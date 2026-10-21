@@ -1,0 +1,20 @@
+{
+  "id": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "title": "Launch Shipped",
+  "description": "Stand up Shipped (shipped.anth.us), a Papyrus publication of community-ranked AI that actually shipped: announcements and real-world deployments, including open-weights releases and decision models used in the wild. Placeholder site first; design by Ryan in Claude Design. Infrastructure follows the Distinctive Mark pattern (CMS Amplify app, S3 projection, one CloudFront edge, Google sign-in).",
+  "type": "initiative",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T11:42:18.979878Z",
+  "updated_at": "2026-10-21T11:42:18.979904Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

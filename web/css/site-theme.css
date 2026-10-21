@@ -1,0 +1,27 @@
+:root {
+  --papyrus-bg: #ffffff;
+  --papyrus-ink: #16181d;
+  --papyrus-rule: #d9dce2;
+  --shipped-link: #1a4fd6;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --papyrus-bg: #121417;
+    --papyrus-ink: #f1f2f4;
+    --papyrus-rule: #3a3f47;
+    --shipped-link: #8fa8ff;
+  }
+}
+
+body {
+  background: var(--papyrus-bg);
+  color: var(--papyrus-ink);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.55;
+}
+
+a {
+  color: var(--shipped-link);
+}

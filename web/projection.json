@@ -1,0 +1,40 @@
+{
+  "theme": null,
+  "site": {
+    "name": "Shipped",
+    "tagline": "The AI that actually shipped",
+    "description": "Announcements and real-world deployments of AI, ranked by the community: open-weights releases, decision models in the wild, and what is actually in use.",
+    "productionUrl": "https://shipped.anth.us"
+  },
+  "urls": {
+    "style": "directory",
+    "sections": {
+      "shipped": {
+        "label": "Shipped",
+        "description": "Announcements and deployments of AI that is real, useful and in use.",
+        "listEmpty": true
+      },
+      "open-weights": {
+        "label": "Open weights",
+        "description": "Open-weights model releases and what people are doing with them.",
+        "listEmpty": true
+      },
+      "decisions": {
+        "label": "Decisions in the wild",
+        "description": "Decision models used in real deployments.",
+        "listEmpty": true
+      }
+    }
+  },
+  "nav": {
+    "links": [
+      { "label": "Shipped", "href": "/shipped/" },
+      { "label": "Open weights", "href": "/open-weights/" },
+      { "label": "Decisions in the wild", "href": "/decisions/" }
+    ]
+  },
+  "listings": { "homeCount": 12 },
+  "feeds": { "formats": ["rss", "atom"], "count": 30 },
+  "sitemap": { "style": "single", "lastmod": true },
+  "chrome": { "stylesheets": ["css/site-theme.css"] }
+}

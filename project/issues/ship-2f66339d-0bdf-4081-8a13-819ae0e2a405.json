@@ -1,0 +1,20 @@
+{
+  "id": "ship-2f66339d-0bdf-4081-8a13-819ae0e2a405",
+  "title": "Write content policies",
+  "description": "Define what counts as shipped, source rules, how open-weights releases and decision models in the wild are treated, and corrections. Policies live in the newsroom backend as data (editorial missions and checks), not in the repository.",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T11:42:25.099242Z",
+  "updated_at": "2026-10-21T11:42:25.099261Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

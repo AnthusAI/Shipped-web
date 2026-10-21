@@ -1,0 +1,20 @@
+{
+  "id": "ship-7e99a6f7-8022-418f-98e2-b1beb48f60c0",
+  "title": "Newsletter",
+  "description": "Set up a Shipped newsletter and signup (Papyrus public form endpoint, no faked signups) once the design and content policies exist.",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T11:42:25.130234Z",
+  "updated_at": "2026-10-21T11:42:25.130253Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

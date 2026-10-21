@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "17eb9618-4b95-438d-9d23-d40995975495",
+  "issue_id": "ship-b35fa25f-89f8-4701-9835-c912b3c148f1",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T11:42:25.120Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Collaborative voting pilot",
+    "description": "Pilot reader and collaborative voting on items as input to the ranking. The core capability is future Papyrus work: link the Papyrus initiative here once it is filed (Papyrus board, PPY-).",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": []
+  }
+}

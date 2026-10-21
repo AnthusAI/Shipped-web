@@ -1,0 +1,20 @@
+{
+  "id": "ship-4a59a17f-95cd-4f9a-8eee-571d49b44479",
+  "title": "Design the Shipped site in Claude Design",
+  "description": "Ryan designs the public site and brand (logo, icon, share card, theme) in Claude Design. Until then the site is an unstyled-but-tidy placeholder. Then implement web/css/site-theme.css, assets and any projection settings from the design.",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T11:42:25.087643Z",
+  "updated_at": "2026-10-21T11:42:25.087664Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
