@@ -8,6 +8,11 @@
 <div class="shipped-layout">
 <div class="shipped-main">
 <nav class="view-tabs" aria-label="Views"><a href="/">Front</a><a href="/new/" aria-current="page">New</a><a href="/rising/">Rising</a><a href="/vapor/">Vapor log</a></nav>
+::endraw
+
+::include{kind="block" name="desk-board" depends="*"}
+
+::raw
 <section class="board" aria-labelledby="board-h">
 <div class="board-heading"><span class="cintillo">Wk 43 · 19–25 Oct</span><h1 id="board-h">New this week</h1><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div>
 <div class="board-head kicker" aria-hidden="true"><span>Rank</span><span>Vote</span><span>Item · entities</span><span>Status</span><span class="board-head-dims"><span>Real</span><span>Useful</span><span>Notable</span><span>Novel</span></span><span>Talk</span></div>
