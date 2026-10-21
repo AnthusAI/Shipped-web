@@ -33,6 +33,10 @@
         "href": "/"
       },
       {
+        "label": "Decision models",
+        "href": "/topics/decision-models/"
+      },
+      {
         "label": "New",
         "href": "/new/"
       },
@@ -100,7 +104,7 @@
       "id": "new",
       "path": "new",
       "title": "New",
-      "description": "The newest sample items on the board.",
+      "description": "The newest items on the board.",
       "source": "pages/new.md"
     },
     {
@@ -151,6 +155,20 @@
       "title": "Voice agents (sample topic)",
       "description": "A fictional sample topic page that previews the Shipped topic design.",
       "source": "pages/topic-voice-agents.md"
+    },
+    {
+      "id": "topic-decision-models",
+      "path": "topics/decision-models",
+      "title": "Decision models that actually shipped",
+      "description": "Decision models that actually shipped: guard and moderation classifiers, judge and reward models, routers. Scored by editors, with sources and release dates.",
+      "source": "pages/topic-decision-models.md"
+    },
+    {
+      "id": "topic-open-tts",
+      "path": "topics/open-tts",
+      "title": "Open-weights TTS that actually shipped",
+      "description": "Open-weights text-to-speech and voice-cloning models from the last year, with the licence of each stated, scored by editors with sources.",
+      "source": "pages/topic-open-tts.md"
     }
   ],
   "footer": {

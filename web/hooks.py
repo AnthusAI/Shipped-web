@@ -148,9 +148,39 @@ def _date_text(value):
     return _text(value)
 
 
+def _read_score_notes(summary, front):
+    raw = front.get("scoreNotes")
+    if raw is None:
+        return {}
+    if not isinstance(raw, dict):
+        _warn(summary, "scoreNotes is not a mapping; left out")
+        return {}
+    known = {dimension["key"] for dimension in _scoring()["dimensions"]}
+    return {key: _text(value) for key, value in raw.items() if key in known and _text(value)}
+
+
+def _read_source_url(summary, front):
+    url = _text(front.get("sourceUrl"))
+    if not url:
+        return None
+    if urlparse(url).scheme not in SAFE_URL_SCHEMES or not urlparse(url).netloc:
+        _warn(summary, "sourceUrl is not an http or https url; left out")
+        return None
+    return url
+
+
+def _read_tags(front):
+    raw = front.get("tags")
+    return [tag.strip() for tag in raw if isinstance(tag, str) and tag.strip()] if isinstance(raw, list) else []
+
+
 def _read_item(summary):
     front = summary.front_matter or {}
     return {
+        "source_url": _read_source_url(summary, front),
+        "released_on": _date_text(front.get("releasedOn")),
+        "score_notes": _read_score_notes(summary, front),
+        "tags": _read_tags(front),
         "verdict": _read_verdict(summary, front),
         "by": _text(front.get("verdictBy")),
         "at": _date_text(front.get("verdictAt")),
@@ -192,11 +222,12 @@ def _stamp_html(verdict, extra_class=""):
     )
 
 
-def _score_dimension_html(label, score):
+def _score_dimension_html(label, score, note=None):
+    note_html = f'<span class="score-note">{escape(note)}</span>' if note else ""
     if score is None:
         return (
             f'<div class="score-dimension is-low"><span class="score-dimension-name">{escape(label)}</span>'
-            f'<span class="score-dimension-value" aria-label="{escape(label)} not scored">&mdash;</span></div>'
+            f'<span class="score-dimension-value" aria-label="{escape(label)} not scored">&mdash;</span>{note_html}</div>'
         )
     filled = round(score)
     segments = "".join(
@@ -206,12 +237,46 @@ def _score_dimension_html(label, score):
     return (
         f'<div class="score-dimension{low}"><span class="score-dimension-name">{escape(label)}</span>'
         f'<span class="score-dimension-value">{score:.1f}</span>'
-        f'<span class="score-meter" role="img" aria-label="{escape(label)} {score:.1f} out of 5, editor score">{segments}</span></div>'
+        f'<span class="score-meter" role="img" aria-label="{escape(label)} {score:.1f} out of 5, editor score">{segments}</span>{note_html}</div>'
     )
 
 
-def _dimensions_html(scores):
-    return "".join(_score_dimension_html(dimension["label"], scores.get(dimension["key"])) for dimension in _scoring()["dimensions"])
+def _dimensions_html(scores, notes=None):
+    notes = notes or {}
+    return "".join(
+        _score_dimension_html(dimension["label"], scores.get(dimension["key"]), notes.get(dimension["key"]))
+        for dimension in _scoring()["dimensions"]
+    )
+
+
+def _full_date_label(iso_date):
+    try:
+        return datetime.strptime(iso_date, "%Y-%m-%d").strftime("%-d %b %Y")
+    except (TypeError, ValueError):
+        return iso_date or ""
+
+
+def _topic_of(item):
+    topics = _scoring().get("topics", {})
+    return topics.get(item["tags"][0]) if item["tags"] else None
+
+
+def _strip_links_html(item):
+    parts = []
+    if item["source_url"]:
+        domain = urlparse(item["source_url"]).netloc
+        parts.append(
+            f'<a class="source-link" href="{escape(item["source_url"], quote=True)}" rel="noopener">'
+            f'Source: {escape(domain)} &rarr;</a>'
+        )
+    if item["released_on"]:
+        parts.append(f'<span class="released-on">Released {escape(_full_date_label(item["released_on"]))}</span>')
+    topic = _topic_of(item)
+    if topic:
+        parts.append(
+            f'<a class="topic-link" href="{escape(topic["path"], quote=True)}">Topic: {escape(topic["label"])} &rarr;</a>'
+        )
+    return f'<div class="desk-strip-links">{"".join(parts)}</div>' if parts else ""
 
 
 def _evidence_row_html(entry):
@@ -252,9 +317,10 @@ def item_decorator(html, summary):
     scores_html = ""
     if item["scores"]:
         gap_html = f'<div class="hype-row"><span class="hype-label">Hype gap</span>{_hype_gap_html(gap, True)}</div>' if gap is not None else ""
+        notes_class = " has-notes" if item["score_notes"] else ""
         scores_html = (
-            f'<div class="desk-scores"><p class="kicker">Editor score</p>'
-            f'<div class="desk-score-grid">{_dimensions_html(item["scores"])}</div>{gap_html}</div>'
+            f'<div class="desk-scores{notes_class}"><p class="kicker">Editor score</p>'
+            f'<div class="desk-score-grid">{_dimensions_html(item["scores"], item["score_notes"])}</div>{gap_html}</div>'
         )
     evidence_html = ""
     if item["evidence"]:
@@ -266,14 +332,14 @@ def item_decorator(html, summary):
     strip = (
         '<header class="item-header desk-strip"><div class="item-header-main">'
         f'<div class="item-header-meta"><span class="kicker kicker-ink">Desk verdict</span>{maker_html}</div>'
-        f"{scores_html}{chips_html}</div>"
+        f"{_strip_links_html(item)}{scores_html}{chips_html}</div>"
         f'<div class="item-stamp-block">{_stamp_html(item["verdict"], " status-stamp-xl")}{note_html}</div></header>'
     )
     return strip + html + evidence_html
 
 
 def _date_label(summary):
-    published = _text(summary.published_at)
+    published = _text(_read_item(summary)["released_on"]) or _text(summary.published_at)
     if not published:
         return ""
     try:
@@ -283,6 +349,8 @@ def _date_label(summary):
 
 
 def _source_domain(item):
+    if item["source_url"]:
+        return urlparse(item["source_url"]).netloc
     for entry in item["evidence"]:
         return urlparse(entry["url"]).netloc
     return ""
@@ -293,6 +361,8 @@ def _board_row_html(position, summary, entry, section_label):
     gap_html = _hype_gap_html(_hype_gap(item["scores"]))
     meta = [f"<b>{escape(_source_domain(item))}</b>"] if _source_domain(item) else []
     meta.append(f"<span>&sect; {escape(section_label)}</span>")
+    if item["maker"]:
+        meta.append(f"<span>{escape(item['maker'])}</span>")
     date_label = _date_label(summary)
     if date_label:
         meta.append(f"<span>{escape(date_label)}</span>")
@@ -311,33 +381,142 @@ def _board_row_html(position, summary, entry, section_label):
     )
 
 
-def _desk_board(page):
+def _sort_date(summary):
+    return _read_item(summary)["released_on"] or _text(summary.published_at) or ""
+
+
+def _board_pairs(page, keep):
     section_labels = {section.name: section.label for section in page.settings.sections}
     entries_by_id = {entry.item_id: entry for entry in page.entries if entry.url}
-    rows = [
-        (summary, entries_by_id[summary.item_id])
+    pairs = [
+        (summary, entries_by_id[summary.item_id], section_labels[summary.section])
         for summary in page.summaries
-        if summary.section in section_labels and summary.item_id in entries_by_id
+        if summary.section in section_labels and summary.item_id in entries_by_id and keep(summary)
     ]
-    if not rows:
-        return ""
-    rows.sort(key=lambda pair: (_text(pair[0].published_at) or "", pair[0].slug), reverse=True)
+    pairs.sort(key=lambda triple: (_sort_date(triple[0]), triple[0].slug), reverse=True)
+    return pairs
+
+
+def _board_list_html(pairs):
     body = "".join(
-        _board_row_html(position, summary, entry, section_labels[summary.section])
-        for position, (summary, entry) in enumerate(rows[:BOARD_ROW_LIMIT], start=1)
+        _board_row_html(position, summary, entry, label) for position, (summary, entry, label) in enumerate(pairs, start=1)
     )
     head_dimensions = "".join(f'<span>{escape(dimension["label"])}</span>' for dimension in _scoring()["dimensions"])
     return (
-        '<section class="board desk-board" aria-labelledby="desk-board-h">'
-        '<div class="board-heading"><h2 id="desk-board-h">From the desk</h2></div>'
-        '<p class="board-note desk-board-note">Ratings open with reader sign-in</p>'
         f'<div class="board-head kicker" aria-hidden="true"><span>Rank</span><span>Item</span><span>Status</span>'
         f'<span class="board-head-dims">{head_dimensions}</span></div>'
-        f'<ol class="board-list">{body}</ol></section>'
+        f'<ol class="board-list">{body}</ol>'
+    )
+
+
+def _more_links_html(page):
+    links = "".join(
+        f'<a href="/{escape(section.name, quote=True)}/">{escape(section.label)}</a>' for section in page.settings.sections
+    )
+    return f'<p class="board-more"><span class="kicker">More</span>{links}</p>'
+
+
+def _desk_board(page, attributes):
+    wanted_verdict = attributes.get("verdict")
+    pairs = _board_pairs(page, lambda summary: not wanted_verdict or _read_item(summary)["verdict"] == wanted_verdict)
+    if not pairs:
+        return ""
+    limit = int(attributes.get("limit", BOARD_ROW_LIMIT))
+    heading = attributes.get("heading", "From the desk")
+    tag = "h1" if attributes.get("level") == "1" else "h2"
+    more_html = _more_links_html(page) if attributes.get("more") == "true" else ""
+    return (
+        '<section class="board desk-board" aria-labelledby="desk-board-h">'
+        f'<div class="board-heading"><{tag} id="desk-board-h">{escape(heading)}</{tag}></div>'
+        '<p class="board-note desk-board-note">Ratings open with reader sign-in</p>'
+        f"{_board_list_html(pairs[:limit])}{more_html}</section>"
+    )
+
+
+def _mean(values):
+    return sum(values) / len(values) if values else None
+
+
+def _profile_row_html(label, mean):
+    segments = "".join(
+        f'<span class="meter-segment{" is-on" if index < round(mean) else ""}"></span>' for index in range(METER_SEGMENTS)
+    )
+    return (
+        f'<div class="profile-row"><span class="profile-name">{escape(label)}</span>'
+        f'<span class="profile-value">{mean:.1f}</span>'
+        f'<span class="score-meter score-meter-large" role="img" aria-label="{escape(label)} {mean:.1f} out of 5, mean editor score">{segments}</span></div>'
+    )
+
+
+def _topic_profile_html(items):
+    scored = [item for item in items if item["scores"]]
+    if not scored:
+        return ""
+    rows = "".join(
+        _profile_row_html(dimension["label"], _mean(values))
+        for dimension in _scoring()["dimensions"]
+        for values in [[item["scores"][dimension["key"]] for item in scored if dimension["key"] in item["scores"]]]
+        if values
+    )
+    mean_gap = _mean([gap for gap in (_hype_gap(item["scores"]) for item in scored) if gap is not None])
+    gap_html = (
+        f'<div class="hype-box"><div><div class="hype-label">Mean hype gap</div></div>{_hype_gap_html(mean_gap, True)}</div>'
+        if mean_gap is not None else ""
+    )
+    return (
+        '<section aria-labelledby="profile-h" class="topic-profile"><div class="section-heading">'
+        '<span class="cintillo">Scores</span><h2 id="profile-h">How the topic scores</h2></div>'
+        f'<p class="graph-note">Editor scores, mean of {len(scored)} items</p>{rows}{gap_html}</section>'
+    )
+
+
+def _topic_makers_html(items):
+    counts = {}
+    for item in items:
+        if item["maker"]:
+            counts[item["maker"]] = counts.get(item["maker"], 0) + 1
+    if not counts:
+        return ""
+    ordered = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0].lower()))
+    rows = "".join(
+        f'<li><span>{escape(name)}</span><span class="topic-maker-count">{count}</span></li>' for name, count in ordered
+    )
+    return (
+        '<section aria-labelledby="makers-h" class="topic-makers"><div class="section-heading">'
+        '<span class="cintillo">Makers</span><h2 id="makers-h">Who made them</h2></div>'
+        f'<ul class="topic-maker-list">{rows}</ul></section>'
+    )
+
+
+def _topic_board(page, attributes):
+    tag = attributes.get("tag")
+    if not tag:
+        raise ValueError("topic-board needs a tag attribute")
+    pairs = _board_pairs(page, lambda summary: _read_item(summary)["tags"][:1] == [tag])
+    items = [_read_item(summary) for summary, _entry, _label in pairs]
+    makers = {item["maker"] for item in items if item["maker"]}
+    stats = [
+        ("Items", len(items)),
+        ("Makers", len(makers)),
+        ("Shipped", sum(1 for item in items if item["verdict"] == "shipped")),
+        ("Pending", sum(1 for item in items if item["verdict"] == "pending")),
+    ]
+    stats_html = "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in stats)
+    ranked_html = (
+        '<section aria-labelledby="items-h" class="topic-block board desk-board"><div class="section-heading">'
+        '<span class="cintillo">Newest first</span><h2 id="items-h">Items in this topic</h2></div>'
+        f'<p class="board-note desk-board-note">Ratings open with reader sign-in</p>{_board_list_html(pairs)}</section>'
+        if pairs else ""
+    )
+    return (
+        f'<dl class="topic-stats topic-stats-row">{stats_html}</dl>'
+        f'<div class="topic-two">{_topic_profile_html(items)}{_topic_makers_html(items)}</div>{ranked_html}'
     )
 
 
 def block(name, attributes, page):
     if name == "desk-board":
-        return _desk_board(page)
+        return _desk_board(page, attributes)
+    if name == "topic-board":
+        return _topic_board(page, attributes)
     raise ValueError(f"unknown block {name!r}")
