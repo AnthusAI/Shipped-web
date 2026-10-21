@@ -26,6 +26,7 @@ export default defineSite({
   defaultBrand: "shipped",
   backend: {
     brandId: "shipped",
+    resolverWaveSize: 4,
     auth: resolvedAuthConfiguration,
     publication: {
       kind: "s3-projection",
