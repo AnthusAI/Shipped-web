@@ -76,7 +76,8 @@
   "chrome": {
     "stylesheets": [
       "css/site-theme.css",
-      "assets/shipped-components.css"
+      "assets/shipped-components.css",
+      "assets/shipped-forms-roundup.css"
     ]
   },
   "fonts": {
@@ -113,6 +114,27 @@
       "title": "Vapor log",
       "description": "Sample items announced but not something you can use.",
       "source": "pages/vapor.md"
+    },
+    {
+      "id": "submit",
+      "path": "submit",
+      "title": "Submit",
+      "description": "Preview of the submission form. Submitting is not open yet.",
+      "source": "pages/submit.md"
+    },
+    {
+      "id": "roundup",
+      "path": "roundup",
+      "title": "Weekly roundup",
+      "description": "A fictional sample weekly roundup that shows the design.",
+      "source": "pages/roundup.md"
+    },
+    {
+      "id": "sign-in",
+      "path": "sign-in",
+      "title": "Sign in",
+      "description": "Reader accounts with Google sign-in are coming. This is a preview.",
+      "source": "pages/sign-in.md"
     }
   ],
   "footer": {
