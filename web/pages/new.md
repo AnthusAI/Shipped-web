@@ -1,10 +1,10 @@
 ::band{size="bare"}
 
 ::raw
-<div class="ticker"><div class="ticker-inner"><span class="ticker-label">TRENDING</span><a href="/"><b>Autonomous SRE</b><span>▲ +210%</span></a><a href="/"><b>Voice agents</b><span>▲ +112%</span></a><a href="/"><b>Training-data manifests</b><span>▲ +64%</span></a><a href="/"><b>On-device speech</b><span>▲ +41%</span></a><a href="/"><b>Override rates</b><span>▲ +38%</span></a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div></div>
+<div class="ticker"><div class="ticker-inner"><span class="ticker-label">TRENDING</span><a href="/"><b>Autonomous SRE</b><span>▲ +210%</span></a><a href="/sample/voice-agents/"><b>Voice agents</b><span>▲ +112%</span></a><a href="/"><b>Training-data manifests</b><span>▲ +64%</span></a><a href="/"><b>On-device speech</b><span>▲ +41%</span></a><a href="/"><b>Override rates</b><span>▲ +38%</span></a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div></div>
 <div class="shipped-page">
 
-<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a href="/">Voice agents</a><a href="/">Coding models</a><a href="/">Document AI</a><a href="/">Decision models</a><a href="/">Speech</a><a href="/">Evals</a><a href="/">Agents</a><a class="beats-all" href="/">ALL 214 TOPICS →</a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></nav>
+<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a href="/sample/voice-agents/">Voice agents</a><a href="/">Coding models</a><a href="/">Document AI</a><a href="/">Decision models</a><a href="/">Speech</a><a href="/">Evals</a><a href="/">Agents</a><a class="beats-all" href="/">ALL 214 TOPICS →</a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></nav>
 <div class="shipped-layout">
 <div class="shipped-main">
 <nav class="view-tabs" aria-label="Views"><a href="/">Front</a><a href="/new/" aria-current="page">New</a><a href="/rising/">Rising</a><a href="/vapor/">Vapor log</a></nav>
@@ -25,7 +25,7 @@
 <li class="board-row">
 <span class="board-rank">2</span>
 <button type="button" class="vote-button" disabled aria-disabled="true" aria-label="Sample votes: 412"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5l6 10H2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>412</span></button>
-<div class="board-main"><a class="board-title" href="/">Tern-3: a 14B open-weights coding model that fits on one 24 GB card, Apache-2.0</a>
+<div class="board-main"><a class="board-title" href="/sample/tern-3/">Tern-3: a 14B open-weights coding model that fits on one 24 GB card, Apache-2.0</a>
 <div class="board-meta"><b>hub.example</b><span>§ Open weights</span><span>Coding models</span><span>9h</span><span>by kmorrow</span></div>
 <div class="board-entities"><a class="entity-chip" href="/"><i>org</i>Tern Labs</a><a class="entity-chip" href="/"><i>task</i>code completion</a><a class="entity-chip" href="/"><i>technique</i>4-bit quantisation</a></div></div>
 <div class="board-status"><span class="status-stamp status-stamp-verified"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="5.8"/><path d="M5.4 8.1l1.8 1.8 3.4-3.7"/></svg><span class="status-stamp-label">Verified</span></span></div>

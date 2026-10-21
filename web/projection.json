@@ -77,7 +77,8 @@
     "stylesheets": [
       "css/site-theme.css",
       "assets/shipped-components.css",
-      "assets/shipped-forms-roundup.css"
+      "assets/shipped-forms-roundup.css",
+      "assets/shipped-item-topic.css"
     ]
   },
   "fonts": {
@@ -135,6 +136,20 @@
       "title": "Sign in",
       "description": "Reader accounts with Google sign-in are coming. This is a preview.",
       "source": "pages/sign-in.md"
+    },
+    {
+      "id": "sample-tern-3",
+      "path": "sample/tern-3",
+      "title": "Tern-3: a 14B open-weights coding model (sample item)",
+      "description": "A fictional sample item page that previews the Shipped item design.",
+      "source": "pages/item-tern-3.md"
+    },
+    {
+      "id": "sample-voice-agents",
+      "path": "sample/voice-agents",
+      "title": "Voice agents (sample topic)",
+      "description": "A fictional sample topic page that previews the Shipped topic design.",
+      "source": "pages/topic-voice-agents.md"
     }
   ],
   "footer": {
