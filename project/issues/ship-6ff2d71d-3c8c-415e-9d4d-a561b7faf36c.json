@@ -1,0 +1,28 @@
+{
+  "id": "ship-6ff2d71d-3c8c-415e-9d4d-a561b7faf36c",
+  "title": "Scaffold the designed site with labelled sample data",
+  "description": "Ryan's delivery rule (2026-10-21): deploy visible scaffolding first. Every page of the Claude Design artifact (EoXGtpzsayij4d7tmrfZ9r) is built as an authored page file on the standard Papyrus front end with obviously fictional sample data (Tern-3, Harlow County, Basalt-70B ...), each mocked section carrying the one consistent Sample mark. Placeholders are replaced feature by feature; each feature drops its sample mark.",
+  "type": "epic",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "7042bb61-ac75-4f89-9e65-51c057e230c2",
+      "author": "home",
+      "text": "Scaffold live 2026-10-21. Edge 403 root cause fixed in PR #12 (edgeDistributionArn was never set).",
+      "created_at": "2026-10-21T23:18:51.043127Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-10-21T20:55:15.815035Z",
+  "updated_at": "2026-10-21T23:18:51.043151Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

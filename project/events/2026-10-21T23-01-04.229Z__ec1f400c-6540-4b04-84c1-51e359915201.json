@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "ec1f400c-6540-4b04-84c1-51e359915201",
+  "issue_id": "ship-368c9592-bdcb-4bbc-b34a-6968c563d2c1",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T23:01:04.229Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Seed real items by manual research (decision models, open TTS, then open LLMs)",
+    "description": "Ryan 2026-10-21: seed real items by manual research until monitoring takes over. Rules and file format: scratchpad seed/SEEDING-RULES.md (copied into this ticket's comments on completion). First pass: ~30 decision models (section decisions), ~20 open TTS (open-weights); open LLMs later. Publish path: Papyrus library save_item/publish_item with IAM authoring, idempotent by slug.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": []
+  }
+}

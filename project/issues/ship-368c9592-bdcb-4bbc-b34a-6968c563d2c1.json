@@ -1,0 +1,28 @@
+{
+  "id": "ship-368c9592-bdcb-4bbc-b34a-6968c563d2c1",
+  "title": "Seed real items by manual research (decision models, open TTS, then open LLMs)",
+  "description": "Ryan 2026-10-21: seed real items by manual research until monitoring takes over. Rules and file format: scratchpad seed/SEEDING-RULES.md (copied into this ticket's comments on completion). First pass: ~30 decision models (section decisions), ~20 open TTS (open-weights); open LLMs later. Publish path: Papyrus library save_item/publish_item with IAM authoring, idempotent by slug.",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "b46943e6-e4a3-4ccd-9333-5acd9d3e0da6",
+      "author": "home",
+      "text": "First pass published 2026-10-21: 30 decision-model items (decisions) and 21 open-TTS items (open-weights), all live, none verified. Open LLMs remain.",
+      "created_at": "2026-10-21T23:18:51.030083Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-10-21T23:01:04.229170Z",
+  "updated_at": "2026-10-21T23:18:51.030396Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
