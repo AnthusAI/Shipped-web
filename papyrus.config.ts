@@ -31,6 +31,7 @@ export default defineSite({
       kind: "s3-projection",
       staticDir: "web",
       reprojectOnDeploy: true,
+      edgeDistributionArn: "arn:aws:cloudfront::712236451410:distribution/EUQZ249T4OKXH",
     },
     stagingBuild: { enabled: false },
     features: {
