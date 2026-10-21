@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "event_id": "516aba99-9e8c-4eac-a94f-5df56cf8d867",
+  "issue_id": "ship-4a59a17f-95cd-4f9a-8eee-571d49b44479",
+  "event_type": "comment_added",
+  "occurred_at": "2026-10-21T12:51:16.466Z",
+  "actor_id": "home",
+  "payload": {
+    "comment_id": "db9b63a3-160f-45fa-bc42-61113d4bcd41",
+    "comment_author": "home",
+    "agent": {
+      "platform": "claude_code",
+      "model": "Sonnet 5.5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

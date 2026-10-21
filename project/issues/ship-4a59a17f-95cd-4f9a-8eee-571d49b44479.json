@@ -10,9 +10,22 @@
   "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "db9b63a3-160f-45fa-bc42-61113d4bcd41",
+      "author": "home",
+      "text": "Designer adjustments are filed as ship-14efe5 (17-item checklist).",
+      "created_at": "2026-10-21T12:51:16.466644Z",
+      "comment_type": "default",
+      "agent": {
+        "platform": "claude_code",
+        "model": "Sonnet 5.5",
+        "name": "papyrus-anthus"
+      }
+    }
+  ],
   "created_at": "2026-10-21T11:42:25.087643Z",
-  "updated_at": "2026-10-21T11:42:25.087664Z",
+  "updated_at": "2026-10-21T12:51:16.466660Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,
