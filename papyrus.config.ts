@@ -26,7 +26,6 @@ export default defineSite({
   defaultBrand: "shipped",
   backend: {
     brandId: "shipped",
-    excludeModelGroups: ["editions"],
     auth: resolvedAuthConfiguration,
     publication: {
       kind: "s3-projection",
