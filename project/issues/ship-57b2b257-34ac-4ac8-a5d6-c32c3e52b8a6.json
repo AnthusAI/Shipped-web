@@ -10,9 +10,17 @@
   "parent": null,
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "3be1b6e5-54e6-4ee6-a680-7707c5905041",
+      "author": "home",
+      "text": "2026-10-21 infrastructure state (papyrus-production 712236451410): stack amplify-app-shell-shipped-cms deployed (CMS Amplify app dkycd9pntgo6d, no repository yet); ACM certificate for shipped.anth.us issued and validated (record in the anth.us zone); next: Amplify GitHub connection (Ryan), Google OAuth secrets (script shipped-store-google-secrets.sh), first main build, then edge stack papyrus-edge-shipped and the shipped DNS alias.",
+      "created_at": "2026-10-21T11:46:08.158591Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-21T11:42:18.979878Z",
-  "updated_at": "2026-10-21T11:42:18.979904Z",
+  "updated_at": "2026-10-21T11:46:08.158610Z",
   "closed_at": null,
   "right_now_summary": null,
   "right_now_updated_at": null,
