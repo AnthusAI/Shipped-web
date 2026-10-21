@@ -78,7 +78,8 @@
       "css/site-theme.css",
       "assets/shipped-components.css",
       "assets/shipped-forms-roundup.css",
-      "assets/shipped-item-topic.css"
+      "assets/shipped-item-topic.css",
+      "assets/shipped-desk.css"
     ]
   },
   "fonts": {
@@ -173,5 +174,6 @@
         ]
       }
     ]
-  }
+  },
+  "hooks": "hooks.py"
 }

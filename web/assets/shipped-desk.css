@@ -1,0 +1,13 @@
+.desk-board .board-head,.desk-board .board-row{grid-template-columns:30px minmax(0,1fr) 96px 172px}
+.desk-board-note{margin:0 0 12px}
+.board-gap{display:flex;align-items:baseline;gap:8px;margin-top:8px}
+.desk-strip{margin-top:18px}
+.desk-scores{margin-top:18px;max-width:420px}
+.desk-score-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 8px;margin-top:8px}
+.desk-score-grid .score-dimension-name{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.desk-entities{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.desk-evidence{margin-top:32px}
+@media (max-width:640px){
+  .desk-board .board-row{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"rank status" "main main" "dims dims"}
+  .desk-board .board-dimensions{border-left:0;padding-left:0}
+}

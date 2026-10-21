@@ -1,0 +1,10 @@
+{
+  "dimensions": [
+    {"key": "real", "label": "Real"},
+    {"key": "useful", "label": "Useful"},
+    {"key": "notable", "label": "Notable"},
+    {"key": "novel", "label": "Novel"}
+  ],
+  "hypeGap": {"plus": ["notable", "novel"], "minus": ["real", "useful"]},
+  "verdicts": ["shipped", "verified", "pending", "vapor"]
+}
