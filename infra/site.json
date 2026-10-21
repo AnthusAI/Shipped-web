@@ -4,7 +4,7 @@
   "repository": "https://github.com/AnthusAI/Shipped-web",
   "brand": "shipped",
   "frontend": "markus-static",
-  "papyrusVersion": "5.12.0",
+  "papyrusVersion": "5.13.0",
   "cms": {
     "staging": false,
     "cognitoDomainPrefix": "papyrus-shipped-cms",
@@ -21,6 +21,10 @@
   "github": {
     "owner": "AnthusAI",
     "repo": "Shipped-web",
-    "branches": ["main"]
+    "branches": [
+      "main"
+    ],
+    "ownerId": 152415604,
+    "repoId": 1428297675
   }
 }
