@@ -29,18 +29,35 @@
   "nav": {
     "links": [
       {
-        "label": "Shipped",
-        "href": "/shipped/"
+        "label": "Front",
+        "href": "/"
       },
       {
-        "label": "Open weights",
-        "href": "/open-weights/"
+        "label": "New",
+        "href": "/new/"
       },
       {
-        "label": "Decisions in the wild",
-        "href": "/decisions/"
+        "label": "Rising",
+        "href": "/rising/"
+      },
+      {
+        "label": "Vapor log",
+        "href": "/vapor/"
+      },
+      {
+        "label": "Roundup",
+        "href": "/roundup/"
+      },
+      {
+        "label": "Submit",
+        "href": "/submit/"
+      },
+      {
+        "label": "Sign in",
+        "href": "/sign-in/"
       }
-    ]
+    ],
+    "brandHtml": "<span class=\"brand-word\">Shipped</span><span class=\"brand-stamp\"><svg viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"5\"/><path d=\"M3 13L13 3\"/></svg><span>No vapor</span></span>"
   },
   "listings": {
     "homeCount": 12
@@ -58,7 +75,8 @@
   },
   "chrome": {
     "stylesheets": [
-      "css/site-theme.css"
+      "css/site-theme.css",
+      "assets/shipped-components.css"
     ]
   },
   "fonts": {
@@ -66,5 +84,57 @@
   },
   "icons": {
     "themeColor": "#C6F432"
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "",
+      "title": "Shipped: AI that actually shipped",
+      "description": "Announcements and real-world deployments of AI, ranked by the community: open-weights releases, decision models in the wild, and what is actually in use.",
+      "source": "pages/home.md"
+    },
+    {
+      "id": "new",
+      "path": "new",
+      "title": "New",
+      "description": "The newest sample items on the board.",
+      "source": "pages/new.md"
+    },
+    {
+      "id": "rising",
+      "path": "rising",
+      "title": "Rising",
+      "description": "Sample items gaining votes fastest in the last 6 hours.",
+      "source": "pages/rising.md"
+    },
+    {
+      "id": "vapor",
+      "path": "vapor",
+      "title": "Vapor log",
+      "description": "Sample items announced but not something you can use.",
+      "source": "pages/vapor.md"
+    }
+  ],
+  "footer": {
+    "text": "Shipped, from Anthus AI Solutions. AI that actually shipped, ranked by the people who checked.",
+    "columns": [
+      {
+        "title": "Shipped",
+        "links": [
+          {
+            "label": "Front",
+            "href": "/"
+          },
+          {
+            "label": "Vapor log",
+            "href": "/vapor/"
+          },
+          {
+            "label": "Submit",
+            "href": "/submit/"
+          }
+        ]
+      }
+    ]
   }
 }
