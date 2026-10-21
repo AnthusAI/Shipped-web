@@ -6,7 +6,7 @@ __pycache__/
 .DS_Store
 .env*
 !.env.example
-node_modules/
+node_modules
 
 # Papyrus publication app (CMS build; the static Python build never reads these)
 .next/
