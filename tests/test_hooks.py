@@ -56,16 +56,64 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Editor score", page)
         self.assertIn("hype-gap", page)
 
-    def test_home_page_has_two_desk_board_rows(self):
-        page = self._page(".")
-        self.assertIn("From the desk", page)
-        self.assertEqual(len(re.findall(r'<li class="board-row">', page.split('class="board desk-board"')[1].split("</ol>")[0])), 2)
-        self.assertIn("Ratings open with reader sign-in", page)
+    def test_item_page_renders_source_release_date_score_notes_and_topic_link(self):
+        page = self._page("decisions/fixture-guard-one")
+        self.assertIn('class="source-link" href="https://source.fixture.example/guard-one" rel="noopener"', page)
+        self.assertIn("Source: source.fixture.example", page)
+        self.assertIn("Released 18 Oct 2026", page)
+        self.assertIn('<span class="score-note">Fixture note on novel.</span>', page)
+        self.assertIn('href="/topics/decision-models/">Topic: Decision models', page)
 
-    def test_new_page_has_desk_board_and_sample_board_stays_marked(self):
+    def test_item_page_without_notes_has_no_score_note_for_missing_dimensions(self):
+        page = self._page("decisions/fixture-router-two")
+        self.assertNotIn("score-note", page)
+
+    def test_home_page_has_one_real_board_with_four_rows_and_no_sample_board(self):
+        page = self._page(".")
+        self.assertIn("Latest from the desk", page)
+        self.assertNotIn("Shipped this week", page)
+        self.assertEqual(len(re.findall(r'<li class="board-row">', page.split('class="board desk-board"')[1].split("</ol>")[0])), 4)
+        self.assertIn("Ratings open with reader sign-in", page)
+        self.assertIn('href="/topics/decision-models/">Decision models', page)
+        self.assertIn('href="/topics/open-tts/">Open TTS', page)
+
+    def test_new_page_has_only_the_real_board_newest_first(self):
         page = self._page("new")
-        self.assertIn("From the desk", page)
-        self.assertIn("sample-mark", page)
+        self.assertNotIn("New this week", page)
+        board = page.split('class="board desk-board"')[1].split("</ol>")[0]
+        self.assertLess(board.index("fixture-full-contract"), board.index("fixture-router-two"))
+        self.assertLess(board.index("fixture-router-two"), board.index("fixture-guard-one"))
+
+    def test_vapor_and_rising_keep_their_sample_boards(self):
+        self.assertIn("sample-mark", self._page("vapor"))
+        self.assertNotIn("desk-board", self._page("vapor"))
+        self.assertIn("sample-mark", self._page("rising"))
+
+    def test_decision_models_topic_page_counts_and_profile(self):
+        page = self._page("topics/decision-models")
+        self.assertIn("<title>Decision models that actually shipped", page)
+        self.assertNotIn("sample-mark", page)
+        stats = re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)
+        self.assertEqual(stats, [("Items", "2"), ("Makers", "2"), ("Shipped", "1"), ("Pending", "1")])
+        self.assertIn("Editor scores, mean of 2 items", page)
+        self.assertIn('<span class="profile-value">3.0</span>', page)
+        self.assertIn("&#9650; +0.5 over", page)
+        self.assertEqual(len(re.findall(r'<li class="board-row">', page)), 2)
+        self.assertIn("Other Fixture Lab", page)
+        self.assertNotIn("fixture-full-contract", page)
+
+    def test_open_tts_topic_page_lists_only_its_own_tag(self):
+        page = self._page("topics/open-tts")
+        self.assertEqual(re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)[:2], [("Items", "1"), ("Makers", "1")])
+        self.assertIn("fixture-full-contract", page)
+        self.assertNotIn("fixture-guard-one", page)
+
+    def test_sitemap_and_markdown_twins_include_topic_pages(self):
+        sitemap = (self.output_directory / "sitemap.xml").read_text(encoding="utf-8")
+        self.assertIn("/topics/decision-models/", sitemap)
+        self.assertIn("/topics/open-tts/", sitemap)
+        self.assertTrue((self.output_directory / "topics" / "decision-models" / "index.md").exists())
+        self.assertTrue((self.output_directory / "topics" / "open-tts" / "index.md").exists())
 
     def test_invalid_values_are_not_rendered(self):
         page = self._page("shipped/fixture-invalid-values")

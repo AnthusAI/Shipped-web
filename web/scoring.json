@@ -1,10 +1,46 @@
 {
   "dimensions": [
-    {"key": "real", "label": "Real"},
-    {"key": "useful", "label": "Useful"},
-    {"key": "notable", "label": "Notable"},
-    {"key": "novel", "label": "Novel"}
+    {
+      "key": "real",
+      "label": "Real"
+    },
+    {
+      "key": "useful",
+      "label": "Useful"
+    },
+    {
+      "key": "notable",
+      "label": "Notable"
+    },
+    {
+      "key": "novel",
+      "label": "Novel"
+    }
   ],
-  "hypeGap": {"plus": ["notable", "novel"], "minus": ["real", "useful"]},
-  "verdicts": ["shipped", "verified", "pending", "vapor"]
+  "hypeGap": {
+    "plus": [
+      "notable",
+      "novel"
+    ],
+    "minus": [
+      "real",
+      "useful"
+    ]
+  },
+  "verdicts": [
+    "shipped",
+    "verified",
+    "pending",
+    "vapor"
+  ],
+  "topics": {
+    "decision-models": {
+      "label": "Decision models",
+      "path": "/topics/decision-models/"
+    },
+    "open-tts": {
+      "label": "Open TTS",
+      "path": "/topics/open-tts/"
+    }
+  }
 }

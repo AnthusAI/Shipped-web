@@ -4,10 +4,15 @@
 <div class="ticker"><div class="ticker-inner"><span class="ticker-label">TRENDING</span><a href="/"><b>Autonomous SRE</b><span>▲ +210%</span></a><a href="/sample/voice-agents/"><b>Voice agents</b><span>▲ +112%</span></a><a href="/"><b>Training-data manifests</b><span>▲ +64%</span></a><a href="/"><b>On-device speech</b><span>▲ +41%</span></a><a href="/"><b>Override rates</b><span>▲ +38%</span></a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div></div>
 <div class="shipped-page">
 
-<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a href="/sample/voice-agents/">Voice agents</a><a href="/">Coding models</a><a href="/">Document AI</a><a href="/">Decision models</a><a href="/">Speech</a><a href="/">Evals</a><a href="/">Agents</a><a class="beats-all" href="/">ALL 214 TOPICS →</a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></nav>
+<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a href="/sample/voice-agents/">Voice agents</a><a href="/">Coding models</a><a href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a href="/">Speech</a><a href="/">Evals</a><a href="/">Agents</a><a class="beats-all" href="/">ALL 214 TOPICS →</a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></nav>
 <div class="shipped-layout">
 <div class="shipped-main">
 <nav class="view-tabs" aria-label="Views"><a href="/">Front</a><a href="/new/">New</a><a href="/rising/">Rising</a><a href="/vapor/" aria-current="page">Vapor log</a></nav>
+::endraw
+
+::include{kind="block" name="desk-board" depends="*" verdict="vapor" heading="Vapor log from the desk"}
+
+::raw
 <section class="board" aria-labelledby="board-h">
 <div class="board-heading"><span class="cintillo">Wk 43 · 19–25 Oct</span><h1 id="board-h">Vapor log</h1><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div>
 <div class="board-head kicker" aria-hidden="true"><span>Rank</span><span>Vote</span><span>Item · entities</span><span>Status</span><span class="board-head-dims"><span>Real</span><span>Useful</span><span>Notable</span><span>Novel</span></span><span>Talk</span></div>
