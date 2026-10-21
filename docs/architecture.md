@@ -4,7 +4,7 @@ Status: decided 2026-10-21 for the pilot. Generic pieces are built in Papyrus (i
 
 ## The shape in one paragraph
 
-The public site stays a static S3 projection behind the `papyrus-edge-shipped` CloudFront distribution. Readers sign in with Prospectus accounts (Google only) through the CMS app's existing `/api/auth/prospectus/*` routes, which the edge already serves on the same origin (`/api/*` → CMS app). Votes, ratings, submissions, comments and reports go to a small authenticated **reader API**, `/api/reader/*`, in the same CMS app. The route checks the sealed session cookie and the Origin, then invokes one Papyrus plugin Lambda that owns validation, rate limits, moderation state and storage. Nothing a reader writes is readable through GraphQL by guests. Public numbers reach the page as **snapshot JSON** in the site bucket (`/_data/...`), rebuilt by the content-actions Lambda after writes and on a short schedule, and read by small client islands that poll. No AppSync subscriptions.
+The public site stays a static S3 projection behind the `papyrus-edge-shipped` CloudFront distribution. Readers sign in with Prospectus accounts (Google only) through the CMS app's existing `/api/auth/prospectus/*` routes, which the edge already serves on the same origin (`/api/*` → CMS app). Votes, ratings, submissions, comments and reports go to a small authenticated **reader API**, `/api/reader/*`, in the same CMS app. The route checks the sealed session cookie and the Origin, then invokes one Papyrus plugin Lambda that owns validation, rate limits, moderation state and storage. Nothing a reader writes is readable through GraphQL by guests. Public numbers reach the page as **snapshot JSON** in the site bucket (`/_data/...`), rebuilt by the content-actions Lambda after writes and every 6 hours, and read by small client islands that poll. No AppSync subscriptions.
 
 ```
 reader ── static pages (S3 via CloudFront) ── islands poll /_data/*.json
@@ -63,7 +63,7 @@ Editorial facts (verdict, editor scores, evidence links) stay **item front matte
 - **Per-person limits** in `reader-actions`, from a conditional DynamoDB counter per person, action and window, with a TTL. Starting limits (publication data, not code): 120 votes/ratings per hour, 10 submissions per day, 30 comments per hour, 20 reports per day. A new account (under 24 h) gets a third of each.
 - **Moderation mode** per publication: `off`, `human` (post-hoc queue; content is public at once, as Ryan decided) or `ai` (GPT-6 Luna verdict with human override). Shipped starts in `human`. The queue lives in the newsroom Administration panel, with approve, hide, ban and an undo for each action.
 - **Content checks**: submissions get Humanus checks and URL normalisation; comments get a length cap and a link cap. A hidden item or comment is dropped from the next snapshot.
-- **Edge**: a WAF rate-based rule on `/api/reader/*` at the Shipped distribution is a follow-up. It is a new paid AWS resource, so it needs Ryan's approval. Until then the per-person limits and the Lambda's reserved concurrency (a cap of 10) bound the cost.
+- **Edge**: no WAF. Ryan rejected it on 2026-10-21: a rate spike costs less than the rule's $6/month. Per-person limits and the Lambda's reserved concurrency (a cap of 10) bound the cost.
 - Bans are by `personId`. Prospectus is Google-only, so making new accounts takes effort.
 
 ## 5. Publishing numbers: snapshots plus client components
@@ -73,7 +73,7 @@ Editorial facts (verdict, editor scores, evidence links) stay **item front matte
   - `/_data/items/<itemKey>.json`: per-dimension mean, n and histogram, editor mean, upvotes, used-it count, hype gap (blank under n=5), comment count and approved comments.
   - `/_data/readers/top.json`: karma leaderboard.
   - Every file carries `generatedAt`.
-- **Triggers**: a debounced run after writes (the `reader-actions` Lambda queues one asynchronous invoke at most per minute), plus an EventBridge schedule every 10 minutes for time decay and Rising. The schedule is new scheduled compute and is listed for approval. The write-triggered path works without it.
+- **Triggers**: a debounced run after writes (the `reader-actions` Lambda queues one asynchronous invoke at most per minute), plus an EventBridge schedule every 6 hours (4 runs a day) for time decay and Rising. Ryan approved it on 2026-10-21.
 - **Caching**: `/_data/*` is served with `Cache-Control: max-age=30`, and the task invalidates `/_data/*` after it writes.
 - **Client components**: small islands in Papyrus (`papyrus-board`, `papyrus-score-readout`, `papyrus-vote`, `papyrus-freshness`). Each prerenders the last values into the page where possible, fetches the JSON on load, polls every 60 s while the tab is visible, and shows "Updated N min ago". The reader's own vote is optimistic and comes from `/api/reader/me`.
 - **Ranking**: v1 orders the Front by editor composite × time decay until readers have rated. How reader and editor scores combine is an open exploration (PPY-0b2cbb). The snapshot writes both values separately so the formula can change without moving any data.
@@ -85,7 +85,7 @@ Editorial facts (verdict, editor scores, evidence links) stay **item front matte
 
 ## 7. What needs approval or input
 
-- The EventBridge schedule (5) and the WAF rule (4): new AWS resources.
+- Decided 2026-10-21: the EventBridge schedule is approved at every 6 hours; the WAF rule is rejected.
 - Shipped's registration in Prospectus (a Prospectus repo change, cyclotron-production) and the app-shell deploy for `PAPYRUS_SITE_ORIGIN`. The deploy is approved; the change set is reviewed before it is executed.
 - Google client redirect URIs for the Shipped Cognito domain: Ryan adds them himself.
-- Real editorial items: someone has to write them in the newsroom. Sample items stay marked until real ones exist.
+- Real editorial items: long term they come from standard Papyrus monitoring. To start, editors seed them by manual research, in this order: decision models, then open TTS models from the last year, then open LLMs. Each item is a real, verifiable release with a primary source. Sample items and their marks go once real items fill the board.
