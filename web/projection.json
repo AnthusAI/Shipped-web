@@ -28,13 +28,43 @@
   },
   "nav": {
     "links": [
-      { "label": "Shipped", "href": "/shipped/" },
-      { "label": "Open weights", "href": "/open-weights/" },
-      { "label": "Decisions in the wild", "href": "/decisions/" }
+      {
+        "label": "Shipped",
+        "href": "/shipped/"
+      },
+      {
+        "label": "Open weights",
+        "href": "/open-weights/"
+      },
+      {
+        "label": "Decisions in the wild",
+        "href": "/decisions/"
+      }
     ]
   },
-  "listings": { "homeCount": 12 },
-  "feeds": { "formats": ["rss", "atom"], "count": 30 },
-  "sitemap": { "style": "single", "lastmod": true },
-  "chrome": { "stylesheets": ["css/site-theme.css"] }
+  "listings": {
+    "homeCount": 12
+  },
+  "feeds": {
+    "formats": [
+      "rss",
+      "atom"
+    ],
+    "count": 30
+  },
+  "sitemap": {
+    "style": "single",
+    "lastmod": true
+  },
+  "chrome": {
+    "stylesheets": [
+      "css/site-theme.css"
+    ]
+  },
+  "fonts": {
+    "stylesheet": "https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+  },
+  "icons": {
+    "themeColor": "#C6F432"
+  }
 }

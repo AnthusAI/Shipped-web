@@ -1,27 +1,195 @@
 :root {
-  --papyrus-bg: #ffffff;
-  --papyrus-ink: #16181d;
-  --papyrus-rule: #d9dce2;
-  --shipped-link: #1a4fd6;
   color-scheme: light dark;
+  --font-title: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-ui: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --title-stretch: 125%;
+
+  --brand-fill: #C6F432;
+  --brand-deep: #A8D61A;
+  --brand-on: #1A1615;
+  --brand-text: #4A6B00;
+  --brand-tint: #EEF8C8;
+
+  --papyrus-bg: #F5F1EA;
+  --paper-raised: #FFFFFF;
+  --papyrus-ink: #1A1615;
+  --papyrus-muted: #5E5752;
+  --papyrus-rule: #DDD5CB;
+  --papyrus-focus: #1C4C9C;
+  --papyrus-hover: #EEF8C8;
+  --papyrus-error: #B00020;
+  --papyrus-band-bg: #C6F432;
+  --papyrus-band-card-bg: #FFFFFF;
+  --papyrus-band-muted-bg: #EEF8C8;
+  --papyrus-button-bg: #C6F432;
+  --papyrus-button-ink: #1A1615;
+  --papyrus-family-footer-background: #C6F432;
+  --papyrus-family-footer-accent-background: #A8D61A;
+  --papyrus-family-footer-text: #1A1615;
+  --papyrus-family-footer-muted-text: #1A1615;
+  --papyrus-family-footer-link: #1A1615;
+  --papyrus-family-footer-font-family: var(--font-ui);
+  --verified: #1C4C9C;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --papyrus-bg: #121417;
-    --papyrus-ink: #f1f2f4;
-    --papyrus-rule: #3a3f47;
-    --shipped-link: #8fa8ff;
+    --brand-text: #C6F432;
+    --brand-tint: #2A3311;
+    --papyrus-bg: #141112;
+    --paper-raised: #1E1A1A;
+    --papyrus-ink: #F1ECE4;
+    --papyrus-muted: #A59D96;
+    --papyrus-rule: #332D2B;
+    --papyrus-focus: #93B4FF;
+    --papyrus-hover: #2A3311;
+    --papyrus-error: #FF8A9B;
+    --papyrus-band-card-bg: #1E1A1A;
+    --papyrus-band-muted-bg: #2A3311;
+    --verified: #93B4FF;
   }
 }
 
 body {
+  margin: 0;
   background: var(--papyrus-bg);
   color: var(--papyrus-ink);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--font-ui);
+  font-stretch: 100%;
+  font-weight: 400;
   line-height: 1.55;
 }
 
 a {
-  color: var(--shipped-link);
+  color: var(--brand-text);
+  text-underline-offset: 0.2em;
+}
+
+main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+h1, h2, h3, .markus-card-title, .markus-site-wordmark {
+  font-family: var(--font-title);
+  font-stretch: var(--title-stretch);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+time, .markus-time, .markus-byline, code, pre, .markus-tags, .markus-pager, .markus-breadcrumbs {
+  font-family: var(--font-mono);
+}
+
+.markus-site-masthead,
+.markus-site-footer {
+  background: var(--brand-fill);
+  color: var(--brand-on);
+}
+
+.markus-site-masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.5rem;
+  padding: 1rem;
+}
+
+.markus-site-masthead a,
+.markus-site-footer a {
+  color: var(--brand-on);
+}
+
+.markus-site-wordmark {
+  margin: 0;
+  font-size: 1.75rem;
+  text-transform: none;
+}
+
+.markus-site-wordmark a {
+  text-decoration: none;
+}
+
+.markus-site-tagline {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.markus-site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-left: auto;
+  font-weight: 600;
+}
+
+.markus-site-footer {
+  padding: 1.5rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.markus-site-footer p {
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.markus-card {
+  padding: 1rem;
+  background: var(--paper-raised);
+  border: 1px solid var(--papyrus-rule);
+}
+
+.markus-card-title a {
+  text-decoration: none;
+}
+
+.markus-card-summary,
+.markus-byline {
+  color: var(--papyrus-muted);
+}
+
+.markus-button {
+  background: var(--brand-fill);
+  color: var(--brand-on);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.markus-button:active {
+  background: var(--brand-deep);
+}
+
+.markus-band-eyebrow {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  background: var(--brand-fill);
+  color: var(--brand-on);
+  font-family: var(--font-mono);
+}
+
+.markus-band {
+  color: var(--brand-on);
+}
+
+.markus-band[data-tone="card"], .markus-band[data-tone="muted"] {
+  color: var(--papyrus-ink);
+}
+
+th {
+  background: var(--brand-fill);
+  color: var(--brand-on);
+  font-family: var(--font-mono);
+  text-align: left;
+}
+
+::selection {
+  background: var(--brand-fill);
+  color: var(--brand-on);
 }
