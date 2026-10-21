@@ -18,7 +18,7 @@ The public site is the S3 projection that the CMS backend creates (`backend.publ
 Order, because the edge needs the bucket and the redirects store the backend creates, and the backend needs the real distribution ARN:
 
 1. Deploy the backend once without `edgeDistributionArn` (first `main` build).
-2. Create the edge stack with a change set: `SiteBucketRegionalDomainName`, `RedirectsKeyValueStoreArn`, `CmsAppId` and `CertificateArn` once the ACM certificate is issued.
+2. Create the edge stack with a change set: `SiteBucketRegionalDomainName`, `SiteViewerRequestFunctionArn` (the backend stack's `RedirectAndIndexFunction`, which carries the redirects store and Markdown negotiation), `CmsAppId` and `CertificateArn` once the ACM certificate is issued.
 3. Set `edgeDistributionArn` in `../papyrus.config.ts` to the stack's `DistributionArn` and merge.
 4. Point the `shipped` record in the `anth.us` zone at the distribution.
 
