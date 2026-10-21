@@ -47,13 +47,13 @@
 
 .board-heading{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:18px}
 .board-heading h1{margin:0;font-size:clamp(30px,5vw,49px);line-height:1;letter-spacing:-.02em}
-.board-head,.board-row{display:grid;grid-template-columns:40px 50px minmax(0,1fr) 104px 240px 44px;column-gap:12px;align-items:center}
-.board-head{padding:8px 0;border-bottom:2px solid var(--rule-strong);color:var(--ink)}
-.board-head-dims{display:grid;grid-template-columns:repeat(4,1fr);column-gap:8px}
+.board-head,.board-row{display:grid;grid-template-columns:30px 48px minmax(0,1fr) 96px 172px 36px;column-gap:10px;align-items:center}
+.board-head{font-size:10px;letter-spacing:.04em;padding:8px 0;border-bottom:2px solid var(--rule-strong);color:var(--ink)}
+.board-head-dims{display:grid;grid-template-columns:repeat(4,1fr);column-gap:6px}
 .board-list{list-style:none;margin:0;padding:0}
 .board-row{padding:16px 0;border-bottom:1px solid var(--rule)}
-.board-dimensions{display:grid;grid-template-columns:repeat(4,1fr);column-gap:8px}
-.board-rank{font-family:var(--font-title);font-stretch:var(--title-stretch);font-size:34px;line-height:1;font-weight:700;color:var(--brand-text);font-variant-numeric:lining-nums tabular-nums}
+.board-dimensions{display:grid;grid-template-columns:repeat(4,1fr);column-gap:6px}
+.board-rank{font-family:var(--font-title);font-stretch:var(--title-stretch);font-size:30px;line-height:1;font-weight:700;color:var(--brand-text);font-variant-numeric:lining-nums tabular-nums}
 .board-main{min-width:0}
 .board-title{font-family:var(--font-title);font-size:21px;line-height:1.25;font-weight:500;text-wrap:pretty;color:var(--ink);text-decoration:none}
 .board-title:hover{color:var(--brand-text)}
@@ -76,10 +76,11 @@
 
 .preview-line{margin:0;padding:12px 0 0;font-family:var(--font-mono);font-size:13px;color:var(--ink)}
 
+main:has(>.shipped-page){max-width:none}
 .shipped-page{max-width:90rem;margin:0 auto;padding:0 32px 64px}
-.shipped-layout{display:flex;flex-wrap:wrap;gap:44px;padding-top:32px}
+.shipped-layout{display:flex;flex-wrap:wrap;gap:28px;padding-top:32px}
 .shipped-main{flex:999 1 720px;min-width:0}
-.shipped-rails{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:40px}
+.shipped-rails{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:40px}
 
 .rail{border-top:4px solid var(--brand);padding-top:14px}
 .rail-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
