@@ -11,66 +11,15 @@ Parameters:
   SiteBucketRegionalDomainName:
     Type: String
     Description: The backend site bucket, <bucket>.s3.us-east-1.amazonaws.com (PAPYRUS_SITE_BUCKET on content-actions).
-  RedirectsKeyValueStoreArn:
+  SiteViewerRequestFunctionArn:
     Type: String
-    Description: The backend redirects key-value store (PAPYRUS_REDIRECTS_KVS_ARN on content-actions).
+    Description: The backend's shared Papyrus viewer-request function (redirects from its key-value store, directory index documents, Accept text/markdown negotiation), RedirectAndIndexFunction in the site backend stack. Using it keeps the edge on the core function instead of a local copy.
   CmsAppId:
     Type: String
     Description: Amplify app id of shipped-cms (CmsAppId output of amplify-app-shell-shipped-cms).
 Conditions:
   HasCertificate: !Not [!Equals [!Ref CertificateArn, '']]
 Resources:
-  SiteViewerRequestFunction:
-    Type: AWS::CloudFront::Function
-    Properties:
-      Name: !Sub '${AWS::StackName}-site-viewer-request'
-      AutoPublish: true
-      FunctionConfig:
-        Comment: key-value-store redirects, directory index documents
-        Runtime: cloudfront-js-2.0
-        KeyValueStoreAssociations:
-          - KeyValueStoreARN: !Ref RedirectsKeyValueStoreArn
-      FunctionCode: !Sub |
-        import cf from "cloudfront";
-
-        const redirectStore = cf.kvs();
-        function permanentRedirect(location) {
-          return {
-            statusCode: 301,
-            statusDescription: "Moved Permanently",
-            headers: { location: { value: location } },
-          };
-        }
-
-        async function lookUpRedirectTarget(uri) {
-          try {
-            const target = await redirectStore.get(uri);
-            return target ? String(target) : null;
-          } catch (error) {
-            return null;
-          }
-        }
-
-        function rewriteToIndexDocument(uri) {
-          if (uri.endsWith("/")) {
-            return uri + "index.html";
-          }
-          const lastSegment = uri.substring(uri.lastIndexOf("/") + 1);
-          if (lastSegment.indexOf(".") === -1) {
-            return uri + "/index.html";
-          }
-          return uri;
-        }
-
-        async function handler(event) {
-          const request = event.request;
-          const redirectTarget = await lookUpRedirectTarget(request.uri);
-          if (redirectTarget !== null) {
-            return permanentRedirect(redirectTarget);
-          }
-          request.uri = rewriteToIndexDocument(request.uri);
-          return request;
-        }
   CmsViewerRequestFunction:
     Type: AWS::CloudFront::Function
     Properties:
@@ -128,7 +77,7 @@ Resources:
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
           FunctionAssociations:
             - EventType: viewer-request
-              FunctionARN: !GetAtt SiteViewerRequestFunction.FunctionARN
+              FunctionARN: !Ref SiteViewerRequestFunctionArn
         CacheBehaviors:
           - PathPattern: '/newsroom*'
             TargetOriginId: cms
