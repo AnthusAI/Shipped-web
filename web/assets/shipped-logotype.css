@@ -7,7 +7,8 @@
 .brand-barcode{display:flex;flex-direction:column;justify-content:space-between;gap:3px;min-width:0;color:var(--brand-on)}
 .brand-barcode-bars{display:block;width:246px;height:46px}
 .brand-barcode-text{font-family:var(--font-mono);font-size:9px;font-weight:700;line-height:1;letter-spacing:.08em;text-transform:none;white-space:nowrap}
-.markus-site-tagwrap{max-width:440px;text-align:right;margin:0 0 16px}
+.markus-site-tagwrap{flex:1 1 auto;min-width:0;max-width:none;text-align:right;margin:0 0 16px}
+.markus-site-tagwrap .markus-site-tagline,.markus-site-descriptor{text-wrap:balance}
 .markus-site-tagwrap .markus-site-tagline{margin:0;max-width:none;font-weight:600;line-height:1.2}
 .markus-site-descriptor{margin:6px 0 0;font-family:var(--font-ui);font-size:14px;font-weight:500;line-height:1.4;text-transform:none;letter-spacing:0}
 @media (max-width:640px){

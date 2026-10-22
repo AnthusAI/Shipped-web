@@ -2,7 +2,7 @@
   "theme": null,
   "site": {
     "name": "Shipped",
-    "tagline": "New arrivals in machine learning, mapped the moment they land.",
+    "tagline": "New arrivals in machine learning.",
     "description": "Open-weights releases, decision models in production and the products built on them, tracked from the moment they land.",
     "productionUrl": "https://shipped.anth.us"
   },
@@ -251,7 +251,7 @@
   },
   "seo": {
     "defaultImage": "https://shipped.anth.us/assets/social/shipped-default.png",
-    "defaultImageAlt": "Shipped: new arrivals in machine learning, mapped the moment they land.",
+    "defaultImageAlt": "Shipped: new arrivals in machine learning.",
     "jsonLdTypes": {
       "wiki_page": "WebPage"
     }

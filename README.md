@@ -1,6 +1,6 @@
 # Shipped
 
-New arrivals in machine learning, mapped the moment they land.
+New arrivals in machine learning.
 
 Machine-learning releases and real-world deployments (signals), a knowledge map built from them (concepts, clusters and trends), and AI-written stories that editors approve. Readers steer the map; editors can override them. Signals are rated on useful, ready, advances and open.
 

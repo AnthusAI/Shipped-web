@@ -1689,7 +1689,7 @@ def _newsletter_signup_html():
 
 
 FRONT_NEWSLETTER_HEADING = "The Weekly"
-FRONT_NEWSLETTER_DEK = "New arrivals in machine learning, mapped the moment they land. One email on Fridays."
+FRONT_NEWSLETTER_DEK = "New arrivals in machine learning. One email on Fridays."
 FRONT_NEWSLETTER_FORM_ID = "front-page"
 
 
@@ -1725,7 +1725,7 @@ def _front_block(page, attributes):
     raise ValueError(f"unknown front part {part!r}")
 
 
-WEEKLY_ARCHIVE_STRAP = "New arrivals in machine learning, mapped the moment they land."
+WEEKLY_ARCHIVE_STRAP = "New arrivals in machine learning."
 WEEKLY_SAMPLE_ISSUE_PATH = "/sample/roundup/"
 WEEKLY_SAMPLE_ISSUE_LABEL = "See what an issue will look like (placeholder)"
 
@@ -1762,7 +1762,7 @@ def _reader_sign_in(html):
 LOGOTYPE_BARCODE_PREFIX = "SHP"
 LOGOTYPE_BARCODE_PLACEHOLDER = '<span class="brand-barcode" data-brand-barcode></span>'
 LOGOTYPE_BARCODE_SCRIPT = '<script src="/assets/shipped-barcode.js" defer></script>'
-LOGOTYPE_DESCRIPTOR = "Open-weights releases, decision models in production and the products built on them, tracked from the moment they land."
+LOGOTYPE_DESCRIPTOR = "Open weights, decision models, real products. Mapped as they land."
 LOGOTYPE_TAGLINE_PARAGRAPH = re.compile(r'<p class="markus-site-tagline">(.*?)</p>', re.DOTALL)
 CODE128_START_B = 104
 CODE128_STOP = 106

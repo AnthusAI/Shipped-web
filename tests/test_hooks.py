@@ -410,7 +410,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Approved by <b>[editor]</b>", page)
         self.assertIn("Fixture theme", page.split('id="front-map-h"')[1].split("</aside>")[0])
         self.assertIn("The Weekly", page)
-        self.assertIn("New arrivals in machine learning, mapped the moment they land. One email on Fridays.", page)
+        self.assertIn("New arrivals in machine learning. One email on Fridays.", page)
         self.assertNotIn("How to read a row", page)
         self.assertNotIn("vapor", page.lower())
 
@@ -501,7 +501,7 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_sample_roundup_is_the_weekly_with_every_part_as_a_placeholder(self):
         page = self._page("sample/roundup")
-        self.assertIn("New arrivals in machine learning, mapped the moment they land.", page)
+        self.assertIn("New arrivals in machine learning.", page)
         self.assertIn("Drafted by AI", page)
         self.assertIn("Approved by <b>[editor]</b>", page)
         for heading in ("What moved on the map", "Concepts born this week", "The community’s top proposal", "Underrated this week", "Also out this week"):
@@ -513,7 +513,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_roundup_archive_has_the_weekly_strap_and_links_the_sample_issue(self):
         page = self._page("roundup")
         self.assertIn("<h1>The Weekly</h1>", page)
-        self.assertIn("New arrivals in machine learning, mapped the moment they land.", page)
+        self.assertIn("New arrivals in machine learning.", page)
         self.assertIn('href="/sample/roundup/"', page)
 
     def test_proposals_page_explains_steering_and_keeps_the_queue_as_a_placeholder(self):
@@ -554,7 +554,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_masthead_carries_the_tagline_and_the_new_navigation(self):
         page = self._page(".")
         header = page.split("<header")[1].split("</header>")[0]
-        self.assertIn("New arrivals in machine learning, mapped the moment they land.", header)
+        self.assertIn("New arrivals in machine learning.", header)
         for label in ("Front", "Map", "Proposals", "New", "Wiki", "The Weekly", "Submit"):
             self.assertIn(f">{label}</a>", header)
         for label in ("Rising", "Vapor"):
@@ -574,9 +574,9 @@ class HooksProjectionTest(unittest.TestCase):
     def test_masthead_carries_the_tagline_and_the_descriptor(self):
         page = self._page(".")
         header = page.split("<header")[1].split("</header>")[0]
-        self.assertIn('<p class="markus-site-tagline">New arrivals in machine learning, mapped the moment they land.</p>', header)
+        self.assertIn('<p class="markus-site-tagline">New arrivals in machine learning.</p>', header)
         self.assertIn(
-            '<p class="markus-site-descriptor">Open-weights releases, decision models in production and the products built on them, tracked from the moment they land.</p>',
+            '<p class="markus-site-descriptor">Open weights, decision models, real products. Mapped as they land.</p>',
             header,
         )
 
@@ -589,7 +589,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_home_title_and_description_use_the_new_copy(self):
         page = self._page(".")
         self.assertIn("<title>Shipped: new arrivals in machine learning", page)
-        self.assertIn("tracked from the moment they land.", page)
+        self.assertIn("Mapped as they land.", page)
         self.assertNotIn("In the wild", page)
 
     def test_pages_link_the_icon_the_apple_touch_icon_and_the_manifest(self):
