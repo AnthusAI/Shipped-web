@@ -6,7 +6,7 @@
 <article class="roundup-article weekly-issue">
 <div class="roundup-column">
 <header class="weekly-masthead">
-<div><p class="weekly-name">The Weekly</p><p class="weekly-strap">In the wild, and mapped as it moves.</p></div>
+<div><p class="weekly-name">The Weekly</p><p class="weekly-strap">New arrivals in machine learning, mapped the moment they land.</p></div>
 <p class="weekly-issue-facts">Issue [n]<br>Week of [DATE]<br>Map week [n]</p>
 </header>
 

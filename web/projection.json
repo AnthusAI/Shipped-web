@@ -2,8 +2,8 @@
   "theme": null,
   "site": {
     "name": "Shipped",
-    "tagline": "In the wild, and mapped as it moves.",
-    "description": "A living map of AI that is out in the world: signals from releases and deployments, the map of concepts and makers they connect, and stories that explain what moved.",
+    "tagline": "New arrivals in machine learning, mapped the moment they land.",
+    "description": "Open-weights releases, decision models in production and the products built on them, tracked from the moment they land.",
     "productionUrl": "https://shipped.anth.us"
   },
   "urls": {
@@ -76,7 +76,7 @@
         "href": "/sign-in/"
       }
     ],
-    "brandHtml": "<span class=\"brand-word\">Shipped</span>"
+    "brandHtml": "<span class=\"brand-lockup\"><span class=\"brand-word\">Shipped</span><span class=\"brand-divider\" aria-hidden=\"true\"></span><span class=\"brand-barcode\" data-brand-barcode></span></span>"
   },
   "listings": {
     "types": [
@@ -112,13 +112,18 @@
       "assets/shipped-front.css",
       "assets/shipped-concept.css",
       "assets/shipped-signal.css",
-      "assets/shipped-map.css"
+      "assets/shipped-map.css",
+      "assets/shipped-logotype.css"
     ]
   },
   "fonts": {
     "stylesheet": "https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
   },
   "icons": {
+    "icon": "/assets/icons/shipped-icon.svg",
+    "iconType": "image/svg+xml",
+    "appleTouch": "/assets/icons/shipped-icon-180.png",
+    "manifest": "/assets/icons/shipped.webmanifest",
     "themeColor": "#C6F432",
     "themeColorDark": "#C6F432"
   },
@@ -126,8 +131,8 @@
     {
       "id": "home",
       "path": "",
-      "title": "Shipped: in the wild, and mapped as it moves",
-      "description": "A living map of AI that is out in the world: signals from releases and deployments, the map of concepts and makers they connect, and stories that explain what moved.",
+      "title": "Shipped: new arrivals in machine learning",
+      "description": "Open-weights releases, decision models in production and the products built on them, tracked from the moment they land.",
       "source": "pages/home.md"
     },
     {
@@ -226,7 +231,7 @@
   },
   "seo": {
     "defaultImage": "https://shipped.anth.us/assets/social/shipped-default.png",
-    "defaultImageAlt": "Shipped: in the wild, and mapped as it moves.",
+    "defaultImageAlt": "Shipped: new arrivals in machine learning, mapped the moment they land.",
     "jsonLdTypes": {
       "wiki_page": "WebPage"
     }

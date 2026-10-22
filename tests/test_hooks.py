@@ -410,7 +410,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Approved by <b>[editor]</b>", page)
         self.assertIn("Fixture theme", page.split('id="front-map-h"')[1].split("</aside>")[0])
         self.assertIn("The Weekly", page)
-        self.assertIn("In the wild, and mapped as it moves. One email on Fridays.", page)
+        self.assertIn("New arrivals in machine learning, mapped the moment they land. One email on Fridays.", page)
         self.assertNotIn("How to read a row", page)
         self.assertNotIn("vapor", page.lower())
 
@@ -501,7 +501,7 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_sample_roundup_is_the_weekly_with_every_part_as_a_placeholder(self):
         page = self._page("sample/roundup")
-        self.assertIn("In the wild, and mapped as it moves.", page)
+        self.assertIn("New arrivals in machine learning, mapped the moment they land.", page)
         self.assertIn("Drafted by AI", page)
         self.assertIn("Approved by <b>[editor]</b>", page)
         for heading in ("What moved on the map", "Concepts born this week", "The community’s top proposal", "Underrated this week", "Also out this week"):
@@ -513,7 +513,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_roundup_archive_has_the_weekly_strap_and_links_the_sample_issue(self):
         page = self._page("roundup")
         self.assertIn("<h1>The Weekly</h1>", page)
-        self.assertIn("In the wild, and mapped as it moves.", page)
+        self.assertIn("New arrivals in machine learning, mapped the moment they land.", page)
         self.assertIn('href="/sample/roundup/"', page)
 
     def test_proposals_page_explains_steering_and_keeps_the_queue_as_a_placeholder(self):
@@ -554,11 +554,57 @@ class HooksProjectionTest(unittest.TestCase):
     def test_masthead_carries_the_tagline_and_the_new_navigation(self):
         page = self._page(".")
         header = page.split("<header")[1].split("</header>")[0]
-        self.assertIn("In the wild, and mapped as it moves.", header)
+        self.assertIn("New arrivals in machine learning, mapped the moment they land.", header)
         for label in ("Front", "Map", "Proposals", "New", "Wiki", "The Weekly", "Submit"):
             self.assertIn(f">{label}</a>", header)
         for label in ("Rising", "Vapor"):
             self.assertNotIn(f">{label}</a>", header)
+
+    def test_masthead_is_the_shipping_label_lockup_with_a_dated_barcode(self):
+        page = self._page(".")
+        header = page.split("<header")[1].split("</header>")[0]
+        self.assertIn('<span class="brand-word">Shipped</span>', header)
+        self.assertIn('class="brand-divider"', header)
+        self.assertIn('role="img"', header)
+        self.assertRegex(header, r'aria-label="Barcode for SHP \d{4}-\d{2}-\d{2}, today&#x27;s date"')
+        self.assertRegex(header, r'data-brand-barcode-text aria-hidden="true">SHP \d{4}-\d{2}-\d{2}<')
+        self.assertIn('<script src="/assets/shipped-barcode.js" defer></script>', header)
+        self.assertEqual(header.count("data-brand-barcode>"), 1)
+
+    def test_masthead_carries_the_tagline_and_the_descriptor(self):
+        page = self._page(".")
+        header = page.split("<header")[1].split("</header>")[0]
+        self.assertIn('<p class="markus-site-tagline">New arrivals in machine learning, mapped the moment they land.</p>', header)
+        self.assertIn(
+            '<p class="markus-site-descriptor">Open-weights releases, decision models in production and the products built on them, tracked from the moment they land.</p>',
+            header,
+        )
+
+    def test_footer_wordmark_is_plain_without_a_barcode(self):
+        page = self._page(".")
+        footer = page.split("<footer")[1].split("</footer>")[0]
+        self.assertIn('<span class="brand-word">Shipped</span>', footer)
+        self.assertNotIn("brand-barcode", footer)
+
+    def test_home_title_and_description_use_the_new_copy(self):
+        page = self._page(".")
+        self.assertIn("<title>Shipped: new arrivals in machine learning", page)
+        self.assertIn("tracked from the moment they land.", page)
+        self.assertNotIn("In the wild", page)
+
+    def test_pages_link_the_icon_the_apple_touch_icon_and_the_manifest(self):
+        page = self._page(".")
+        self.assertIn('<link rel="icon" href="/assets/icons/shipped-icon.svg" type="image/svg+xml">', page)
+        self.assertIn('<link rel="apple-touch-icon" href="/assets/icons/shipped-icon-180.png">', page)
+        self.assertIn('<link rel="manifest" href="/assets/icons/shipped.webmanifest">', page)
+        for published in ("shipped-icon.svg", "shipped-icon-32.png", "shipped-icon-180.png", "shipped-icon-512.png", "shipped.webmanifest"):
+            self.assertTrue((self.output_directory / "assets" / "icons" / published).exists(), published)
+
+    def test_markdown_and_llms_text_carry_no_barcode_markup(self):
+        for relative_path in ("index.md", "llms.txt"):
+            text = (self.output_directory / relative_path).read_text(encoding="utf-8")
+            self.assertNotIn("<svg", text)
+            self.assertNotIn("brand-barcode", text)
 
     def test_every_page_carries_the_default_social_card(self):
         page = self._page(".")
@@ -595,6 +641,49 @@ class HooksProjectionTest(unittest.TestCase):
         weights = self._page("open-weights")
         self.assertIn("Concepts bubbling up", weights)
         self.assertIn("1 in section", weights)
+
+
+EXPECTED_BARCODE_MODULES_FOR_2026_10_22 = (
+    "110100100001101110100011000101000111011101101101100110011001110010100111011001100111001011001110"
+    "100100110111001001110011010011101100100110111001100111001011001110010101110011001100011101011"
+)
+
+
+class LogotypeBarcodeTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.hooks = _load_hooks()
+
+    def test_code_128_set_b_modules_match_the_reference_encoder_for_the_build_date_text(self):
+        self.assertEqual(self.hooks._code128_set_b_modules("SHP 2026-10-22"), EXPECTED_BARCODE_MODULES_FOR_2026_10_22)
+
+    def test_barcode_has_start_symbol_checksum_stop_and_termination_bar(self):
+        modules = self.hooks._code128_set_b_modules("SHP 2026-10-22")
+        self.assertEqual(len(modules), 11 * (1 + 14 + 1) + 13)
+        self.assertTrue(modules.startswith("11010010000"))
+        self.assertTrue(modules.endswith("1100011101011"))
+
+    def test_text_outside_code_set_b_is_refused(self):
+        with self.assertRaises(ValueError):
+            self.hooks._code128_set_b_modules("SHP \u00e9")
+
+    def test_barcode_text_is_the_prefix_and_the_iso_date(self):
+        from datetime import date
+
+        self.assertEqual(self.hooks._logotype_barcode_text(date(2026, 10, 22)), "SHP 2026-10-22")
+
+    def test_barcode_markup_is_an_inline_image_with_a_label_and_the_text_line(self):
+        from datetime import date
+
+        markup = self.hooks._logotype_barcode_html(date(2026, 10, 22))
+        self.assertIn('role="img"', markup)
+        self.assertIn("Barcode for SHP 2026-10-22, today&#x27;s date", markup)
+        self.assertIn(">SHP 2026-10-22</span>", markup)
+
+    def test_static_script_carries_the_same_pattern_table(self):
+        script = (STATIC_DIRECTORY / "assets" / "shipped-barcode.js").read_text(encoding="utf-8")
+        for pattern in self.hooks.CODE128_PATTERNS:
+            self.assertIn(pattern, script)
 
 
 class StampNoteTest(unittest.TestCase):
