@@ -131,7 +131,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_footer_is_the_wordmark_links_and_the_plain_line(self):
         page = self._page(".")
         footer = page.split("<footer")[1].split("</footer>")[0]
-        for href in ('href="/map/">How the map works', 'href="/policies/#steering">How steering works', 'href="/policies/">Policies', 'href="/roundup/">All issues', 'href="/feed.xml">RSS'):
+        for href in ('href="/map/">How the map works', 'href="/policies/#steering">How steering works', 'href="/policies/">Policies', 'href="/roundup/">All issues', 'href="/feed.xml">RSS', 'href="/policies/#privacy">Privacy', 'href="#cookie-settings">Cookie settings'):
             self.assertIn(href, footer)
         self.assertIn("Published by Anthus AI Solutions.", footer)
         self.assertNotIn("ranked by the", page)

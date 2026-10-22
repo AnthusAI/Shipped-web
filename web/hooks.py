@@ -96,6 +96,8 @@ FOOTER_LINKS = (
     ("Policies", "/policies/"),
     ("All issues", "/roundup/"),
     ("RSS", "/feed.xml"),
+    ("Privacy", "/policies/#privacy"),
+    ("Cookie settings", "#cookie-settings"),
 )
 FOOTER_LINE = "Published by Anthus AI Solutions."
 
