@@ -50,7 +50,7 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page("open-weights/fixture-full-contract")
         self.assertIn("status-stamp-verified", page)
         self.assertIn(">Verified<", page)
-        self.assertIn("Checked by the fixture desk", page)
+        self.assertIn("Checked by the fixture editor", page)
         self.assertIn("Partly", page)
         self.assertIn("Not checked", page)
         self.assertIn("Editor score", page)
@@ -71,7 +71,7 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_home_page_has_one_real_board_with_four_rows_and_no_sample_board(self):
         page = self._page(".")
-        self.assertIn("Latest from the desk", page)
+        self.assertIn("Latest", page)
         self.assertNotIn("Shipped this week", page)
         self.assertEqual(len(re.findall(r'<li class="board-row">', page.split('class="board desk-board"')[1].split("</ol>")[0])), 4)
         self.assertIn("Ratings open with reader sign-in", page)
@@ -114,6 +114,26 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page(".")
         self.assertIn('href="/policies/#scores">How we score', page)
         self.assertIn('href="/policies/">Policies', page)
+
+    def test_footer_is_the_wordmark_links_and_the_plain_line(self):
+        page = self._page(".")
+        footer = page.split("<footer")[1].split("</footer>")[0]
+        for href in ('href="/policies/#scores">How ranking works', 'href="/policies/">Policies', 'href="/roundup/">Roundups', 'href="/feed.xml">RSS', 'href="/submit/">Submit'):
+            self.assertIn(href, footer)
+        self.assertIn("AI that shipped.", footer)
+        self.assertNotIn("Anthus", page)
+        self.assertNotIn("ranked by the", page)
+
+    def test_theme_color_is_the_brand_fill_in_light_and_dark(self):
+        page = self._page(".")
+        self.assertIn('<meta name="theme-color" content="#C6F432">', page)
+        self.assertIn('<meta name="theme-color" content="#C6F432" media="(prefers-color-scheme: dark)">', page)
+
+    def test_no_visible_page_says_desk(self):
+        for relative_path in (".", "new", "vapor", "roundup", "sample/tern-3", "topics/decision-models"):
+            page = re.sub(r'<section class="clusters.*?</section>', "", self._page(relative_path), flags=re.S)
+            visible = re.sub(r'class="[^"]*"|id="[^"]*"|aria-labelledby="[^"]*"|href="[^"]*"', "", page)
+            self.assertNotRegex(visible.lower(), r"\bdesk\b", relative_path)
 
     def test_item_page_without_scoring_says_editor_score(self):
         page = self._page("decisions/fixture-router-two")

@@ -53,6 +53,14 @@ DEFAULT_AGENT_SCORES_LABEL = "Editor's first pass (AI-assisted)"
 AGENT_SCORING_NOTICE = "Scored by an AI research pass from the linked sources; a human editor will re-score it."
 AGENT_TAG_TEXT = "AI first pass"
 SCORING_POLICY_PATH = "/policies/#scores"
+FOOTER_LINKS = (
+    ("How ranking works", SCORING_POLICY_PATH),
+    ("Policies", "/policies/"),
+    ("Roundups", "/roundup/"),
+    ("RSS", "/feed.xml"),
+    ("Submit", "/submit/"),
+)
+FOOTER_LINE = "AI that shipped."
 
 
 @lru_cache(maxsize=1)
@@ -370,7 +378,7 @@ def item_decorator(html, summary):
         )
     strip = (
         '<header class="item-header desk-strip"><div class="item-header-main">'
-        f'<div class="item-header-meta"><span class="kicker kicker-ink">Desk verdict</span>{maker_html}</div>'
+        f'<div class="item-header-meta"><span class="kicker kicker-ink">Verdict</span>{maker_html}</div>'
         f"{_strip_links_html(item)}{scores_html}{chips_html}</div>"
         f'<div class="item-stamp-block">{_stamp_html(item["verdict"], " status-stamp-xl")}{note_html}</div></header>'
     )
@@ -462,7 +470,7 @@ def _desk_board(page, attributes):
     if not pairs:
         return ""
     limit = int(attributes.get("limit", BOARD_ROW_LIMIT))
-    heading = attributes.get("heading", "From the desk")
+    heading = attributes.get("heading", "Latest")
     tag = "h1" if attributes.get("level") == "1" else "h2"
     more_html = _more_links_html(page) if attributes.get("more") == "true" else ""
     return (
@@ -555,6 +563,16 @@ def _topic_board(page, attributes):
     return (
         f'<dl class="topic-stats topic-stats-row">{stats_html}</dl>'
         f'<div class="topic-two">{_topic_profile_html(items)}{_topic_makers_html(items)}</div>{ranked_html}'
+    )
+
+
+def footer(page):
+    links = "".join(f'<li><a href="{escape(href, quote=True)}">{escape(label)}</a></li>' for label, href in FOOTER_LINKS)
+    return (
+        '<div class="shipped-footer">'
+        '<a class="shipped-footer-wordmark" href="/"><span class="brand-word">Shipped</span></a>'
+        f'<nav aria-label="Footer"><ul class="shipped-footer-links">{links}</ul></nav>'
+        f'<p class="markus-footer-text">{escape(FOOTER_LINE)}</p></div>'
     )
 
 
