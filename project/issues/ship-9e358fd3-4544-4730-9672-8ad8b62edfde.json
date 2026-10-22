@@ -1,0 +1,25 @@
+{
+  "id": "ship-9e358fd3-4544-4730-9672-8ad8b62edfde",
+  "title": "Pairwise siteSubject from Prospectus",
+  "description": "Waiting on the Prospectus session: person.siteSubject (ss1_...), no Person ID for reader sites, retired-subjects feed. ReaderProfile keys on siteSubject through one accessor.",
+  "type": "story",
+  "status": "blocked",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-22T00:58:11.046687Z",
+  "updated_at": "2026-10-22T00:58:46.081491Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "papyrus-anthus"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

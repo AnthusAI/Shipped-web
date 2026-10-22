@@ -1,0 +1,25 @@
+{
+  "id": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+  "title": "Reader features: replace placeholders one by one",
+  "description": "Plan step 3. Each feature replaces a placeholder and drops its sample mark; architecture in docs/architecture.md. Order: real items, reader sign-in, votes/ratings/karma, submit+moderation, comments, live numbers, topics/trends/entities, wiki, weekly roundup.",
+  "type": "epic",
+  "status": "in_progress",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T22:29:22.118490Z",
+  "updated_at": "2026-10-22T00:58:18.198905Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "papyrus-anthus"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

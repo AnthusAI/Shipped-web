@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "446c6725-d10e-4d7a-84cd-4b9c9e52df6b",
+  "issue_id": "ship-8183dd2e-601a-4523-b9ee-4a453631b611",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:06.729Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Placeholder treatment: dimmed about 60% plus a label, full design always visible",
+    "description": "Ryan: show the full design; never remove placeholder sections. Mocked sections, rows and numbers render at about 60% opacity with a non-colour 'Placeholder' cue. Real content is full opacity; never dim a real item.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-6ff2d71d-3c8c-415e-9d4d-a561b7faf36c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}
