@@ -111,6 +111,7 @@ export default defineSite({
         retirementPoll: true,
         reservedConcurrency: 10,
         moderation: { mode: "human" },
+        subjects: { types: ["item", "submission", "story", "proposal"] },
       },
     ],
     features: {
