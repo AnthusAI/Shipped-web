@@ -61,8 +61,8 @@ export default defineSite({
           footerText: "#1A1615",
           wordmarkImageUrl: "https://shipped.anth.us/assets/email/shipped-wordmark-2x.png",
           wordmarkAlt: "Shipped",
-          wordmarkWidth: 168,
-          wordmarkHeight: 33,
+          wordmarkWidth: 268,
+          wordmarkHeight: 38,
           labelFont: "'JetBrains Mono', 'Courier New', monospace",
         },
         lists: [
