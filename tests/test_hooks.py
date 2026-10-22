@@ -520,7 +520,7 @@ class PageVocabularyTest(unittest.TestCase):
         for page in STATIC_DIRECTORY.joinpath("pages").glob("*.md"):
             source = page.read_text(encoding="utf-8")
             kinds = set(re.findall(r'<a class="entity-chip"[^>]*><i>([a-z ]+)</i>', source))
-            self.assertLessEqual(kinds, {"maker", "model family", "task", "technique", "licence", "concept", "platform", "dataset"}, page.name)
+            self.assertLessEqual(kinds, {"maker", "model", "model family", "task", "technique", "licence", "concept", "platform", "dataset"}, page.name)
 
     def test_no_reader_votes_authors_or_desk_in_the_insights(self):
         for page in STATIC_DIRECTORY.joinpath("pages").glob("*.md"):
