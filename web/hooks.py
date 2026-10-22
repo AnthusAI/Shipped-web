@@ -52,6 +52,7 @@ DEFAULT_SCORES_LABEL = "Editor score"
 DEFAULT_AGENT_SCORES_LABEL = "Editor's first pass (AI-assisted)"
 AGENT_SCORING_NOTICE = "Scored by an AI research pass from the linked sources; a human editor will re-score it."
 AGENT_TAG_TEXT = "AI first pass"
+SCORING_POLICY_PATH = "/policies/#scores"
 
 
 @lru_cache(maxsize=1)
@@ -352,7 +353,10 @@ def item_decorator(html, summary):
         notes_class = " has-notes" if item["score_notes"] else ""
         agent_scored = _is_agent_scored(item)
         scores_label = (item["scoring"]["label"] or DEFAULT_AGENT_SCORES_LABEL) if agent_scored else DEFAULT_SCORES_LABEL
-        provenance_html = f'<p class="scoring-provenance">{escape(AGENT_SCORING_NOTICE)}</p>' if agent_scored else ""
+        provenance_html = (
+            f'<p class="scoring-provenance">{escape(AGENT_SCORING_NOTICE)} <a href="{SCORING_POLICY_PATH}">How we score &rarr;</a></p>'
+            if agent_scored else ""
+        )
         scores_html = (
             f'<div class="desk-scores{notes_class}"><p class="kicker">{escape(scores_label)}</p>{provenance_html}'
             f'<div class="desk-score-grid">{_dimensions_html(item["scores"], item["score_notes"])}</div>{gap_html}</div>'
