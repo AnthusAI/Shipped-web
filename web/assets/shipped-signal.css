@@ -20,18 +20,18 @@
 .signal-ratings .reader-key{margin:14px 0 0}
 .signal-scores-label{margin-top:12px}
 .signal-scores-label .scoring-provenance{margin-top:4px}
-.signal-dimension-head,.signal-dimension{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) repeat(5,44px);column-gap:0;align-items:center}
-.signal-dimension-head{padding:12px 0 8px;color:var(--ink);border-bottom:1px solid var(--rule)}
+.signal-dimension-head,.signal-dimension{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,1fr) repeat(5,44px);column-gap:0;align-items:start}
+.signal-dimension-head{align-items:center;padding:12px 0 8px;color:var(--ink);border-bottom:1px solid var(--rule)}
 .signal-dimension-head span:nth-child(4){grid-column:4/-1}
 .signal-dimension{grid-auto-rows:auto;row-gap:6px;padding:14px 0;border-bottom:1px solid var(--rule)}
-.signal-dimension-name{grid-column:1;grid-row:1/3;display:flex;flex-direction:column;gap:2px;padding-right:18px}
+.signal-dimension-name{grid-column:1;grid-row:1/4;padding-top:2px;display:flex;flex-direction:column;gap:2px;padding-right:18px}
 .signal-dimension-name b{font-weight:800;font-size:16px}
 .signal-dimension-name span{font-size:13px;color:var(--muted)}
 .signal-cell-label{display:none;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .signal-dimension .signal-rating-island{display:contents}
 .signal-dimension .papyrus-reader-rating-row{display:contents}
 .signal-dimension .papyrus-reader-rating-label{display:none}
-.signal-dimension .papyrus-reader-meter{grid-column:2;grid-row:1;padding-right:18px}
+.signal-dimension .papyrus-reader-meter{grid-column:2;grid-row:1;align-self:center;padding-right:18px}
 .signal-dimension .papyrus-reader-stats{grid-column:2;grid-row:2;padding-right:18px;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .signal-dimension .papyrus-reader-stats:last-child{display:none}
 .signal-dimension .papyrus-reader-star{grid-row:1;width:40px;min-width:0;height:40px;padding:0;margin-right:4px;border-radius:0;border-width:1.5px;font-family:var(--font-mono);font-size:14px;box-sizing:border-box}
@@ -45,7 +45,7 @@
 .signal-dimension .papyrus-reader-raters,.signal-dimension .papyrus-reader-status{display:none}
 .signal-dimension:last-of-type .papyrus-reader-raters,.signal-dimension:last-of-type .papyrus-reader-status{display:block;grid-column:1/-1;grid-row:4}
 .signal-dimension:last-of-type .papyrus-reader-status:empty,.signal-dimension:last-of-type .papyrus-reader-raters:empty{display:none}
-.signal-editor{grid-column:3;grid-row:1/3;padding-right:18px}
+.signal-editor{grid-column:3;grid-row:1/4;padding:10px 18px 0 0}
 .signal-editor .score-dimension{font-size:22px}
 .signal-editor .score-dimension-name{display:none}
 .signal-editor .score-dimension-unrated{font-size:13px;font-weight:500;color:var(--muted)}
@@ -72,13 +72,14 @@ ol.board-list>li.board-row .board-reader{margin-top:6px}
   .signal-layout{gap:32px}
   .signal-main{gap:32px}
   .signal-dimension-head{display:none}
-  .signal-dimension{grid-template-columns:repeat(5,minmax(0,1fr));row-gap:8px}
+  .signal-dimension{grid-template-columns:repeat(5,minmax(0,1fr));row-gap:8px;margin-top:12px;padding:16px;border:1.5px solid var(--rule-strong);background:var(--paper-raised)}
+  .signal-dimension-name{padding-top:0}
   .signal-cell-label{display:block}
   .signal-dimension-name{grid-column:1/-1;grid-row:auto;padding-right:0}
   .signal-cell-label-readers{grid-column:1/4;grid-row:2}
-  .signal-dimension .papyrus-reader-meter{grid-column:1/4;grid-row:3;padding-right:0}
+  .signal-dimension .papyrus-reader-meter{grid-column:1/4;grid-row:3;align-self:start;padding-right:0}
   .signal-dimension .papyrus-reader-stats{grid-column:1/4;grid-row:4;padding-right:0}
-  .signal-editor{grid-column:4/-1;grid-row:2/5;padding-right:0}
+  .signal-editor{grid-column:4/-1;grid-row:2/5;padding:0}
   .signal-cell-label-yours{grid-column:1/-1;grid-row:5;margin-top:6px}
   .signal-dimension .papyrus-reader-star{grid-row:6;width:auto;margin-right:4px}
   .signal-dimension .papyrus-reader-star:nth-of-type(1){grid-column:1}
