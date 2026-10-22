@@ -36,7 +36,7 @@ Feature: Items carry one of three neutral statuses
   Scenario: The submit page explains the same three statuses
     When I open the page "/submit/"
     Then the page contains "Anyone can use it today."
-    And the page contains "it will show as Announced while we read it"
+    And the page contains "New signals start as Announced"
 
   Scenario: The old status words are gone from every page
     When I open the page "/new/"

@@ -107,3 +107,76 @@ textarea.field-input{height:auto;padding:10px 12px;line-height:1.5}
 .roundup-table-items td:nth-child(2){font-family:var(--font-ui);font-size:15px;font-weight:600}
 .roundup-table-items td:nth-child(2) a{text-decoration:none}
 .roundup-table-items td:nth-child(1){white-space:nowrap}
+
+.proposal-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px dashed var(--rule-strong);font-size:15px;margin:0 0 28px;color:var(--ink);text-decoration:none}
+.proposal-link:hover{background:var(--brand-tint)}
+.proposal-link svg{flex:none}
+.proposal-link-arrow{margin-left:auto;font-family:var(--font-mono);font-size:12px;font-weight:700}
+.on-the-map{margin-top:40px;display:flex;flex-direction:column;gap:14px;max-width:44rem}
+.on-the-map .step-line h2{font-size:25px}
+.on-the-map .field-hint{margin:0}
+.tag-action{font-family:var(--font-mono);font-size:12px;font-weight:700;border:1.5px solid var(--ink);padding:6px 10px}
+
+.weekly-masthead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:4px solid var(--brand);padding-bottom:18px;margin-bottom:30px}
+.weekly-name{margin:0;font-family:var(--font-title);font-stretch:var(--title-stretch);font-size:clamp(40px,8vw,56px);line-height:.9;font-weight:800;letter-spacing:-.035em}
+.weekly-strap{margin:8px 0 0;font-size:18px;font-weight:600}
+.weekly-issue-facts{margin:0;font-family:var(--font-mono);font-size:12px;text-align:right;line-height:1.6;text-transform:uppercase}
+.weekly-part{margin:0 0 52px}
+.weekly-flags{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.weekly-flags-note{color:var(--ink)}
+.weekly-byline{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:16px 0 0;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.weekly-byline b{color:var(--ink);font-weight:600}
+.weekly-ai-mark{display:inline-flex;align-items:center;height:16px;padding:0 4px;border:1.5px solid var(--ink);color:var(--ink);font-size:10px;font-weight:700;letter-spacing:.06em}
+.weekly-essay{margin-top:26px;font-size:19px;line-height:1.65}
+.weekly-essay p{margin:0 0 20px}
+.weekly-part-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin:0 0 16px;border-top:2px solid var(--rule-strong);padding-top:14px}
+.weekly-part-number{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--brand-text);letter-spacing:.1em}
+.weekly-part-head h2{margin:0;font-size:28px;line-height:1.1;font-weight:800;letter-spacing:-.02em}
+.weekly-underrated-mark{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;line-height:14px;padding:3px 7px 3px 5px;border:1.5px solid var(--ink);background:var(--brand-tint);color:var(--ink);white-space:nowrap}
+.weekly-underrated-mark svg{width:13px;height:13px}
+.weekly-chart{border:1.5px solid var(--rule-strong);background:var(--paper-raised);padding:20px 22px}
+.weekly-chart-title{margin:0 0 12px;color:var(--ink)}
+.weekly-chart-bar{display:flex;height:34px;border:1.5px solid var(--ink)}
+.weekly-chart-legend{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 20px;font-family:var(--font-mono);font-size:12.5px}
+.weekly-chart-legend li{display:flex;gap:8px;align-items:center}
+.weekly-swatch{display:inline-block;flex:none;width:14px;height:14px;border:1px solid var(--ink)}
+.pat-ink{background:var(--ink)}
+.pat-brand{background:var(--brand)}
+.pat-hatch{background:repeating-linear-gradient(135deg,var(--ink) 0 2px,var(--paper-raised) 2px 6px)}
+.pat-dots{background:radial-gradient(var(--ink) 1.2px,var(--paper-raised) 1.3px) 0 0/5px 5px}
+.weekly-changes{list-style:none;margin:14px 0 0;padding:0;font-size:16px}
+.weekly-changes li{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--rule)}
+.weekly-changes svg{width:16px;height:16px;flex:none}
+.weekly-note{margin:10px 0 0;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.weekly-row{padding:12px 0;border-bottom:1px solid var(--rule)}
+.weekly-row p{margin:4px 0 0;font-size:15px}
+.weekly-row-name{font-size:20px;font-weight:800;margin:0}
+.weekly-row-meta{font-family:var(--font-mono);font-size:12px;text-transform:uppercase}
+.weekly-proposal{border:2px dotted var(--ink);padding:16px 18px;background:var(--paper-raised)}
+.weekly-proposal p{margin:4px 0 12px;font-size:15px}
+.weekly-proposal .weekly-row-name{margin-top:8px;font-size:20px}
+.weekly-proposal-flags{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.weekly-steering-mark{border:1.5px dashed currentColor;color:var(--ink)}
+.weekly-draft-note{font-family:var(--font-mono);font-size:12px;font-weight:700;text-transform:uppercase}
+.weekly-also{list-style:none;margin:0;padding:0}
+.weekly-also li{display:grid;grid-template-columns:112px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--rule)}
+.weekly-also-title{font-weight:600}
+.weekly-also-date{font-family:var(--font-mono);font-size:12px}
+.weekly-foot{margin-top:40px;padding:18px 0;border-top:4px solid var(--brand);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:center}
+.weekly-foot .weekly-byline{margin:0}
+.weekly-issues-nav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;margin-top:22px}
+.weekly-issues-nav>*{display:flex;flex-direction:column;gap:4px;color:var(--ink);text-decoration:none}
+.weekly-issues-nav-muted{color:var(--muted)!important}
+.weekly-issues-nav strong{font-weight:700}
+.weekly-archive-strap{margin:-8px 0 28px;font-size:20px;font-weight:600}
+.weekly-archive-sample{margin:0 0 28px;font-family:var(--font-mono);font-size:13px}
+
+@media (max-width:640px){
+  .weekly-issue-facts{text-align:left}
+  .weekly-part-head h2{font-size:24px}
+  .weekly-chart{padding:16px 14px}
+  .weekly-chart-legend{grid-template-columns:minmax(0,1fr)}
+  .weekly-also li{grid-template-columns:minmax(0,1fr) auto}
+  .weekly-also li .status-stamp{grid-column:1/-1;justify-self:start}
+  .weekly-underrated-mark{margin-left:0}
+}

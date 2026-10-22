@@ -708,6 +708,18 @@ def _front_block(page, attributes):
     raise ValueError(f"unknown front part {part!r}")
 
 
+WEEKLY_ARCHIVE_STRAP = "In the wild, and mapped as it moves."
+WEEKLY_SAMPLE_ISSUE_PATH = "/sample/roundup/"
+WEEKLY_SAMPLE_ISSUE_LABEL = "See what an issue will look like (placeholder)"
+
+
+def _weekly_archive_intro_html():
+    return (
+        f'<p class="weekly-archive-strap">{escape(WEEKLY_ARCHIVE_STRAP)}</p>'
+        f'<p class="weekly-archive-sample"><a href="{WEEKLY_SAMPLE_ISSUE_PATH}">{escape(WEEKLY_SAMPLE_ISSUE_LABEL)}</a></p>'
+    )
+
+
 def head_extra(page):
     return (
         f'<link rel="stylesheet" href="{READER_STYLESHEET_PATH}">\n'
@@ -739,4 +751,4 @@ def page_finish(html, page):
         LOGGER.warning("roundup archive has no heading; newsletter signup left out")
         return html
     insert_at = heading_end + len("</h1>")
-    return html[:insert_at] + _newsletter_signup_html() + html[insert_at:]
+    return html[:insert_at] + _weekly_archive_intro_html() + _newsletter_signup_html() + html[insert_at:]
