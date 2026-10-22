@@ -629,6 +629,255 @@ def _topic_board(page, attributes):
     )
 
 
+WIKI_SECTION = "wiki"
+LANDING_EXCLUDED_SECTIONS = {ROUNDUP_SECTION, WIKI_SECTION}
+CONCEPT_SIGNAL_LIMIT = 10
+CONCEPT_NEIGHBOUR_LIMIT = 6
+LANDING_CONCEPT_LIMIT = 6
+LANDING_CLUSTER_LIMIT = 8
+GRAPH_JSON_PATH = "/_data/knowledge/index.json"
+CLUSTER_STATE_WORDS = {"growing": "&#9650; growing", "cooling": "&#9660; cooling", "new": "&#9679; new"}
+MAKER_KIND = "maker"
+
+
+def _knowledge_source(page):
+    return getattr(getattr(page.site, "knowledge", None), "_source", None)
+
+
+def _knowledge_index(page):
+    source = _knowledge_source(page)
+    return (source.index() if source else None) or {}
+
+
+def _knowledge_clusters(page):
+    source = _knowledge_source(page)
+    return ((source.clusters() if source else None) or {}).get("clusters") or []
+
+
+def _latest_attribution_text(accepted_list):
+    dated = [entry for entry in accepted_list if isinstance(entry, dict) and entry.get("actor") in ("ai", "human") and entry.get("on")]
+    if not dated:
+        return ""
+    latest = max(dated, key=lambda entry: str(entry["on"]))
+    day = escape(_full_date_label(str(latest["on"])[:10]))
+    if latest["actor"] == "human":
+        return f'Approved by {escape(str(latest.get("name") or "an editor"))} on {day}'
+    return f"Edited by AI on {day}"
+
+
+def _beat_clusters(page, key):
+    return [cluster for cluster in _knowledge_clusters(page) if key in (cluster.get("beats") or [])]
+
+
+def _beat_pairs(page, tag):
+    return _board_pairs(page, lambda summary: _read_item(summary)["tags"][:1] == [tag])
+
+
+def _signal_row_html(summary, entry, show_beat):
+    item = _read_item(summary)
+    topic = _topic_of(item) if show_beat else None
+    beat_html = f'<span class="signal-beat">{escape(topic["label"])}</span>' if topic else ""
+    return (
+        f'<li class="signal-row">{_stamp_html(item["verdict"])}'
+        f'<a class="signal-title" href="{escape(entry.url, quote=True)}">{escape(entry.title)}</a>'
+        f'{beat_html}<span class="signal-date">{escape(_date_label(summary))}</span></li>'
+    )
+
+
+def _signal_list_html(pairs, show_beat):
+    return '<ol class="signal-list">' + "".join(_signal_row_html(summary, entry, show_beat) for summary, entry, _label in pairs) + "</ol>"
+
+
+def _entity_counts(items, site):
+    counts = {}
+    for item in items:
+        for entity in item["entities"]:
+            if entity["kind"] == MAKER_KIND:
+                continue
+            resolved = site.knowledge.entity_for(entity["kind"], entity["name"]) if site is not None else None
+            key = (entity["kind"], entity["name"])
+            record = counts.setdefault(key, {"name": entity["name"], "kind": entity["kind"], "href": resolved["href"] if resolved else None, "count": 0})
+            record["count"] += 1
+    return sorted(counts.values(), key=lambda record: (-record["count"], record["name"].lower()))
+
+
+def _weighted_rows_html(rows):
+    heaviest = max((weight for _name, _href, _kind, weight in rows), default=1)
+    html = ""
+    for name, href, kind, weight in rows:
+        label = f'{escape(name)} <span class="kicker">{escape(kind)}</span>' if kind else escape(name)
+        label_html = f'<a href="{escape(href, quote=True)}">{label}</a>' if href else label
+        percent = round(weight / heaviest * 100)
+        html += (
+            f'<li class="concept-node"><span class="concept-node-name">{label_html}</span>'
+            f'<span class="concept-node-weight">{weight}</span>'
+            f'<span class="concept-weight" aria-hidden="true"><span style="width:{percent}%"></span></span></li>'
+        )
+    return f'<ul class="concept-node-list">{html}</ul>'
+
+
+def _concept_stats(page, attributes):
+    key = attributes["key"]
+    beat = next((row for row in _knowledge_index(page).get("beats") or [] if row.get("key") == key), None)
+    stats = []
+    if beat and beat.get("series8"):
+        series = [max(0, int(value)) for value in beat["series8"]]
+        stats += [("Signals, 8 wks", sum(series)), ("This week", series[-1])]
+    items = [_read_item(summary) for summary, _entry, _label in _beat_pairs(page, attributes["tag"])]
+    stats.append(("Makers", len({_maker_key(item) for item in items if _maker_key(item)})))
+    if _knowledge_clusters(page):
+        stats.append(("Clusters", len(_beat_clusters(page, key))))
+    body = "".join(f"<div><dt>{escape(label)}</dt><dd>{value}</dd></div>" for label, value in stats)
+    return f'<dl class="concept-stats">{body}</dl>'
+
+
+def _concept_provenance(page, attributes):
+    text = _latest_attribution_text([cluster.get("acceptedBy") for cluster in _beat_clusters(page, attributes["key"])])
+    return f'<p class="concept-provenance"><span aria-hidden="true">&#9998;</span> {text}</p>' if text else ""
+
+
+def _concept_actions(page, attributes):
+    form_id = page.settings.wiki.suggest_form
+    suggest = (
+        f'<details class="concept-suggest"><summary class="concept-button">Suggest an edit</summary>{page.form(form_id)}</details>'
+        if form_id else ""
+    )
+    graph = f'<a class="concept-button concept-button-quiet" href="{GRAPH_JSON_PATH}">Graph JSON</a>'
+    return f'<div class="concept-actions">{suggest}{graph}</div>'
+
+
+def _concept_lineage(page, attributes):
+    pairs = _beat_pairs(page, attributes["tag"])
+    if not pairs:
+        return ""
+    summary, entry, _label = pairs[-1]
+    when = _read_item(summary)["released_on"] or _text(summary.published_at)
+    when_html = f" on {escape(_full_date_label(str(when)[:10]))}" if when else ""
+    return (
+        f'<p class="concept-lineage">Followed as a beat. First seen in <a href="{escape(entry.url, quote=True)}">{escape(entry.title)}</a>{when_html}.</p>'
+        '<p class="concept-note">Extracted from signals</p>'
+    )
+
+
+def _concept_neighbourhood(page, attributes):
+    items = [_read_item(summary) for summary, _entry, _label in _beat_pairs(page, attributes["tag"])]
+    maker_counts = {}
+    for item in items:
+        if _maker_key(item):
+            maker_counts[_maker_key(item)] = maker_counts.get(_maker_key(item), 0) + 1
+    ordered = sorted(maker_counts.items(), key=lambda pair: (-pair[1], pair[0].lower()))
+    name = escape(attributes.get("label", "This concept"))
+    columns = ""
+    if ordered:
+        rows = [(maker, None, "", count) for maker, count in ordered[:CONCEPT_NEIGHBOUR_LIMIT]]
+        rest = len(ordered) - len(rows)
+        rest_html = f'<p class="concept-note">{rest} more makers, fewer signals each</p>' if rest > 0 else ""
+        columns += f'<div><div class="concept-column-head">{name} &rarr; made by</div>{_weighted_rows_html(rows)}{rest_html}</div>'
+    mentioned = _entity_counts(items, page.site)[:CONCEPT_NEIGHBOUR_LIMIT]
+    if mentioned:
+        rows = [(record["name"], record["href"], record["kind"], record["count"]) for record in mentioned]
+        columns += f'<div><div class="concept-column-head">{name} &rarr; mentioned in signals</div>{_weighted_rows_html(rows)}</div>'
+    return f'<div class="concept-columns">{columns}</div>' if columns else ""
+
+
+def _concept_signals(page, attributes):
+    pairs = _beat_pairs(page, attributes["tag"])
+    return _signal_list_html(pairs[: int(attributes.get("limit", CONCEPT_SIGNAL_LIMIT))], show_beat=False) if pairs else ""
+
+
+CONCEPT_BLOCKS = {
+    "concept-stats": _concept_stats,
+    "concept-provenance": _concept_provenance,
+    "concept-actions": _concept_actions,
+    "concept-lineage": _concept_lineage,
+    "concept-neighbourhood": _concept_neighbourhood,
+    "concept-signals": _concept_signals,
+}
+
+
+def _landing_tabs_html(page, current):
+    links = "".join(
+        f'<a href="/{escape(section.base, quote=True)}/"{" aria-current=" + chr(34) + "page" + chr(34) if section.name == current else ""}>{escape(section.label)}</a>'
+        for section in page.settings.sections
+        if section.name not in LANDING_EXCLUDED_SECTIONS and section.listing_page
+    )
+    return f'<nav aria-label="Sections" class="section-tabs">{links}</nav>'
+
+
+def _landing_clusters_html(page):
+    clusters = [cluster for cluster in _knowledge_clusters(page) if cluster.get("name")][:LANDING_CLUSTER_LIMIT]
+    if not clusters:
+        return ""
+    rows = "".join(
+        f'<li class="landing-cluster"><span class="landing-cluster-name">{escape(str(cluster["name"]))}</span>'
+        f'<span class="landing-cluster-meta">{int(cluster.get("itemCount") or 0)}'
+        + (f' &middot; {CLUSTER_STATE_WORDS[cluster["state"]]}' if cluster.get("state") in CLUSTER_STATE_WORDS else "")
+        + "</span></li>"
+        for cluster in clusters
+    )
+    edited = _latest_attribution_text([cluster.get("acceptedBy") for cluster in clusters])
+    return (
+        '<section class="landing-rail" aria-labelledby="landing-clusters-h"><h2 id="landing-clusters-h">Clusters across Shipped</h2>'
+        f'<p class="concept-note">{edited.upper() + " &middot; " if edited else ""}CLUSTERS ARE NOT SPLIT BY SECTION YET</p>'
+        f'<ul class="landing-list">{rows}</ul></section>'
+    )
+
+
+def _landing_concepts_html(items, site):
+    counted = [record for record in _entity_counts(items, site) if record["href"]][:LANDING_CONCEPT_LIMIT]
+    if not counted:
+        return ""
+    rows = "".join(
+        f'<li><a class="landing-concept" href="{escape(record["href"], quote=True)}"><span class="landing-concept-name">{escape(record["name"])} '
+        f'<span class="kicker">{escape(record["kind"])}</span></span><span class="landing-cluster-meta">{record["count"]} in section</span></a></li>'
+        for record in counted
+    )
+    return (
+        '<section class="landing-rail" aria-labelledby="landing-concepts-h"><h2 id="landing-concepts-h">Concepts bubbling up</h2>'
+        f'<ul class="landing-list">{rows}</ul></section>'
+    )
+
+
+def _landing_lead_html(label):
+    return (
+        '<article class="landing-lead is-placeholder" aria-labelledby="landing-lead-h"><span class="placeholder-tag">Placeholder</span>'
+        f'<div class="landing-lead-kicker"><span class="cintillo">Lead story</span><span class="kicker">&sect; {escape(label)}</span></div>'
+        '<h2 id="landing-lead-h">The lead story for this section will appear here</h2>'
+        '<p>AI-written stories are not switched on yet. When they are, readers steer which one leads and an editor approves it.</p>'
+        '<p class="concept-note">Drafted by AI &middot; Approved by [editor] &middot; [date]</p></article>'
+    )
+
+
+def main(page):
+    listing = page.listing
+    if page.kind != "listing" or listing is None or not listing.section or listing.page != 1 or listing.section in LANDING_EXCLUDED_SECTIONS:
+        return None
+    section = next((candidate for candidate in page.settings.sections if candidate.name == listing.section), None)
+    if section is None:
+        return None
+    pairs = _board_pairs(page, lambda summary: summary.section == listing.section)
+    shown = pairs[: max(len(listing.featured) + len(listing.entries), 1)]
+    items = [_read_item(summary) for summary, _entry, _label in pairs]
+    intro = f'<div class="landing-intro">{page.fragment}</div>' if page.fragment else f'<p class="landing-description">{escape(section.description)}</p>'
+    older_html = (
+        f'<p class="landing-older"><a href="{escape(listing.url_for_page(2), quote=True)}">Older signals</a></p>' if listing.pages > 1 else ""
+    )
+    signals_html = (
+        '<section class="landing-signals" aria-labelledby="landing-signals-h"><div class="section-heading"><span class="cintillo">New</span>'
+        f'<h2 id="landing-signals-h">Latest signals in {escape(section.label)}</h2><span class="section-heading-note">NEWEST FIRST</span></div>'
+        f'{_signal_list_html(shown, show_beat=True)}{older_html}</section>'
+        if shown else ""
+    )
+    return (
+        '<div class="shipped-page section-landing">'
+        f'{_landing_tabs_html(page, listing.section)}'
+        f'<header class="landing-head"><span class="cintillo">Section</span><h1>{escape(section.label)}</h1>{intro}</header>'
+        f'<div class="landing-layout">{_landing_lead_html(section.label)}'
+        f'<aside class="landing-rails">{_landing_clusters_html(page)}{_landing_concepts_html(items, page.site)}</aside></div>'
+        f'{signals_html}</div>'
+    )
+
+
 def footer(page):
     links = "".join(f'<li><a href="{escape(href, quote=True)}">{escape(label)}</a></li>' for label, href in FOOTER_LINKS)
     return (
@@ -646,6 +895,8 @@ def block(name, attributes, page):
         return _front_block(page, attributes)
     if name == "topic-board":
         return _topic_board(page, attributes)
+    if name in CONCEPT_BLOCKS:
+        return CONCEPT_BLOCKS[name](page, attributes)
     raise ValueError(f"unknown block {name!r}")
 
 
