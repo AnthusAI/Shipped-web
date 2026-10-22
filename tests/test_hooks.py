@@ -184,15 +184,17 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page("open-weights/fixture-full-contract")
         order = [
             'class="signal-meta"', 'class="status-stamp status-stamp-verified status-stamp-lg"', "signal-status-provenance",
-            'id="signal-summary-h"', 'id="desk-evidence-h"', 'id="signal-map-h"', 'id="signal-ratings-h"', "signal-underrated",
-            'id="signal-stories-h"', 'id="signal-nearby-h"', 'id="item-comments-h"',
+            'id="signal-summary-h"', 'id="desk-evidence-h"', 'id="signal-map-h"', 'id="signal-ratings-h"',
+            'id="signal-stories-h"', 'id="item-comments-h"',
         ]
         positions = [page.index(marker) for marker in order]
         self.assertEqual(positions, sorted(positions))
         self.assertIn("built on", page)
         self.assertIn('<i>task</i>fixture task', page)
         self.assertNotIn("this week", page)
-        self.assertEqual(page.count('class="placeholder-tag"'), 3)
+        self.assertEqual(page.count('class="placeholder-tag"'), 1)
+        self.assertNotIn("signal-underrated", page)
+        self.assertNotIn("signal-nearby-h", page)
         head = re.search(r'<div class="signal-dimension-head.*?</div>', page, flags=re.S).group(0)
         self.assertEqual(re.findall(r"<span>(.*?)</span>", head), ["Dimension", "Readers", "Editors", "Your rating"])
         self.assertEqual(page.count("Not yet rated"), 1)
@@ -399,13 +401,14 @@ class HooksProjectionTest(unittest.TestCase):
     def test_front_page_follows_the_design_in_order_with_real_and_placeholder_parts(self):
         page = self._page(".")
         order = ["front-stats", "front-invite", "front-lead-h", "front-map-h", "front-table-h", "front-stories-h",
-                 "front-rising-h", "front-proposals-h", "front-underrated-h", "desk-board-h", "front-weekly-heading"]
+                 "front-rising-h", "front-proposals-h", "desk-board-h", "front-weekly-heading"]
         positions = [page.index(f'id="{name}"') if f'id="{name}"' in page else page.index(name) for name in order]
         self.assertEqual(positions, sorted(positions))
         self.assertIn("<b>4</b> signals", page)
         self.assertIn("1 entities on the map", page)
         self.assertNotIn("weeks of map history", page)
-        self.assertEqual(page.count('class="placeholder-tag"'), 4)
+        self.assertEqual(page.count('class="placeholder-tag"'), 3)
+        self.assertNotIn("front-underrated", page)
         self.assertIn("Draft · not yet approved", page)
         self.assertIn("Approved by <b>[editor]</b>", page)
         self.assertIn("Fixture theme", page.split('id="front-map-h"')[1].split("</aside>")[0])
