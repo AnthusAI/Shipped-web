@@ -63,6 +63,7 @@ export default defineSite({
           wordmarkAlt: "Shipped",
           wordmarkWidth: 268,
           wordmarkHeight: 38,
+          footerWordmarkWidth: 140,
           labelFont: "'JetBrains Mono', 'Courier New', monospace",
         },
         lists: [
