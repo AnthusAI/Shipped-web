@@ -1,0 +1,6 @@
+.signal-underrated-figures{font-family:var(--font-mono);font-size:12px;text-transform:uppercase;color:var(--muted)}
+.signal-nearby-list{margin:0;padding:0;list-style:none}
+.signal-nearby-list li{display:flex;flex-direction:column;gap:3px;padding:10px 0;border-bottom:1px solid var(--rule)}
+.signal-nearby-list a{font-size:16px;font-weight:700;color:var(--ink);text-decoration:none}
+.signal-nearby-list a:hover,.signal-nearby-list a:focus-visible{text-decoration:underline}
+.signal-nearby-why{font-size:13px;color:var(--muted)}

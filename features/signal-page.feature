@@ -25,3 +25,9 @@ Feature: A signal page shows the status, the evidence, the map and the ratings
     When I open the page "/new/"
     Then the page does not contain "board-dimensions"
     And the page contains "board-section"
+
+  Scenario: A signal that is not underrated and has no neighbours shows neither block
+    When I open the page "/open-weights/fixture-full-contract/"
+    Then the page does not contain "signal-underrated"
+    And the page does not contain "Nearby on the map"
+    And the page contains "Appears in these stories"

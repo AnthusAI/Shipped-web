@@ -87,16 +87,11 @@
 </ul>
 </section>
 
-<section class="front-underrated is-placeholder" aria-labelledby="front-underrated-h">
-<span class="placeholder-tag">Placeholder</span>
-<div class="front-side-heading"><h2 id="front-underrated-h">Underrated</h2><span class="front-underrated-mark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 13.5h12"/><path d="M4 11l4-4 2 2 3.5-3.5"/><path d="M10 5.5h3.5V9"/></svg>Underrated</span></div>
-<p class="front-side-note">Works better than it’s talked about: rated high on Useful and Ready, with few mentions.</p>
-<ol class="front-underrated-list">
-<li><a href="/new/">[Signal title]</a><span class="front-underrated-figures">Useful [n] · Ready [n] · [n] mentions</span></li>
-<li><a href="/new/">[Signal title]</a><span class="front-underrated-figures">Useful [n] · Ready [n] · [n] mentions</span></li>
-<li><a href="/new/">[Signal title]</a><span class="front-underrated-figures">Useful [n] · Ready [n] · [n] mentions</span></li>
-</ol>
-</section>
+::endraw
+
+::include{kind="block" name="front" part="underrated" depends="*"}
+
+::raw
 </div>
 
 <div class="front-latest">

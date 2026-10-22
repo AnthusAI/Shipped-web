@@ -1,0 +1,9 @@
+{
+  "asOf": "2026-10-19",
+  "clusters": [
+    {"acceptedBy": {"actor": "ai", "name": null, "on": "2026-10-21"}, "beats": ["decision-models"], "href": null, "itemCount": 2, "name": "Fixture theme", "series8": [0, 1, 0, 2, 3, 1, 4, 2], "state": "growing", "topTerms": ["one", "two", "three", "four", "five", "six", "seven"], "uid": "cl-fixture", "weeksOfData": 8}
+  ],
+  "runId": "fixture-run",
+  "schemaVersion": 1,
+  "unacceptedClusters": "hide"
+}

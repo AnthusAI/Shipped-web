@@ -35,7 +35,7 @@ NEWSLETTER_HEADING = "Get The Weekly by email"
 NEWSLETTER_DEK = "Tick the lists you want: The Weekly, and a short alert when something is added to a section. Nothing is sent until you confirm your address from the email we send you."
 NEWSLETTER_FEED_NOTE = 'Prefer a feed? <a href="/feed.xml">RSS</a> carries the latest items.'
 
-DEPENDS_ON = {"*": [], "item": []}
+DEPENDS_ON = {"*": [], "item": ["*"]}
 
 MINIMUM_SCORE = 1.0
 MAXIMUM_SCORE = 5.0
@@ -84,9 +84,8 @@ AI_STAMP_NOTE = "Stamped by AI, first pass"
 AWAITING_EDITOR_TEXT = "awaiting an editor check"
 EVIDENCE_NOTE_FOR_SOURCE = "Source of this signal"
 SOURCE_EVIDENCE_KIND = "Release"
-UNDERRATED_PLACEHOLDER_TEXT = "Shown here when Useful and Ready are both high and the signal has few mentions. Works better than it\u2019s talked about."
+UNDERRATED_MARK_TEXT = "Works better than it\u2019s talked about."
 STORIES_PLACEHOLDER_TEXT = "Stories that cite this signal will be listed here, with who approved them."
-NEARBY_PLACEHOLDER_TEXT = "Signals that share entities or a cluster with this one will be listed here."
 WARNINGS_ALREADY_LOGGED = set()
 STAMP_NOTE_VERBS = {"available": "Confirmed by", "verified": "Verified by"}
 STAMP_NOTE_UNNAMED_VERBS = {"available": "Confirmed on", "verified": "Verified on"}
@@ -555,19 +554,208 @@ def _ratings_section_html(item, summary):
     )
 
 
-def _underrated_placeholder_html():
-    return (
-        '<div class="signal-underrated is-placeholder"><span class="placeholder-tag">Placeholder</span>'
-        '<span class="underrated-mark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'
-        '<path d="M2 13.5h12"/><path d="M4 11l4-4 2 2 3.5-3.5"/><path d="M10 5.5h3.5V9"/></svg>Underrated</span>'
-        f'<span>{escape(UNDERRATED_PLACEHOLDER_TEXT)}</span></div>'
-    )
-
-
 def _rail_placeholder_html(heading_id, heading, text):
     return (
         f'<section class="signal-rail-block is-placeholder" aria-labelledby="{heading_id}"><span class="placeholder-tag">Placeholder</span>'
         f'<h2 id="{heading_id}">{escape(heading)}</h2><p>{escape(text)}</p></section>'
+    )
+
+
+SIGNAL_STANDING_MEMO = "shipped-signal-standing"
+UNDERRATED_ICON = (
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'
+    '<path d="M2 13.5h12"/><path d="M4 11l4-4 2 2 3.5-3.5"/><path d="M10 5.5h3.5V9"/></svg>'
+)
+NEARBY_SAME_BEAT_PREFIX = "Same beat: "
+NEARBY_SHARES_PREFIX = "Shares "
+
+
+def _underrated_rule():
+    return _scoring()["underrated"]
+
+
+def _nearby_rule():
+    return _scoring()["nearby"]
+
+
+def _signal_url(summary):
+    path = Path(summary.output_path)
+    stem = path.parent if path.stem == "index" else path.with_suffix("")
+    return f"/{stem.as_posix().strip('/')}/"
+
+
+def _signal_title(summary):
+    front = summary.front_matter or {}
+    return _text(front.get("title")) or _text(summary.page_title) or _text(summary.title) or summary.slug.replace("-", " ").title()
+
+
+def _signal_record(summary, site):
+    item = _read_item(summary)
+    entities = {}
+    for entity in item["entities"]:
+        resolved = site.knowledge.entity_for(entity["kind"], entity["name"])
+        if resolved:
+            entities.setdefault(resolved["key"], (entity["kind"], entity["name"]))
+    topic = _topic_of(item)
+    return {
+        "item_id": summary.item_id,
+        "title": _signal_title(summary),
+        "url": _signal_url(summary),
+        "useful": item["scores"].get("useful"),
+        "ready": item["scores"].get("ready"),
+        "agent_scored": _is_agent_scored(item),
+        "scoring_label": item["scoring"]["label"],
+        "entities": entities,
+        "beat_key": item["tags"][0] if topic else None,
+        "beat_label": topic["label"] if topic else None,
+        "sort_date": _sort_date(summary),
+    }
+
+
+def _signal_records(site):
+    return [
+        _signal_record(summary, site)
+        for summary in site.items
+        if summary.type not in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE) and summary.section and summary.section not in LANDING_EXCLUDED_SECTIONS
+    ]
+
+
+def _mention_counts(records):
+    holders = {}
+    for record in records:
+        for key in record["entities"]:
+            holders.setdefault(key, set()).add(record["item_id"])
+    counts = {}
+    for record in records:
+        sharing = set()
+        for key in record["entities"]:
+            sharing |= holders[key]
+        sharing.discard(record["item_id"])
+        counts[record["item_id"]] = len(sharing)
+    return counts
+
+
+def _quiet_mention_limit(qualifying_counts, rule):
+    if not qualifying_counts:
+        return None
+    ordered = sorted(qualifying_counts)
+    position = max(1, math.ceil(round(len(ordered) * rule["quietestShare"], 6)))
+    return min(ordered[position - 1], rule["mentionCeiling"])
+
+
+def _underrated_signals(records, counts, rule):
+    qualifying = [
+        record for record in records
+        if (record["useful"] or 0) >= rule["minimumUseful"] and (record["ready"] or 0) >= rule["minimumReady"]
+    ]
+    limit = _quiet_mention_limit([counts[record["item_id"]] for record in qualifying], rule)
+    quiet = [record for record in qualifying if counts[record["item_id"]] <= limit] if limit is not None else []
+    return sorted(quiet, key=lambda record: (counts[record["item_id"]], -(record["useful"] + record["ready"]), record["title"].lower()))
+
+
+def _signal_standing(site):
+    def build():
+        records = _signal_records(site)
+        counts = _mention_counts(records)
+        return {
+            "records": {record["item_id"]: record for record in records},
+            "ordered": records,
+            "counts": counts,
+            "underrated": _underrated_signals(records, counts, _underrated_rule()),
+        }
+
+    return site.memo(SIGNAL_STANDING_MEMO, build)
+
+
+def _mentions_text(count):
+    return f"{count} mention" if count == 1 else f"{count} mentions"
+
+
+def _underrated_figures_text(record, mentions):
+    return f"Useful {record['useful']:.1f} · Ready {record['ready']:.1f} · {_mentions_text(mentions)}"
+
+
+def _record_scores_label(record):
+    if record["agent_scored"]:
+        return record["scoring_label"] or DEFAULT_AGENT_SCORES_LABEL
+    return DEFAULT_SCORES_LABEL
+
+
+def _underrated_mark_html(record, standing):
+    if record is None or record["item_id"] not in {candidate["item_id"] for candidate in standing["underrated"]}:
+        return ""
+    figures = f'{_record_scores_label(record)} · {_underrated_figures_text(record, standing["counts"][record["item_id"]])}'
+    return (
+        f'<div class="signal-underrated"><span class="underrated-mark">{UNDERRATED_ICON}Underrated</span>'
+        f'<span>{escape(UNDERRATED_MARK_TEXT)}</span><span class="signal-underrated-figures">{escape(figures)}</span></div>'
+    )
+
+
+def _nearby_why_text(shared_labels, same_beat_label):
+    if shared_labels:
+        named = [f"{kind} {name}" for kind, name in shared_labels[: _nearby_rule()["namedEntityLimit"]]]
+        more = len(shared_labels) - len(named)
+        if more > 0:
+            named.append(f"{more} more")
+        joined = named[0] if len(named) == 1 else ", ".join(named[:-1]) + " and " + named[-1]
+        return NEARBY_SHARES_PREFIX + joined
+    return NEARBY_SAME_BEAT_PREFIX + same_beat_label
+
+
+def _nearby_signals(record, records, limit):
+    candidates = []
+    for other in records:
+        if other["item_id"] == record["item_id"]:
+            continue
+        shared = [label for key, label in record["entities"].items() if key in other["entities"]]
+        same_beat = bool(record["beat_key"]) and record["beat_key"] == other["beat_key"]
+        if shared or same_beat:
+            candidates.append({"record": other, "shared": shared, "same_beat": same_beat})
+    candidates.sort(key=lambda candidate: candidate["record"]["title"].lower())
+    candidates.sort(key=lambda candidate: candidate["record"]["sort_date"], reverse=True)
+    candidates.sort(key=lambda candidate: (len(candidate["shared"]), candidate["same_beat"]), reverse=True)
+    return [
+        {"record": candidate["record"], "why": _nearby_why_text(candidate["shared"], record["beat_label"])}
+        for candidate in candidates[:limit]
+    ]
+
+
+def _nearby_html(record, standing):
+    if record is None:
+        return ""
+    nearby = _nearby_signals(record, standing["ordered"], _nearby_rule()["limit"])
+    if not nearby:
+        return ""
+    rows = "".join(
+        f'<li><a href="{escape(entry["record"]["url"], quote=True)}">{escape(entry["record"]["title"])}</a>'
+        f'<span class="signal-nearby-why">{escape(entry["why"])}</span></li>'
+        for entry in nearby
+    )
+    return (
+        '<section class="signal-rail-block signal-nearby" aria-labelledby="signal-nearby-h">'
+        f'<h2 id="signal-nearby-h">Nearby on the map</h2><ol class="signal-nearby-list">{rows}</ol></section>'
+    )
+
+
+def _front_underrated_html(page):
+    if page.site is None:
+        return ""
+    standing = _signal_standing(page.site)
+    shown = standing["underrated"][: _underrated_rule()["homeLimit"]]
+    if not shown:
+        return ""
+    rows = "".join(
+        f'<li><a href="{escape(record["url"], quote=True)}">{escape(record["title"])}</a>'
+        f'<span class="front-underrated-figures">{escape(_underrated_figures_text(record, standing["counts"][record["item_id"]]))}</span></li>'
+        for record in shown
+    )
+    labels = " / ".join(sorted({_record_scores_label(record) for record in shown}))
+    return (
+        '<section class="front-underrated" aria-labelledby="front-underrated-h">'
+        f'<div class="front-side-heading"><h2 id="front-underrated-h">Underrated</h2><span class="front-underrated-mark">{UNDERRATED_ICON}Underrated</span></div>'
+        f'<p class="front-side-note">{escape(UNDERRATED_MARK_TEXT)} Rated high on Useful and Ready, with few mentions. '
+        f'<span class="kicker">{escape(labels)}</span></p>'
+        f'<ol class="front-underrated-list">{rows}</ol></section>'
     )
 
 
@@ -585,16 +773,18 @@ def item_decorator(html, summary, site=None):
     if summary.type in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE):
         return html
     item = _read_item(summary)
+    standing = _signal_standing(site) if site is not None else None
+    record = standing["records"].get(summary.item_id) if standing else None
     main = (
         _article_with_status(html, item, summary)
         + _evidence_section_html(item)
         + _map_section_html(item, site)
         + _ratings_section_html(item, summary)
-        + _underrated_placeholder_html()
+        + _underrated_mark_html(record, standing)
     )
     rail = (
         _rail_placeholder_html("signal-stories-h", "Appears in these stories", STORIES_PLACEHOLDER_TEXT)
-        + _rail_placeholder_html("signal-nearby-h", "Nearby on the map", NEARBY_PLACEHOLDER_TEXT)
+        + _nearby_html(record, standing)
     )
     return (
         f'{_signal_meta_html(item)}<div class="signal-layout"><div class="signal-main">{main}</div>'
@@ -1724,6 +1914,8 @@ def _front_block(page, attributes):
         return _front_signal_count_html(page)
     if part == "newsletter":
         return _front_newsletter_html()
+    if part == "underrated":
+        return _front_underrated_html(page)
     raise ValueError(f"unknown front part {part!r}")
 
 

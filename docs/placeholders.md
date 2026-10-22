@@ -12,9 +12,16 @@ When a feature goes live, remove the class (and the tag) from that block in the 
 
 Item front matter may carry `scoring: {by: agent, label: "Editor's first pass (AI-assisted)", at: 2026-10-21}`. With `by: agent` the item page labels the scores with `label` and says an AI research pass produced them; the editors column of the ratings table carries an "AI first pass" tag; the topic page profile says "Editor scores (AI-assisted first pass)". With `by: human` or no `scoring`, the label is "Editor score". Optional `makerHandle` is shown as stored, in mono, beside `maker` (as "maker (handle)") or alone.
 
-## Signal page placeholders
+## Signal page
 
-The Underrated mark, "Appears in these stories" and "Nearby on the map" on every signal page are placeholders with one tag each. Items still carrying the old score keys (real, notable, novel) show no scores for them, show the new dimensions as "Not yet rated", and log one warning per item.
+"Appears in these stories" on every signal page is a placeholder with one tag; stories do not exist yet. Items still carrying the old score keys (real, notable, novel) show no scores for them, show the new dimensions as "Not yet rated", and log one warning per item.
+
+The Underrated mark, the Underrated panel on the home page and "Nearby on the map" are real, built at projection time from the items and the knowledge snapshot (`site.knowledge`):
+
+- Mentions of a signal: how many other accepted signals share at least one of its accepted entities. An entity counts only when the snapshot has it; unresolved names are ignored.
+- Underrated: editor Useful and Ready both at least `underrated.minimumUseful` and `underrated.minimumReady` in `web/scoring.json` (4 and 4), and mentions within the quietest `underrated.quietestShare` of the signals that pass those two (about the bottom third, ties kept), never above `underrated.mentionCeiling`. The mark and the figures are labelled with the item's score label ("Editor's first pass" for agent-scored items). A signal that fails the rule shows nothing, and the home panel (up to `underrated.homeLimit` signals) is left out when none qualify.
+- Nearby: up to `nearby.limit` other signals, ranked by shared accepted entities, then the same beat (topic), then newest. The reason reads "Shares maker X and task Y", or "Same beat: Decision models" when only the beat is shared. Cluster membership is not in the snapshot, so beats stand in for clusters. The block is left out when there are none.
+- The sample item page (`/sample/tern-3/`) still shows a dimmed Underrated design reference.
 
 ## Reader steering is live
 

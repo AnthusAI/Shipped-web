@@ -31,6 +31,17 @@
     "verified": "Available, and an editor checked the evidence.",
     "announced": "Claimed, not yet usable or not yet confirmed."
   },
+  "underrated": {
+    "minimumUseful": 4,
+    "minimumReady": 4,
+    "quietestShare": 0.34,
+    "mentionCeiling": 5,
+    "homeLimit": 5
+  },
+  "nearby": {
+    "limit": 5,
+    "namedEntityLimit": 3
+  },
   "topics": {
     "decision-models": {
       "label": "Decision models",
