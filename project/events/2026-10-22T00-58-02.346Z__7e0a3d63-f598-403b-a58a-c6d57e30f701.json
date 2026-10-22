@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "7e0a3d63-f598-403b-a58a-c6d57e30f701",
+  "issue_id": "ship-3e4e38a4-6255-4c0d-afa7-b799eafcf5a4",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:02.346Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Agent-readable Shipped (Markus twins, llms, negotiation)",
+    "description": "Every page serves its Markus source to agents: .md twins, Accept: text/markdown, llms.txt and llms-full.txt, page actions with Open in ChatGPT/Claude/Perplexity. The core work is in Papyrus PPY-b2e95d (Markus twins, not stripped Markdown) and PR #502 (bare /x.md, authored pages in llms).",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

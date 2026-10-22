@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "dd2e0060-be96-4894-9e7e-6cffdfe3d631",
+  "issue_id": "ship-34070bdc-2bbd-48df-b579-c70954038c97",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:05.409Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Score provenance: label AI-assisted first-pass scores",
+    "description": "Scores were set by the research agent. Label them 'Editor's first pass (AI-assisted)', store who scored each item, and allow a human re-score to replace it.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-579bbb15-33e2-456f-88de-4f2968aab20c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

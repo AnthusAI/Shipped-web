@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "04f0bc19-8d98-4816-9102-4cebd02abc25",
+  "issue_id": "ship-e4b90def-33fd-4a6a-8e8c-7c292da341da",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:10.592Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "cms.siteOrigin + prospectusAccountsApiStageArn via app-shell change set",
+    "description": "Papyrus cms.siteOrigin (generic, for edge-fronted sites). Set siteOrigin and prospectusAccountsApiStageArn in infra/site.json, then deploy the app shell with a reviewed change set. Verify that sign-in returns 303 with redirect_uri on https://shipped.anth.us.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

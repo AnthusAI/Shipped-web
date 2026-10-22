@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "20a467f7-2cc5-451f-adae-132b2c57bc6d",
+  "issue_id": "ship-579bbb15-33e2-456f-88de-4f2968aab20c",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:01.915Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Real content: seeding and editorial quality",
+    "description": "Real items reach the board by manual research first, then through standard Papyrus monitoring. Order: decision models (SEO on 'decision models'), open TTS from the last year, later open LLMs. Every item has a primary source, a release date, evidence check states and score rationales. Nothing is marked Verified unless checked.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

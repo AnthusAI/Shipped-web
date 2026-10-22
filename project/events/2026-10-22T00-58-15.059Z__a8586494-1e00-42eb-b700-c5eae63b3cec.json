@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "a8586494-1e00-42eb-b700-c5eae63b3cec",
+  "issue_id": "ship-0efe843a-99d6-4d6f-bdc5-2bd363e558f3",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:15.059Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Live numbers via snapshots (debounced after writes, plus 4× daily)",
+    "description": "PPY-64cb48. Snapshot JSON and client islands; schedule every 6 hours (Ryan); no AppSync realtime; no WAF.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

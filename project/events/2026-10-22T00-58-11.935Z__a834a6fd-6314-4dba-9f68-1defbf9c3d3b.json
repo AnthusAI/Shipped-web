@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "a834a6fd-6314-4dba-9f68-1defbf9c3d3b",
+  "issue_id": "ship-63b07de7-69d3-4ed5-9c05-e7cec5426ad8",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:11.935Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Google client redirect URIs for papyrus-shipped-cms",
+    "description": "Ryan adds origin https://papyrus-shipped-cms.auth.us-east-1.amazoncognito.com and redirect .../oauth2/idpresponse to Google client 916164220927-8d3m2nvo...",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}
