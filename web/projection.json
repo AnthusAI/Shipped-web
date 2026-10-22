@@ -189,6 +189,10 @@
     "columns": []
   },
   "hooks": "hooks.py",
+  "agents": {
+    "llmsFullMaxItems": 1000,
+    "llmsFullMaxBytes": 2000000
+  },
   "seo": {
     "jsonLdTypes": {
       "wiki_page": "WebPage"
