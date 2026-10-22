@@ -103,6 +103,7 @@
       "assets/shipped-components.css",
       "assets/shipped-forms-roundup.css",
       "assets/shipped-story.css",
+      "assets/shipped-proposals.css",
       "assets/shipped-item-topic.css",
       "assets/shipped-desk.css",
       "assets/shipped-newsletter.css",
@@ -149,6 +150,13 @@
       "title": "The map",
       "description": "How the field is taking shape: every model we track as a periodic table, how concepts connect, and how clusters change week to week.",
       "source": "pages/map.md"
+    },
+    {
+      "id": "proposals",
+      "path": "proposals",
+      "title": "Proposals",
+      "description": "AI proposes. You steer. Editors decide. Draft stories, new concepts and changes to the map, open to every signed-in reader.",
+      "source": "pages/proposals.md"
     },
     {
       "id": "submit",

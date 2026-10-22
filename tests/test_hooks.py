@@ -516,6 +516,20 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("In the wild, and mapped as it moves.", page)
         self.assertIn('href="/sample/roundup/"', page)
 
+    def test_proposals_page_explains_steering_and_keeps_the_queue_as_a_placeholder(self):
+        page = self._page("proposals")
+        for text in ("AI proposes. You steer. Editors decide.", "Draft · not yet approved", "How steering works", "Karma is shown but never gates voting", "both results stay visible, with a reason", "Sign in with Google", "Two tiers", "Example only"):
+            self.assertIn(text, page)
+        for text in ("Stories", "Concepts", "Map changes", "Top", "New", "Controversial", "Overridden by editor", "Editor review", "In steering"):
+            self.assertIn(text, page)
+        self.assertEqual(self._island_props(page, "ReaderSignIn")[-1], {})
+        queue = page.split('class="proposals-queue is-placeholder"')[1].split("</section>")[0]
+        self.assertEqual(queue.count("placeholder-tag"), 1)
+        self.assertEqual(queue.count('class="proposals-row"'), 4)
+        self.assertNotRegex(queue, r"▲ \d")
+        self.assertNotIn("<button type=\"button\" aria-pressed", queue)
+        self.assertNotRegex((STATIC_DIRECTORY / "pages" / "proposals.md").read_text(encoding="utf-8").lower(), r"\bdesk\b")
+
     def test_sample_story_is_a_placeholder_with_citations_lineage_and_a_draft_box(self):
         page = self._page("sample/story")
         self.assertIn("Decision models are starting to have family trees", page)
