@@ -473,23 +473,43 @@
       .catch(function () { return []; });
   }
 
+  function loadOwnProposalVotes(scope, entries, voteState) {
+    if (!voteState.enabled) return Promise.resolve();
+    var subjectKeys = entries.map(function (entry) { return "proposal:" + entry.id; });
+    var settings = readSettings(scope);
+    var url = settings.api + "/me?subjects=" + subjectKeys.map(encodeURIComponent).join(",");
+    return scope.fetch(url, { credentials: "same-origin", headers: { accept: "application/json" } }).then(function (response) {
+      if (!response.ok) return null;
+      return response.json().catch(function () { return null; });
+    }).then(function (body) {
+      var subjectVotes = (body && body.subjectVotes) || {};
+      entries.forEach(function (entry) {
+        var value = subjectVotes["proposal:" + entry.id];
+        if (value === 1 || value === -1) voteState.mine[entry.id] = value;
+      });
+    }).catch(function () {});
+  }
+
   function start(scope) {
     var mounts = scope.document.querySelectorAll("[data-proposals-live]");
     if (!mounts.length || typeof scope.fetch !== "function") return Promise.resolve();
     return fetchIndex(scope).then(function (entries) {
       if (!entries.length) return;
       var voteState = { enabled: votingEnabled(scope), mine: {}, baseline: {}, busy: false };
-      var now = Date.now();
-      Array.prototype.forEach.call(mounts, function (section) {
-        var kind = section.getAttribute("data-proposals-live");
-        if (kind === "queue") mountQueue(section, entries, scope, voteState, now);
-        else if (kind === "home") mountHome(section, entries, scope, voteState);
-        else if (kind === "concept") mountConcept(section, entries, scope, voteState);
+      return loadOwnProposalVotes(scope, entries, voteState).then(function () {
+        var now = Date.now();
+        Array.prototype.forEach.call(mounts, function (section) {
+          var kind = section.getAttribute("data-proposals-live");
+          if (kind === "queue") mountQueue(section, entries, scope, voteState, now);
+          else if (kind === "home") mountHome(section, entries, scope, voteState);
+          else if (kind === "concept") mountConcept(section, entries, scope, voteState);
+        });
       });
     });
   }
 
   return {
+    loadOwnProposalVotes: loadOwnProposalVotes,
     normaliseEntries: normaliseEntries,
     sortEntries: sortEntries,
     entriesInGroup: entriesInGroup,

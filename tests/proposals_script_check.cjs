@@ -56,7 +56,27 @@ const missingScope = {
   fetch: () => Promise.resolve({ ok: false, status: 404, json: () => Promise.resolve({}) }),
 };
 const emptyScope = Object.assign({}, missingScope, { fetch: () => Promise.resolve({ ok: true, json: () => Promise.resolve([]) }) });
-Promise.all([script.start(missingScope), script.start(emptyScope)]).then(() => {
+const requestedUrls = [];
+const signedInScope = {
+  papyrusReader: { api: "/api/reader", proposalVoting: true },
+  fetch: (url) => { requestedUrls.push(url); return Promise.resolve({ ok: true, json: () => Promise.resolve({ subjectVotes: { "proposal:fixture-story-one": 1, "proposal:fixture-concept-one": -1, "proposal:fixture-change-one": 7 } }) }); },
+};
+const signedInVoteState = { enabled: true, mine: {}, baseline: {}, busy: false };
+const disabledVoteState = { enabled: false, mine: {}, baseline: {}, busy: false };
+const signedOutVoteState = { enabled: true, mine: {}, baseline: {}, busy: false };
+const signedOutScope = Object.assign({}, signedInScope, { fetch: () => Promise.resolve({ ok: false, status: 401, json: () => Promise.resolve({}) }) });
+Promise.all([
+  script.start(missingScope),
+  script.start(emptyScope),
+  script.loadOwnProposalVotes(signedInScope, entries, signedInVoteState),
+  script.loadOwnProposalVotes(signedInScope, entries, disabledVoteState),
+  script.loadOwnProposalVotes(signedOutScope, entries, signedOutVoteState),
+]).then(() => {
   assert.strictEqual(untouchedMount.innerHTML, "PLACEHOLDER");
+  assert.deepStrictEqual(plain(signedInVoteState.mine), { "fixture-story-one": 1, "fixture-concept-one": -1 });
+  assert.strictEqual(requestedUrls.length, 1);
+  assert.ok(requestedUrls[0].startsWith("/api/reader/me?subjects=proposal%3Afixture-"));
+  assert.deepStrictEqual(plain(disabledVoteState.mine), {});
+  assert.deepStrictEqual(plain(signedOutVoteState.mine), {});
   console.log("proposals script checks passed");
 });
