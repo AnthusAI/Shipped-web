@@ -24,6 +24,13 @@
         "description": "Decision models used in real deployments.",
         "listEmpty": true
       },
+      "stories": {
+        "base": "stories",
+        "label": "Stories",
+        "description": "AI-drafted, editor-approved stories about what moved on the map.",
+        "feed": true,
+        "listEmpty": true
+      },
       "roundup": {
         "base": "roundup",
         "label": "The Weekly",
@@ -120,7 +127,8 @@
       "assets/shipped-signal.css",
       "assets/shipped-map.css",
       "assets/shipped-logotype.css",
-      "assets/shipped-underrated.css"
+      "assets/shipped-underrated.css",
+      "assets/shipped-stories.css"
     ]
   },
   "fonts": {

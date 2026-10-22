@@ -1,0 +1,7 @@
+.story-vote-button:disabled{cursor:not-allowed}
+.story-vote-button:disabled:hover{background:transparent;color:var(--ink);border-color:var(--ink)}
+.story-react.is-placeholder{position:relative;padding-top:30px}
+.story-body a:not(.story-cite){color:var(--brand-text)}
+.story-sources a{color:inherit}
+.landing-lead h2 a{color:inherit;text-decoration:none}
+.landing-lead h2 a:hover{color:var(--brand-text)}

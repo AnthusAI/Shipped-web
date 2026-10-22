@@ -20,20 +20,11 @@
 </div>
 
 <div class="front-row front-row-lead">
-<article class="front-lead is-placeholder" aria-labelledby="front-lead-h">
-<span class="placeholder-tag">Placeholder</span>
-<div class="front-lead-figure" role="img" aria-label="Lead image: three lines of descent between decision models">
-<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>
-<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>
-<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>
-<p class="front-lead-caption">Three “built on” relations from the map · Figure: Shipped map, Edited by AI</p>
-</div>
-<div class="front-lead-labels"><span class="cintillo">Lead story</span><span class="kicker">§ Decisions in the wild</span></div>
-<h1 id="front-lead-h"><a href="/topics/decision-models/">Decision models are starting to have family trees</a></h1>
-<p class="front-lead-standfirst">Three decision models released since [date] say whose weights they started from. The map now draws those lines, and a new concept is waiting for your vote.</p>
-<p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span><b>[n]</b> readers steered it</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p>
-<p class="front-chips"><span class="entity-chip"><i>topic</i>Decision models</span><span class="entity-chip"><i>task</i>[task]</span><span class="entity-chip"><i>model</i>[model]</span><span class="entity-chip"><i>maker</i>[maker]</span></p>
-</article>
+::endraw
+
+::include{kind="block" name="stories" part="lead"}
+
+::raw
 
 <aside class="front-side" aria-label="This week on the map">
 <section class="front-map" aria-labelledby="front-map-h">
@@ -58,14 +49,11 @@
 </div>
 
 <div class="front-row">
-<section class="front-stories is-placeholder" aria-labelledby="front-stories-h">
-<span class="placeholder-tag">Placeholder</span>
-<div class="front-section-heading"><span class="cintillo">Stories</span><h2 id="front-stories-h">Also on the map this week</h2></div>
-<div class="front-story-grid">
-<article class="front-story"><span class="kicker">§ [Section]</span><h3><a href="/new/">[Story headline]</a></h3><p>[One-sentence standfirst, written by AI.]</p><p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p><p class="front-chips"><span class="entity-chip"><i>cluster</i>[cluster]</span><span class="entity-chip"><i>model</i>[model]</span></p></article>
-<article class="front-story"><span class="kicker">§ [Section]</span><h3><a href="/new/">[Story headline]</a></h3><p>[One-sentence standfirst, written by AI.]</p><p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p><p class="front-chips"><span class="entity-chip"><i>cluster</i>[cluster]</span><span class="entity-chip"><i>model</i>[model]</span></p></article>
-</div>
-</section>
+::endraw
+
+::include{kind="block" name="stories" part="also"}
+
+::raw
 
 <section class="rail front-rising" aria-labelledby="front-rising-h">
 <div class="rail-heading"><h2 id="front-rising-h" class="rail-h">Rising concepts</h2><span class="kicker">8 weeks</span></div>

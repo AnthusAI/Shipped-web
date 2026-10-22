@@ -772,6 +772,8 @@ def _article_with_status(html, item, summary):
 def item_decorator(html, summary, site=None):
     if summary.type in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE):
         return html
+    if _is_story(summary):
+        return _story_page_html(html, summary, site)
     item = _read_item(summary)
     standing = _signal_standing(site) if site is not None else None
     record = standing["records"].get(summary.item_id) if standing else None
@@ -826,7 +828,7 @@ def _board_pairs(page, keep):
     pairs = [
         (summary, entries_by_id[summary.item_id], section_labels[summary.section])
         for summary in page.summaries
-        if summary.section in section_labels and summary.section != ROUNDUP_SECTION and summary.type != WIKI_ITEM_TYPE and summary.item_id in entries_by_id and keep(summary)
+        if summary.section in section_labels and summary.section != ROUNDUP_SECTION and summary.type != WIKI_ITEM_TYPE and not _is_story(summary) and summary.item_id in entries_by_id and keep(summary)
     ]
     pairs.sort(key=lambda triple: (_sort_date(triple[0]), triple[0].slug), reverse=True)
     return pairs
@@ -943,7 +945,7 @@ def _topic_board(page, attributes):
 
 
 WIKI_SECTION = "wiki"
-LANDING_EXCLUDED_SECTIONS = {ROUNDUP_SECTION, WIKI_SECTION}
+LANDING_EXCLUDED_SECTIONS = {ROUNDUP_SECTION, WIKI_SECTION, "stories"}
 CONCEPT_SIGNAL_LIMIT = 10
 CONCEPT_NEIGHBOUR_LIMIT = 6
 LANDING_CONCEPT_LIMIT = 6
@@ -1185,7 +1187,7 @@ def main(page):
         '<div class="shipped-page section-landing">'
         f'{_landing_tabs_html(page, listing.section)}'
         f'<header class="landing-head"><span class="cintillo">Section</span><h1>{escape(section.label)}</h1>{intro}</header>'
-        f'<div class="landing-layout">{_landing_lead_html(section.label)}'
+        f'<div class="landing-layout">{_landing_lead_for_section(page, listing.section, section.label)}'
         f'<aside class="landing-rails">{_landing_clusters_html(page)}{_landing_concepts_html(items, page.site)}</aside></div>'
         f'{signals_html}</div>'
     )
@@ -1549,7 +1551,7 @@ def _map_table_models(page, group_keys):
     models = [
         model
         for summary in page.summaries
-        if summary.type not in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE) and summary.section != ROUNDUP_SECTION and summary.item_id in entries_by_id
+        if summary.type not in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE) and summary.section != ROUNDUP_SECTION and not _is_story(summary) and summary.item_id in entries_by_id
         for model in [_map_read_model(summary, entries_by_id[summary.item_id], group_keys)]
         if model
     ]
@@ -1849,6 +1851,381 @@ def _map_block(name, attributes, page):
     return _map_river(page, attributes)
 
 
+STORIES_SECTION = "stories"
+STORY_KIND = "story"
+STORY_APPROVED_STATUS = "approved"
+STORY_AGENT_AUTHOR = "agent"
+STORY_HOME_ALSO_LIMIT = 2
+STORY_HOME_LEAD_PAIR_LIMIT = 3
+STORY_CITATION_MARKER = re.compile(r"\[(\d+)\]")
+STORY_HTML_TAG = re.compile(r"(<[^>]*>)")
+STORY_PROJECTION_PATH = Path(__file__).with_name("projection.json")
+STORY_ARROW_SVG = (
+    '<svg viewBox="0 0 120 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">'
+    '<path d="M0 7h110"/><path d="M104 1l9 6-9 6"/></svg>'
+)
+STORY_VOTE_UP_SVG = (
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M8 3l5.5 9h-11z"/></svg>'
+)
+STORY_VOTE_DOWN_SVG = (
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">'
+    '<path d="M8 13l5.5-9h-11z"/></svg>'
+)
+STORY_PROPOSAL_TAG_SVG = (
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'
+    '<path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>'
+)
+STORY_VOTES_LATER_NOTE = "Story votes open later."
+HOME_LEAD_PLACEHOLDER_HTML = (
+    '<article class="front-lead is-placeholder" aria-labelledby="front-lead-h">\n'
+    '<span class="placeholder-tag">Placeholder</span>\n'
+    '<div class="front-lead-figure" role="img" aria-label="Lead image: three lines of descent between decision models">\n'
+    '<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>\n'
+    '<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>\n'
+    '<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>\n'
+    '<p class="front-lead-caption">Three “built on” relations from the map · Figure: Shipped map, Edited by AI</p>\n'
+    '</div>\n'
+    '<div class="front-lead-labels"><span class="cintillo">Lead story</span><span class="kicker">§ Decisions in the wild</span></div>\n'
+    '<h1 id="front-lead-h"><a href="/topics/decision-models/">Decision models are starting to have family trees</a></h1>\n'
+    '<p class="front-lead-standfirst">Three decision models released since [date] say whose weights they started from. The map now draws those lines, and a new concept is waiting for your vote.</p>\n'
+    '<p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span><b>[n]</b> readers steered it</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p>\n'
+    '<p class="front-chips"><span class="entity-chip"><i>topic</i>Decision models</span><span class="entity-chip"><i>task</i>[task]</span><span class="entity-chip"><i>model</i>[model]</span><span class="entity-chip"><i>maker</i>[maker]</span></p>\n'
+    '</article>'
+)
+HOME_ALSO_PLACEHOLDER_HTML = (
+    '<section class="front-stories is-placeholder" aria-labelledby="front-stories-h">\n'
+    '<span class="placeholder-tag">Placeholder</span>\n'
+    '<div class="front-section-heading"><span class="cintillo">Stories</span><h2 id="front-stories-h">Also on the map this week</h2></div>\n'
+    '<div class="front-story-grid">\n'
+    '<article class="front-story"><span class="kicker">§ [Section]</span><h3><a href="/new/">[Story headline]</a></h3><p>[One-sentence standfirst, written by AI.]</p><p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p><p class="front-chips"><span class="entity-chip"><i>cluster</i>[cluster]</span><span class="entity-chip"><i>model</i>[model]</span></p></article>\n'
+    '<article class="front-story"><span class="kicker">§ [Section]</span><h3><a href="/new/">[Story headline]</a></h3><p>[One-sentence standfirst, written by AI.]</p><p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p><p class="front-chips"><span class="entity-chip"><i>cluster</i>[cluster]</span><span class="entity-chip"><i>model</i>[model]</span></p></article>\n'
+    '</div>\n'
+    '</section>'
+)
+
+
+@lru_cache(maxsize=1)
+def _story_section_labels():
+    sections = json.loads(STORY_PROJECTION_PATH.read_text(encoding="utf-8")).get("urls", {}).get("sections", {})
+    return {name: entry.get("label", name) for name, entry in sections.items()}
+
+
+def _story_front(summary):
+    return summary.front_matter or {}
+
+
+def _is_story(summary):
+    return _story_front(summary).get("kind") == STORY_KIND
+
+
+def _story_mapping(front, key):
+    value = front.get(key)
+    return value if isinstance(value, dict) else {}
+
+
+def _story_is_approved(summary):
+    return _story_mapping(_story_front(summary), "approval").get("status") == STORY_APPROVED_STATUS
+
+
+def item_filter(summary):
+    return not _is_story(summary) or _story_is_approved(summary)
+
+
+def _read_story_concepts(front):
+    raw = front.get("concepts")
+    return [
+        {"kind": _text(concept.get("kind")), "name": _text(concept.get("name"))}
+        for concept in (raw if isinstance(raw, list) else [])
+        if isinstance(concept, dict) and _text(concept.get("kind")) and _text(concept.get("name"))
+    ]
+
+
+def _read_story_cites(front):
+    raw = front.get("cites")
+    cites = []
+    for cite in raw if isinstance(raw, list) else []:
+        if not isinstance(cite, dict):
+            continue
+        number = cite.get("n")
+        if isinstance(number, bool) or not isinstance(number, int) or not _text(cite.get("title")):
+            continue
+        url = _text(cite.get("url"))
+        if url and (urlparse(url).scheme not in SAFE_URL_SCHEMES or not urlparse(url).netloc):
+            url = None
+        cites.append({"n": number, "title": _text(cite.get("title")), "url": url, "date": _date_text(cite.get("date"))})
+    return cites
+
+
+def _read_story_pairs(front):
+    raw = _story_mapping(front, "figure").get("pairs")
+    return [
+        {"child": _text(pair.get("child")), "parent": _text(pair.get("parent"))}
+        for pair in (raw if isinstance(raw, list) else [])
+        if isinstance(pair, dict) and _text(pair.get("child")) and _text(pair.get("parent"))
+    ]
+
+
+def _read_story_proposal(front):
+    proposal = front.get("proposes")
+    if not isinstance(proposal, dict) or not _text(proposal.get("name")):
+        return None
+    return {"kind": _text(proposal.get("kind")) or "concept", "name": _text(proposal.get("name")), "why": _text(proposal.get("why"))}
+
+
+def _read_story(summary, entry=None):
+    front = _story_front(summary)
+    approval = _story_mapping(front, "approval")
+    drafting = _story_mapping(front, "drafting")
+    return {
+        "title": _text(entry.title if entry is not None else None) or _text(summary.title) or _text(front.get("title")) or "",
+        "url": entry.url if entry is not None else None,
+        "standfirst": _text(front.get("standfirst")),
+        "section": _text(front.get("section")),
+        "concepts": _read_story_concepts(front),
+        "cites": _read_story_cites(front),
+        "pairs": _read_story_pairs(front),
+        "proposes": _read_story_proposal(front),
+        "drafted_by_ai": drafting.get("by") == STORY_AGENT_AUTHOR,
+        "approved_by": _text(approval.get("by")),
+        "approved_at": _date_text(approval.get("at")),
+    }
+
+
+def _story_section_label(story):
+    return _story_section_labels().get(story["section"], story["section"] or "")
+
+
+def _approved_stories(page):
+    entries_by_id = {entry.item_id: entry for entry in page.entries if entry.url}
+    stories = [
+        (summary, _read_story(summary, entries_by_id[summary.item_id]))
+        for summary in page.summaries
+        if _is_story(summary) and _story_is_approved(summary) and summary.item_id in entries_by_id
+    ]
+    stories.sort(key=lambda pair: (pair[1]["approved_at"] or "", pair[0].slug), reverse=True)
+    return [story for _summary, story in stories]
+
+
+def _story_provenance_html(story, css_prefix):
+    separator = '<span aria-hidden="true">&middot;</span>'
+    parts = ["Drafted by AI"] if story["drafted_by_ai"] else []
+    parts.append(f'Approved by <b>{escape(story["approved_by"])}</b>' if story["approved_by"] else "Approved")
+    if story["approved_at"]:
+        parts.append(escape(_full_date_label(story["approved_at"])))
+    mark = f'<span class="{css_prefix}-ai-mark">AI</span>' if story["drafted_by_ai"] else ""
+    return mark + separator.join(f"<span>{part}</span>" for part in parts)
+
+
+def _story_lineage_row_html(pair):
+    return (
+        f'<div class="story-lineage-row"><span class="story-node"><b>{escape(pair["parent"])}</b></span>'
+        f'<span class="story-arrow">{STORY_ARROW_SVG}<span>built on</span></span>'
+        f'<span class="story-node story-node-child"><b>{escape(pair["child"])}</b></span></div>'
+    )
+
+
+def _story_pairs_description(pairs):
+    return ", ".join(f'{pair["parent"]} to {pair["child"]}' for pair in pairs)
+
+
+def _story_figure_html(story):
+    if not story["pairs"]:
+        return ""
+    rows = "".join(_story_lineage_row_html(pair) for pair in story["pairs"])
+    description = escape(_story_pairs_description(story["pairs"]), quote=True)
+    return (
+        '<figure class="story-figure">'
+        f'<div class="story-lineage" role="img" aria-label="Diagram, each joined by a built-on arrow: {description}">{rows}</div>'
+        '<figcaption class="story-figcaption"><span>Parents on the left, children on the right. Each arrow is a “built on” relation.</span>'
+        '<span class="story-figure-credit">Figure: Shipped map</span></figcaption></figure>'
+    )
+
+
+def _story_body_with_citations(body_html, story):
+    cited_numbers = {str(cite["n"]) for cite in story["cites"]}
+
+    def link_marker(match):
+        number = match.group(1)
+        if number not in cited_numbers:
+            return match.group(0)
+        return f'<a href="#src-{number}" class="story-cite" aria-label="Source {number}">{number}</a>'
+
+    inside_link = False
+    pieces = []
+    for piece in STORY_HTML_TAG.split(body_html):
+        if piece.startswith("<"):
+            lowered = piece.lower()
+            if lowered.startswith("<a ") or lowered == "<a>":
+                inside_link = True
+            elif lowered.startswith("</a"):
+                inside_link = False
+            pieces.append(piece)
+        else:
+            pieces.append(piece if inside_link else STORY_CITATION_MARKER.sub(link_marker, piece))
+    return "".join(pieces)
+
+
+def _story_proposal_html(story):
+    proposal = story["proposes"]
+    if not proposal:
+        return ""
+    why = f'<span class="kicker">{escape(proposal["why"])}</span>' if proposal["why"] else ""
+    return (
+        '<section id="story-map" class="story-map-box" aria-labelledby="story-changes-h"><div class="story-map-head">'
+        '<h2 id="story-changes-h">What this changes on the map</h2>'
+        f'<span class="story-draft-tag">{STORY_PROPOSAL_TAG_SVG}Proposal &middot; not yet approved</span></div>'
+        '<div class="story-map-change"><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="currentColor"/></svg>'
+        f'<div class="story-map-change-text"><strong>Proposes the new {escape(proposal["kind"])} “{escape(proposal["name"])}”</strong>{why}</div></div></section>'
+    )
+
+
+def _story_react_placeholder_html():
+    return (
+        '<section id="story-react" class="story-react is-placeholder" aria-labelledby="story-react-h">'
+        '<span class="placeholder-tag">Placeholder</span>'
+        '<h2 id="story-react-h" class="kicker">Was this story right?</h2>'
+        '<div class="story-vote" role="group" aria-label="Vote on the story">'
+        f'<button type="button" class="story-vote-button" disabled aria-label="Vote the story up">{STORY_VOTE_UP_SVG}</button>'
+        '<span class="story-vote-count">[n]</span>'
+        f'<button type="button" class="story-vote-button" disabled aria-label="Vote the story down">{STORY_VOTE_DOWN_SVG}</button></div>'
+        f'<span class="story-comment-count">{escape(STORY_VOTES_LATER_NOTE)}</span></section>'
+    )
+
+
+def _story_source_row_html(cite):
+    title = escape(cite["title"])
+    host = urlparse(cite["url"]).netloc if cite["url"] else ""
+    if cite["url"]:
+        title = f'<a href="{escape(cite["url"], quote=True)}" rel="noopener">{title}</a>'
+    meta = " &middot; ".join(part for part in (escape(host), escape(_full_date_label(cite["date"])) if cite["date"] else "") if part)
+    meta_html = f'<span class="story-source-meta">{meta}</span>' if meta else ""
+    return f'<li id="src-{cite["n"]}"><span class="story-cite">{cite["n"]}</span><span class="story-source-title">{title}</span>{meta_html}</li>'
+
+
+def _story_sources_html(story):
+    if not story["cites"]:
+        return ""
+    rows = "".join(_story_source_row_html(cite) for cite in sorted(story["cites"], key=lambda cite: cite["n"]))
+    return f'<ol class="story-sources" aria-label="Signals cited"><li class="kicker story-sources-heading">Signals cited</li>{rows}</ol>'
+
+
+def _story_rail_html(story, site):
+    if not story["concepts"]:
+        return ""
+    return (
+        '<aside class="story-rails"><section class="rail story-rail" aria-labelledby="story-concepts-h">'
+        f'<h2 id="story-concepts-h" class="rail-h">Concepts in this story</h2>'
+        f'<div class="story-chips">{_entity_chips_html(story["concepts"], site)}</div></section></aside>'
+    )
+
+
+def _story_page_html(html, summary, site):
+    story = _read_story(summary)
+    header_end = html.find("</header>")
+    body_html = (html[header_end + len("</header>"):] if header_end >= 0 else html).strip()
+    if body_html.endswith("</article>"):
+        body_html = body_html[: -len("</article>")]
+    section_label = _story_section_label(story)
+    section_crumb = (
+        f'<span aria-hidden="true">/</span><a href="/{escape(story["section"], quote=True)}/">{escape(section_label)}</a>' if story["section"] else ""
+    )
+    standfirst = f'<p class="story-standfirst">{escape(story["standfirst"])}</p>' if story["standfirst"] else ""
+    return (
+        '<div class="shipped-page story-page"><div class="story-layout"><article class="story-article" aria-labelledby="story-h">'
+        '<nav class="story-breadcrumb" aria-label="Breadcrumb"><a href="/">Front</a><span aria-hidden="true">/</span>'
+        f'<a href="/{STORIES_SECTION}/">Stories</a>{section_crumb}</nav>'
+        f'<div class="story-flags"><span class="cintillo">Story</span><span class="kicker story-flags-section">{escape(section_label)}</span></div>'
+        f'<h1 id="story-h" class="story-title">{escape(story["title"])}</h1>{standfirst}'
+        f'<div class="story-provenance">{_story_provenance_html(story, "story")}</div>'
+        f'{_story_figure_html(story)}'
+        f'<div class="story-body">{_story_body_with_citations(body_html, story)}</div>'
+        f'{_story_proposal_html(story)}{_story_react_placeholder_html()}{_story_sources_html(story)}'
+        f'</article>{_story_rail_html(story, site)}</div></div>'
+    )
+
+
+def _home_lead_figure_html(story):
+    pairs = story["pairs"][:STORY_HOME_LEAD_PAIR_LIMIT]
+    if not pairs:
+        return ""
+    arrow = (
+        '<svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">'
+        '<path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg>'
+    )
+    cells = "".join(
+        f'<span class="front-lineage-from">{escape(pair["parent"])}</span>{arrow}<span class="front-lineage-to">{escape(pair["child"])}</span>'
+        for pair in pairs
+    )
+    relations = len(story["pairs"])
+    noun = "relation" if relations == 1 else "relations"
+    description = escape(_story_pairs_description(pairs), quote=True)
+    return (
+        f'<div class="front-lead-figure" role="img" aria-label="Lead image, built-on lines of descent: {description}">{cells}'
+        f'<p class="front-lead-caption">{relations} “built on” {noun} from the map · Figure: Shipped map</p></div>'
+    )
+
+
+def _home_story_tail_html(story, site):
+    chips = _entity_chips_html(story["concepts"], site)
+    return f'<p class="front-provenance">{_story_provenance_html(story, "front")}</p>' + (f'<p class="front-chips">{chips}</p>' if chips else "")
+
+
+def _home_lead_html(story, site):
+    standfirst = f'<p class="front-lead-standfirst">{escape(story["standfirst"])}</p>' if story["standfirst"] else ""
+    return (
+        '<article class="front-lead" aria-labelledby="front-lead-h">'
+        f'{_home_lead_figure_html(story)}'
+        f'<div class="front-lead-labels"><span class="cintillo">Lead story</span><span class="kicker">&sect; {escape(_story_section_label(story))}</span></div>'
+        f'<h1 id="front-lead-h"><a href="{escape(story["url"], quote=True)}">{escape(story["title"])}</a></h1>'
+        f'{standfirst}{_home_story_tail_html(story, site)}</article>'
+    )
+
+
+def _home_also_story_html(story, site):
+    standfirst = f'<p>{escape(story["standfirst"])}</p>' if story["standfirst"] else ""
+    return (
+        f'<article class="front-story"><span class="kicker">&sect; {escape(_story_section_label(story))}</span>'
+        f'<h3><a href="{escape(story["url"], quote=True)}">{escape(story["title"])}</a></h3>'
+        f'{standfirst}{_home_story_tail_html(story, site)}</article>'
+    )
+
+
+def _home_also_html(stories, site):
+    cards = "".join(_home_also_story_html(story, site) for story in stories)
+    return (
+        '<section class="front-stories" aria-labelledby="front-stories-h">'
+        '<div class="front-section-heading"><span class="cintillo">Stories</span><h2 id="front-stories-h">Also on the map this week</h2></div>'
+        f'<div class="front-story-grid">{cards}</div></section>'
+    )
+
+
+def _stories_block(page, attributes):
+    part = attributes.get("part")
+    stories = _approved_stories(page)
+    if part == "lead":
+        return _home_lead_html(stories[0], page.site) if stories else HOME_LEAD_PLACEHOLDER_HTML
+    if part == "also":
+        also = stories[1 : 1 + STORY_HOME_ALSO_LIMIT]
+        return _home_also_html(also, page.site) if also else HOME_ALSO_PLACEHOLDER_HTML
+    raise ValueError(f"unknown stories part {part!r}")
+
+
+def _landing_lead_story_html(story):
+    standfirst = f'<p>{escape(story["standfirst"])}</p>' if story["standfirst"] else ""
+    return (
+        '<article class="landing-lead" aria-labelledby="landing-lead-h">'
+        f'<div class="landing-lead-kicker"><span class="cintillo">Lead story</span><span class="kicker">&sect; {escape(_story_section_label(story))}</span></div>'
+        f'<h2 id="landing-lead-h"><a href="{escape(story["url"], quote=True)}">{escape(story["title"])}</a></h2>'
+        f'{standfirst}<p class="concept-note">{_story_provenance_html(story, "front")}</p></article>'
+    )
+
+
+def _landing_lead_for_section(page, section_name, label):
+    story = next((candidate for candidate in _approved_stories(page) if candidate["section"] == section_name), None)
+    return _landing_lead_story_html(story) if story else _landing_lead_html(label)
+
+
 def block(name, attributes, page):
     if name in MAP_BLOCK_NAMES:
         return _map_block(name, attributes, page)
@@ -1856,6 +2233,8 @@ def block(name, attributes, page):
         return _desk_board(page, attributes)
     if name == "front":
         return _front_block(page, attributes)
+    if name == "stories":
+        return _stories_block(page, attributes)
     if name == "topic-board":
         return _topic_board(page, attributes)
     if name in CONCEPT_BLOCKS:
