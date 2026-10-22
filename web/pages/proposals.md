@@ -25,7 +25,7 @@
 <div class="proposals-invite-action" data-island="ReaderSignIn" data-props="{}"><a class="button" href="/sign-in/">Sign in with Google</a></div>
 </div>
 
-<section class="proposals-queue is-placeholder" aria-labelledby="proposals-queue-h">
+<section class="proposals-queue is-placeholder" aria-labelledby="proposals-queue-h" data-proposals-live="queue">
 <span class="placeholder-tag">Placeholder</span>
 <h2 id="proposals-queue-h" class="proposals-queue-heading">The queue</h2>
 <div class="proposals-controls">

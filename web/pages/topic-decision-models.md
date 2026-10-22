@@ -71,7 +71,7 @@
 </section>
 </div>
 
-<section class="concept-proposals is-placeholder" aria-labelledby="proposals-h"><span class="placeholder-tag">Placeholder</span>
+<section class="concept-proposals is-placeholder" aria-labelledby="proposals-h" data-proposals-live="concept" data-concept-name="Decision models" data-concept-key="decision-models"><span class="placeholder-tag">Placeholder</span>
 <div class="section-heading"><span class="cintillo">Proposals</span><h2 id="proposals-h">Open proposals touching this concept</h2></div>
 <p class="concept-note">Reader proposals are not switched on yet. When they are, open proposals about this concept will be listed here, newest votes first.</p>
 <ul class="concept-proposal-list"><li><span class="concept-proposal-kind">New concept</span> [Proposed title] <span class="concept-note">[n] votes</span></li><li><span class="concept-proposal-kind">Merge</span> [Proposed title] <span class="concept-note">[n] votes</span></li></ul>

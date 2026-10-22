@@ -26,6 +26,7 @@ ROUNDUP_SECTION = "roundup"
 WIKI_ITEM_TYPE = "wiki_page"
 READER_SCRIPT_PATH = "/_plugins/papyrus-reader@1.js"
 READER_STYLESHEET_PATH = "/_plugins/papyrus-reader@1.css"
+PROPOSALS_SCRIPT_PATH = "/assets/shipped-proposals.js"
 PAGE_ITEM_TYPE = "page"
 VERSION_SUFFIX = re.compile(r"-v\d+$")
 SIGN_IN_LINK = re.compile(r'<a href="/sign-in/"[^>]*>Sign in</a>')
@@ -2396,7 +2397,8 @@ def _weekly_archive_intro_html():
 def head_extra(page):
     return (
         f'<link rel="stylesheet" href="{READER_STYLESHEET_PATH}">\n'
-        f'<script src="{READER_SCRIPT_PATH}" defer></script>'
+        f'<script src="{READER_SCRIPT_PATH}" defer></script>\n'
+        f'<script src="{PROPOSALS_SCRIPT_PATH}" defer></script>'
     )
 
 

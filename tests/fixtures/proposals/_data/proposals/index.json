@@ -1,0 +1,273 @@
+[
+  {
+    "id": "fixture-story-one",
+    "kind": "story",
+    "group": "stories",
+    "title": "Fictional routers are becoming the quiet default",
+    "summary": "A fictional story: why small routing models now sit in front of most fictional assistants.",
+    "state": "in_steering",
+    "label": "In steering \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Decision models"
+    ],
+    "evidence": "6 signals \u00b7 fixture index",
+    "createdAt": "2026-10-20T08:00:00Z",
+    "updatedAt": "2026-10-20T08:00:00Z",
+    "votes": {
+      "up": 14,
+      "down": 2,
+      "net": 12.0
+    },
+    "comments": 5,
+    "communityResult": null,
+    "decision": {
+      "state": null,
+      "result": null,
+      "by": null,
+      "reason": null,
+      "at": null
+    }
+  },
+  {
+    "id": "fixture-story-two",
+    "kind": "story",
+    "group": "stories",
+    "title": "Fictional open voices reach the long tail",
+    "summary": "A fictional story on open text-to-speech weights landing in small languages.",
+    "state": "draft",
+    "label": "Draft \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Open TTS"
+    ],
+    "evidence": "3 signals \u00b7 fixture index",
+    "createdAt": "2026-10-22T07:30:00Z",
+    "updatedAt": "2026-10-22T07:30:00Z",
+    "votes": {
+      "up": 1,
+      "down": 0,
+      "net": 1.0
+    },
+    "comments": 0,
+    "communityResult": null,
+    "decision": {
+      "state": null,
+      "result": null,
+      "by": null,
+      "reason": null,
+      "at": null
+    }
+  },
+  {
+    "id": "fixture-story-three",
+    "kind": "story",
+    "group": "stories",
+    "title": "A fictional split in guard models",
+    "summary": "Fictional: guard models divide into policy and safety families.",
+    "state": "editor_review",
+    "label": "Editor review \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Decision models",
+      "Guard models"
+    ],
+    "evidence": "4 signals",
+    "createdAt": "2026-10-18T10:00:00Z",
+    "updatedAt": "2026-10-18T10:00:00Z",
+    "votes": {
+      "up": 9,
+      "down": 8,
+      "net": 1.4
+    },
+    "comments": 12,
+    "communityResult": null,
+    "decision": {
+      "state": null,
+      "result": null,
+      "by": null,
+      "reason": null,
+      "at": null
+    }
+  },
+  {
+    "id": "fixture-story-four",
+    "kind": "story",
+    "group": "stories",
+    "title": "Fictional edge deployments, a year on",
+    "summary": "An approved fictional retrospective.",
+    "state": "approved",
+    "label": "Approved \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Edge deployment"
+    ],
+    "evidence": "8 signals",
+    "createdAt": "2026-10-10T10:00:00Z",
+    "updatedAt": "2026-10-10T10:00:00Z",
+    "votes": {
+      "up": 20,
+      "down": 1,
+      "net": 19.0
+    },
+    "comments": 3,
+    "communityResult": "Approved",
+    "decision": {
+      "state": "approved",
+      "result": "approved",
+      "by": "Editor",
+      "reason": "Well sourced.",
+      "at": "2026-10-12T10:00:00Z"
+    }
+  },
+  {
+    "id": "fixture-concept-one",
+    "kind": "concept",
+    "group": "concepts",
+    "title": "Voice cloning consent",
+    "summary": "A fictional concept for models that clone a voice from a short sample.",
+    "state": "in_steering",
+    "label": "In steering \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Open TTS"
+    ],
+    "evidence": "5 signals \u00b7 fixture index",
+    "createdAt": "2026-10-19T12:00:00Z",
+    "updatedAt": "2026-10-19T12:00:00Z",
+    "votes": {
+      "up": 7,
+      "down": 1,
+      "net": 6.0
+    },
+    "comments": 2,
+    "communityResult": null,
+    "decision": {
+      "state": null,
+      "result": null,
+      "by": null,
+      "reason": null,
+      "at": null
+    }
+  },
+  {
+    "id": "fixture-concept-two",
+    "kind": "concept",
+    "group": "concepts",
+    "title": "Tiny routers",
+    "summary": "Fictional: routing models under one billion parameters.",
+    "state": "draft",
+    "label": "Draft \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "decision-models"
+    ],
+    "evidence": "2 signals",
+    "createdAt": "2026-10-21T06:00:00Z",
+    "updatedAt": "2026-10-21T06:00:00Z",
+    "votes": {
+      "up": 0,
+      "down": 3,
+      "net": -3.0
+    },
+    "comments": 1,
+    "communityResult": null,
+    "decision": {
+      "state": null,
+      "result": null,
+      "by": null,
+      "reason": null,
+      "at": null
+    }
+  },
+  {
+    "id": "fixture-change-one",
+    "kind": "map_change",
+    "group": "map_changes",
+    "title": "Merge two fictional clusters",
+    "summary": "Fictional: merge the two speech clusters, which overlap in most signals.",
+    "state": "editor_review",
+    "label": "Editor review \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Speech models"
+    ],
+    "evidence": "11 signals",
+    "createdAt": "2026-10-17T09:00:00Z",
+    "updatedAt": "2026-10-17T09:00:00Z",
+    "votes": {
+      "up": 4,
+      "down": 0,
+      "net": 4.0
+    },
+    "comments": 0,
+    "communityResult": null,
+    "decision": {
+      "state": null,
+      "result": null,
+      "by": null,
+      "reason": null,
+      "at": null
+    }
+  },
+  {
+    "id": "fixture-change-two",
+    "kind": "map_change",
+    "group": "map_changes",
+    "title": "Rename a fictional cluster after coordinated votes",
+    "summary": "Fictional: a rename that gathered many votes in two hours.",
+    "state": "overridden_by_editor",
+    "label": "Overridden by editor \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Open TTS"
+    ],
+    "evidence": "3 signals",
+    "createdAt": "2026-10-15T09:00:00Z",
+    "updatedAt": "2026-10-15T09:00:00Z",
+    "votes": {
+      "up": 42,
+      "down": 3,
+      "net": 39.0
+    },
+    "comments": 18,
+    "communityResult": "Approved by readers",
+    "decision": {
+      "state": "overridden_by_editor",
+      "result": "declined",
+      "by": "Editor",
+      "reason": "Coordinated votes from new accounts.",
+      "at": "2026-10-16T09:00:00Z"
+    }
+  },
+  {
+    "id": "fixture-change-three",
+    "kind": "map_change",
+    "group": "map_changes",
+    "title": "Split a fictional cluster",
+    "summary": "Fictional: split a broad cluster in two.",
+    "state": "declined",
+    "label": "Declined \u00b7 Proposed by AI",
+    "proposedBy": "AI",
+    "targets": [
+      "Edge deployment"
+    ],
+    "evidence": "2 signals",
+    "createdAt": "2026-10-14T09:00:00Z",
+    "updatedAt": "2026-10-14T09:00:00Z",
+    "votes": {
+      "up": 2,
+      "down": 6,
+      "net": -4.0
+    },
+    "comments": 4,
+    "communityResult": "Declined",
+    "decision": {
+      "state": "declined",
+      "result": "declined",
+      "by": "Editor",
+      "reason": "Too few signals.",
+      "at": "2026-10-15T09:00:00Z"
+    }
+  }
+]

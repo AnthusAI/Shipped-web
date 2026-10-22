@@ -66,7 +66,7 @@
 </div>
 
 <div class="front-row front-row-wide">
-<section class="front-proposals is-placeholder" aria-labelledby="front-proposals-h">
+<section class="front-proposals is-placeholder" aria-labelledby="front-proposals-h" data-proposals-live="home">
 <span class="placeholder-tag">Placeholder</span>
 <div class="front-section-heading"><span class="cintillo">Proposals</span><h2 id="front-proposals-h">Steer the map</h2><a class="front-link front-link-end" href="/sign-in/">Sign in to vote</a></div>
 <p class="front-proposals-note">AI-written drafts, not yet approved · ranked by reader votes · editors decide</p>
