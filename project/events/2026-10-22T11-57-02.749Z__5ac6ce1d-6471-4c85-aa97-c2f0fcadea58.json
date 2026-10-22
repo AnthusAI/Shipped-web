@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "event_id": "5ac6ce1d-6471-4c85-aa97-c2f0fcadea58",
+  "issue_id": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "event_type": "field_updated",
+  "occurred_at": "2026-10-22T11:57:02.749Z",
+  "actor_id": "home",
+  "payload": {
+    "changes": {
+      "description": {
+        "from": "Launch Shipped (shipped.anth.us): a community-ranked feed of AI that actually shipped. It pilots Papyrus collaborative steering (PPY-77bb3b) and the public knowledge base (PPY-428252, closed).\n\nStatus 2026-10-22 (10:45Z):\n- Live and checked: 70 real items (40 open weights, 30 decisions in the wild) with topic pages; Papyrus 5.22.0 pinned.\n- Knowledge base live: 282-page wiki stamped Edited by AI, Trending strip and list, Emerging clusters, concept of the week, topic count (All 282 topics), entity chips.\n- Agent-readable pages live: Markus twins, bare .md, Accept negotiation, llms.txt and llms-full.txt.\n- Site chrome: lime chrome, generic footer, wide layout (PR #26), newsletter signup at /roundup/ (simulator-verified).\n- Reader steering is enabled (PR #39, deploy run 39761870423 success): sign-in control, Vote, UsedIt, Rating, Comments and Submit islands render; snapshot JSON under /_data/reader/ is live but empty.\n- Blocked on Ryan: Google redirect URIs for papyrus-shipped-cms (ship-63b07d), which gates the first sign-in, vote, rating, comment and submission (ship-b3b934, ship-378fcc, ship-d02e82); and the newsletter confirmation retest (ship-7e99a6) after the email lead fixes the confirm page.\n- Open: PR #38 (poll secret in site.json), live-number schedule check (ship-0efe84), Person ID scan as a Shipped gate (ship-b3933d), score combination (ship-1f3d29), designer adjustments (ship-14efe5).\n- Decisions in force: no WAF; snapshot four times a day; the AI does the accepting and naming and is labelled AI; the word desk is not used on pages; the Data Parade mission and policy are saved.\nDelivery rule: deploy incrementally, keep the full design visible, and dim placeholders (~60% plus a label) until they are real.",
+        "to": "Launch Shipped (shipped.anth.us): a community-ranked feed of AI that actually shipped. It pilots Papyrus collaborative steering (PPY-77bb3b) and the public knowledge base (PPY-428252).\n\nStatus 2026-10-22 12:00Z:\n- Live and verified: the full design on every page, with remaining placeholders dimmed; 70 real items (30 decision models, 21 open TTS, 19 open LLMs) with sources, verdicts and AI-labelled scores; topic pages; the knowledge base (Trending, clusters, concept of the week, 282-page wiki stamped Edited by AI); agent-readable Markus twins, llms.txt, Accept negotiation and page actions; reader components (vote, used-it, ratings, comments, submit, sign-in); newsletter signup; the content policies page; the wide-display layout; lime chrome; deploy-on-merge through Actions → OIDC → Amplify.\n- Blocked on Ryan: Google redirect URIs (ship-63b07d), which gate every reader write.\n- In progress: the newsletter confirm-page fix (email lead), then Ryan's inbox retest; 6 designer items; the ranked-list island for Rising; making the Person-ID scan a CI gate.\nDelivery rule: deploy incrementally; the full design always visible; placeholders dimmed (~60%) with a label until real."
+      }
+    }
+  }
+}

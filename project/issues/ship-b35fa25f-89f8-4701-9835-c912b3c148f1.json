@@ -3,7 +3,7 @@
   "title": "Collaborative voting pilot",
   "description": "Pilot reader and collaborative voting on items as input to the ranking. The core capability is future Papyrus work: link the Papyrus initiative here once it is filed (Papyrus board, PPY-).",
   "type": "story",
-  "status": "in_progress",
+  "status": "blocked",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -29,10 +29,17 @@
       "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Pilot is running in read mode: reader steering enabled and snapshots published. Papyrus counterparts: PPY-77bb3b in progress, votes (PPY-56b0a7) and karma (PPY-231533) closed, moderation (PPY-af98c7) and comments (PPY-739cb4) closed in Papyrus. The first real votes wait on sign-in (ship-63b07d, Ryan).",
       "created_at": "2026-10-22T10:47:17.127480Z",
       "comment_type": "default"
+    },
+    {
+      "id": "e684f105-9901-4eb7-8371-8a4538ce0556",
+      "author": "home",
+      "text": "Blocked 2026-10-22: the voting pilot needs real reader sign-ins. Components are live (30 Vote, 30 UsedIt, ReaderSignIn); Google still answers redirect_uri_mismatch until Ryan adds the papyrus-shipped-cms URIs (ship-63b07d).",
+      "created_at": "2026-10-22T11:57:00.560432Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T11:42:25.120429Z",
-  "updated_at": "2026-10-22T10:47:17.127507Z",
+  "updated_at": "2026-10-22T11:57:00.560457Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

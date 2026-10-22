@@ -31,10 +31,17 @@
       "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Blocked. Live since PR #30 and #33: https://shipped.anth.us/roundup/ 200 with the signup form, simulator-verified. Waiting on: (1) the email lead's fix to the confirmation page (reported unstyled and a 404 after submit), then (2) Ryan's real-inbox retest of confirm, test alert and one-click unsubscribe. Papyrus counterpart PPY-64f38a is blocked on the same.",
       "created_at": "2026-10-22T10:47:21.919851Z",
       "comment_type": "default"
+    },
+    {
+      "id": "6325f6a0-9ac2-46a7-a97b-4ca26badd858",
+      "author": "home",
+      "text": "2026-10-22: blocked on the confirm-page fix (unstyled /api page, 403 masked as 404). The email lead is moving human-facing pages to clean /newsletter/* URLs with site chrome. Then a fresh confirmation goes to Ryan's test inbox for the real-inbox retest.",
+      "created_at": "2026-10-22T11:57:01.892278Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T11:42:25.130234Z",
-  "updated_at": "2026-10-22T10:47:21.919877Z",
+  "updated_at": "2026-10-22T11:57:01.892305Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
