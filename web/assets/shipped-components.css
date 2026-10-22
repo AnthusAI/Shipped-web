@@ -209,3 +209,4 @@ main:has(>.shipped-page){max-width:none}
 .topic-knowledge .papyrus-knowledge-chip-name{font-weight:700}
 .topic-knowledge a.papyrus-knowledge-chip:hover{border-color:var(--brand)}
 .topic-knowledge.clusters{margin-top:40px;margin-bottom:40px}
+.beats .papyrus-knowledge-count{margin-left:auto;padding-left:18px;border-left:1px solid var(--rule-strong)}

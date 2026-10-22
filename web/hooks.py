@@ -396,7 +396,7 @@ def _strip_links_html(item):
     topic = _topic_of(item)
     if topic:
         parts.append(
-            f'<a class="topic-link" href="{escape(topic["path"], quote=True)}">Topic: {escape(topic["label"])} &rarr;</a>'
+            f'<a class="topic-link" href="{escape(topic["path"], quote=True)}">Beat: {escape(topic["label"])} &rarr;</a>'
         )
     return f'<div class="desk-strip-links">{"".join(parts)}</div>' if parts else ""
 
@@ -617,7 +617,7 @@ def _topic_profile_html(items):
     scores_label = "Editor scores (AI-assisted first pass)" if any(_is_agent_scored(item) for item in scored) else "Editor scores"
     return (
         '<section aria-labelledby="profile-h" class="topic-profile"><div class="section-heading">'
-        '<span class="cintillo">Scores</span><h2 id="profile-h">How the topic scores</h2></div>'
+        '<span class="cintillo">Scores</span><h2 id="profile-h">How the beat scores</h2></div>'
         f'<p class="graph-note">{scores_label}, mean of {len(scored)} items</p>{rows}{gap_html}</section>'
     )
 
@@ -659,7 +659,7 @@ def _topic_board(page, attributes):
     stats_html = "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in stats)
     ranked_html = (
         '<section aria-labelledby="items-h" class="topic-block board desk-board"><div class="section-heading">'
-        '<span class="cintillo">Newest first</span><h2 id="items-h">Items in this topic</h2></div>'
+        '<span class="cintillo">Newest first</span><h2 id="items-h">Items in this beat</h2></div>'
         f'{_board_note_html()}{_board_list_html(pairs, page.site)}</section>'
         if pairs else ""
     )

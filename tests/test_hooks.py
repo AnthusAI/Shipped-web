@@ -73,7 +73,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Source: source.fixture.example", page)
         self.assertIn("Released 18 Oct 2026", page)
         self.assertIn('<span class="score-note">Fixture note on novel.</span>', page)
-        self.assertIn('href="/topics/decision-models/">Topic: Decision models', page)
+        self.assertIn('href="/topics/decision-models/">Beat: Decision models', page)
 
     def test_item_page_without_notes_has_no_score_note_for_missing_dimensions(self):
         page = self._page("decisions/fixture-router-two")
@@ -361,7 +361,7 @@ class HooksProjectionTest(unittest.TestCase):
         for path in (".", "new", "rising", "vapor"):
             page = self._page(path)
             self.assertIn('class="papyrus-knowledge-count"', page, path)
-            self.assertIn("All 1 topics", page, path)
+            self.assertIn("Topic index · 1 topics", page, path)
             self.assertNotIn("214 TOPICS", page, path)
         self.assertIn('name="knowledge-topic-count"', (self.output_directory / "index.md").read_text(encoding="utf-8"))
 
@@ -506,6 +506,39 @@ class NewsletterConfigurationTest(unittest.TestCase):
         self.assertTrue(alert_sections <= set(projection["urls"]["sections"]))
         self.assertEqual(projection["urls"]["style"], "directory")
         self.assertIn("newsletter_issue", projection["listings"]["types"])
+
+
+class PageVocabularyTest(unittest.TestCase):
+    """The launch vocabulary (ship-14efe5 items 6, 9 and 13) holds in the page sources, text only."""
+
+    def _text(self, name):
+        source = (STATIC_DIRECTORY / "pages" / name).read_text(encoding="utf-8")
+        source = re.sub(r"::include\{[^}]*\}", " ", source)
+        return html.unescape(re.sub(r"<[^>]+>", " ", source))
+
+    def test_no_signal_chip_and_no_off_vocabulary_kind_in_sample_rows(self):
+        for page in STATIC_DIRECTORY.joinpath("pages").glob("*.md"):
+            source = page.read_text(encoding="utf-8")
+            kinds = set(re.findall(r'<a class="entity-chip"[^>]*><i>([a-z ]+)</i>', source))
+            self.assertLessEqual(kinds, {"maker", "model family", "task", "technique", "licence", "concept", "platform", "dataset"}, page.name)
+
+    def test_no_reader_votes_authors_or_desk_in_the_insights(self):
+        for page in STATIC_DIRECTORY.joinpath("pages").glob("*.md"):
+            text = self._text(page.name)
+            for word in ("Agree", "Disagree", "signal"):
+                self.assertNotIn(word, text, page.name)
+            if page.name == "topic-voice-agents.md":
+                self.assertNotIn("dsp_nadia", text)
+            self.assertIsNone(re.search(r"(?i)\bdesk\b|anthus", text), page.name)
+
+    def test_beats_are_beats_and_the_index_counts_topics(self):
+        for name in ("topic-open-tts.md", "topic-decision-models.md"):
+            text = self._text(name)
+            self.assertIn("Beats", text)
+            self.assertIn("Topics in this beat", text)
+            self.assertNotIn("Concepts in this topic", text)
+        for name in ("home.md", "new.md", "rising.md", "vapor.md"):
+            self.assertNotIn("All {n} topics", (STATIC_DIRECTORY / "pages" / name).read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
