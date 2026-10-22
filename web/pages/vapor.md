@@ -1,10 +1,10 @@
 ::band{size="bare"}
 
 ::raw
-<div class="ticker"><div class="ticker-inner"><span class="ticker-label">TRENDING</span><a href="/"><b>Autonomous SRE</b><span>▲ +210%</span></a><a href="/sample/voice-agents/"><b>Voice agents</b><span>▲ +112%</span></a><a href="/"><b>Training-data manifests</b><span>▲ +64%</span></a><a href="/"><b>On-device speech</b><span>▲ +41%</span></a><a href="/"><b>Override rates</b><span>▲ +38%</span></a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div></div>
+<div class="ticker is-placeholder"><div class="ticker-inner"><span class="ticker-label">TRENDING</span><a href="/"><b>Autonomous SRE</b><span>▲ +210%</span></a><a href="/sample/voice-agents/"><b>Voice agents</b><span>▲ +112%</span></a><a href="/"><b>Training-data manifests</b><span>▲ +64%</span></a><a href="/"><b>On-device speech</b><span>▲ +41%</span></a><a href="/"><b>Override rates</b><span>▲ +38%</span></a><span class="placeholder-tag">Placeholder</span></div></div>
 <div class="shipped-page">
 
-<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a href="/sample/voice-agents/">Voice agents</a><a href="/">Coding models</a><a href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a href="/">Speech</a><a href="/">Evals</a><a href="/">Agents</a><a class="beats-all" href="/">ALL 214 TOPICS →</a><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></nav>
+<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/sample/voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a><a class="beats-all is-placeholder is-placeholder-inline" title="Placeholder" href="/">ALL 214 TOPICS →</a></nav>
 <div class="shipped-layout">
 <div class="shipped-main">
 <nav class="view-tabs" aria-label="Views"><a href="/">Front</a><a href="/new/">New</a><a href="/rising/">Rising</a><a href="/vapor/" aria-current="page">Vapor log</a></nav>
@@ -13,13 +13,13 @@
 ::include{kind="block" name="desk-board" depends="*" verdict="vapor" heading="Vapor log from the desk"}
 
 ::raw
-<section class="board" aria-labelledby="board-h">
-<div class="board-heading"><span class="cintillo">Wk 43 · 19–25 Oct</span><h1 id="board-h">Vapor log</h1><span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div>
+<section class="board is-placeholder" aria-labelledby="board-h">
+<div class="board-heading"><span class="cintillo">Wk 43 · 19–25 Oct</span><h1 id="board-h">Vapor log</h1><span class="placeholder-tag">Placeholder</span></div>
 <div class="board-head kicker" aria-hidden="true"><span>Rank</span><span>Vote</span><span>Item · entities</span><span>Status</span><span class="board-head-dims"><span>Real</span><span>Useful</span><span>Notable</span><span>Novel</span></span><span>Talk</span></div>
 <ol class="board-list">
 <li class="board-row">
 <span class="board-rank">1</span>
-<button type="button" class="vote-button" disabled aria-disabled="true" aria-label="Sample votes: 141"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5l6 10H2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>141</span></button>
+<button type="button" class="vote-button" disabled aria-disabled="true" aria-label="Placeholder votes: 141"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5l6 10H2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>141</span></button>
 <div class="board-main"><a class="board-title" href="/">Waypoint announces an “autonomous SRE”: waitlist, demo video, no build</a>
 <div class="board-meta"><b>waypoint.example</b><span>§ Shipped</span><span>Agents</span><span>2d</span><span>by oncall_ok</span></div>
 <div class="board-entities"><a class="entity-chip" href="/"><i>org</i>Waypoint</a><a class="entity-chip" href="/"><i>concept</i>autonomous SRE</a><a class="entity-chip" href="/"><i>signal</i>waitlist only</a></div></div>
@@ -29,7 +29,7 @@
 </li>
 <li class="board-row">
 <span class="board-rank">2</span>
-<button type="button" class="vote-button" disabled aria-disabled="true" aria-label="Sample votes: 90"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5l6 10H2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>90</span></button>
+<button type="button" class="vote-button" disabled aria-disabled="true" aria-label="Placeholder votes: 90"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5l6 10H2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>90</span></button>
 <div class="board-main"><a class="board-title" href="/">Halyard-2 vision model: benchmark table now, weights “coming soon”</a>
 <div class="board-meta"><b>halyard.example</b><span>§ Open weights</span><span>Open models</span><span>4d</span><span>by skeptic9</span></div>
 <div class="board-entities"><a class="entity-chip" href="/"><i>org</i>Halyard</a><a class="entity-chip" href="/"><i>task</i>vision</a><a class="entity-chip" href="/"><i>signal</i>“coming soon”</a></div></div>

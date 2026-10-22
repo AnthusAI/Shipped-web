@@ -47,6 +47,12 @@ FALLBACK_STAMP_ICON = '<circle cx="8" cy="8" r="5.8"/>'
 
 SAFE_URL_SCHEMES = ("http", "https")
 
+AGENT_SCORING = "agent"
+DEFAULT_SCORES_LABEL = "Editor score"
+DEFAULT_AGENT_SCORES_LABEL = "Editor's first pass (AI-assisted)"
+AGENT_SCORING_NOTICE = "Scored by an AI research pass from the linked sources; a human editor will re-score it."
+AGENT_TAG_TEXT = "AI first pass"
+
 
 @lru_cache(maxsize=1)
 def _scoring():
@@ -174,6 +180,17 @@ def _read_tags(front):
     return [tag.strip() for tag in raw if isinstance(tag, str) and tag.strip()] if isinstance(raw, list) else []
 
 
+def _read_scoring(front):
+    raw = front.get("scoring")
+    if not isinstance(raw, dict):
+        return {"by": None, "label": None}
+    return {"by": _text(raw.get("by")), "label": _text(raw.get("label"))}
+
+
+def _is_agent_scored(item):
+    return bool(item["scores"]) and item["scoring"]["by"] == AGENT_SCORING
+
+
 def _read_item(summary):
     front = summary.front_matter or {}
     return {
@@ -188,7 +205,22 @@ def _read_item(summary):
         "evidence": _read_evidence(summary, front),
         "entities": _read_entities(summary, front),
         "maker": _text(front.get("maker")),
+        "maker_handle": _text(front.get("makerHandle")),
+        "scoring": _read_scoring(front),
     }
+
+
+def _maker_key(item):
+    return item["maker"] or item["maker_handle"]
+
+
+def _maker_html(item):
+    handle_html = f'<span class="maker-handle">{escape(item["maker_handle"])}</span>' if item["maker_handle"] else ""
+    if item["maker"] and handle_html:
+        return f'{escape(item["maker"])} ({handle_html})'
+    if item["maker"]:
+        return escape(item["maker"])
+    return handle_html
 
 
 def _hype_gap(scores):
@@ -241,12 +273,12 @@ def _score_dimension_html(label, score, note=None):
     )
 
 
-def _dimensions_html(scores, notes=None):
+def _dimensions_html(scores, notes=None, trailing_html=""):
     notes = notes or {}
     return "".join(
         _score_dimension_html(dimension["label"], scores.get(dimension["key"]), notes.get(dimension["key"]))
         for dimension in _scoring()["dimensions"]
-    )
+    ) + trailing_html
 
 
 def _full_date_label(iso_date):
@@ -311,15 +343,18 @@ def item_decorator(html, summary):
     gap = _hype_gap(item["scores"])
     note = _checked_note(item)
     note_html = f'<div class="item-stamp-note">{note}</div>' if note else ""
-    maker_html = f'<span class="kicker">{escape(item["maker"])}</span>' if item["maker"] else ""
+    maker_html = f'<span class="kicker maker-display">{_maker_html(item)}</span>' if _maker_key(item) else ""
     chips = _entity_chips_html(item["entities"])
     chips_html = f'<div class="desk-entities">{chips}</div>' if chips else ""
     scores_html = ""
     if item["scores"]:
         gap_html = f'<div class="hype-row"><span class="hype-label">Hype gap</span>{_hype_gap_html(gap, True)}</div>' if gap is not None else ""
         notes_class = " has-notes" if item["score_notes"] else ""
+        agent_scored = _is_agent_scored(item)
+        scores_label = (item["scoring"]["label"] or DEFAULT_AGENT_SCORES_LABEL) if agent_scored else DEFAULT_SCORES_LABEL
+        provenance_html = f'<p class="scoring-provenance">{escape(AGENT_SCORING_NOTICE)}</p>' if agent_scored else ""
         scores_html = (
-            f'<div class="desk-scores{notes_class}"><p class="kicker">Editor score</p>'
+            f'<div class="desk-scores{notes_class}"><p class="kicker">{escape(scores_label)}</p>{provenance_html}'
             f'<div class="desk-score-grid">{_dimensions_html(item["scores"], item["score_notes"])}</div>{gap_html}</div>'
         )
     evidence_html = ""
@@ -361,12 +396,13 @@ def _board_row_html(position, summary, entry, section_label):
     gap_html = _hype_gap_html(_hype_gap(item["scores"]))
     meta = [f"<b>{escape(_source_domain(item))}</b>"] if _source_domain(item) else []
     meta.append(f"<span>&sect; {escape(section_label)}</span>")
-    if item["maker"]:
-        meta.append(f"<span>{escape(item['maker'])}</span>")
+    if _maker_key(item):
+        meta.append(f"<span>{_maker_html(item)}</span>")
     date_label = _date_label(summary)
     if date_label:
         meta.append(f"<span>{escape(date_label)}</span>")
     chips = _entity_chips_html(item["entities"])
+    agent_tag_html = f'<span class="ai-first-pass-tag">{AGENT_TAG_TEXT}</span>' if _is_agent_scored(item) else ""
     return (
         '<li class="board-row">'
         f'<span class="board-rank">{position}</span>'
@@ -376,7 +412,7 @@ def _board_row_html(position, summary, entry, section_label):
         + (f'<div class="board-gap"><span class="kicker">Hype gap</span> {gap_html}</div>' if gap_html else "")
         + "</div>"
         f'<div class="board-status">{_stamp_html(item["verdict"])}</div>'
-        f'<div class="board-dimensions">{_dimensions_html(item["scores"])}</div>'
+        f'<div class="board-dimensions">{_dimensions_html(item["scores"], None, agent_tag_html)}</div>'
         "</li>"
     )
 
@@ -463,23 +499,27 @@ def _topic_profile_html(items):
         f'<div class="hype-box"><div><div class="hype-label">Mean hype gap</div></div>{_hype_gap_html(mean_gap, True)}</div>'
         if mean_gap is not None else ""
     )
+    scores_label = "Editor scores (AI-assisted first pass)" if any(_is_agent_scored(item) for item in scored) else "Editor scores"
     return (
         '<section aria-labelledby="profile-h" class="topic-profile"><div class="section-heading">'
         '<span class="cintillo">Scores</span><h2 id="profile-h">How the topic scores</h2></div>'
-        f'<p class="graph-note">Editor scores, mean of {len(scored)} items</p>{rows}{gap_html}</section>'
+        f'<p class="graph-note">{scores_label}, mean of {len(scored)} items</p>{rows}{gap_html}</section>'
     )
 
 
 def _topic_makers_html(items):
     counts = {}
+    labels = {}
     for item in items:
-        if item["maker"]:
-            counts[item["maker"]] = counts.get(item["maker"], 0) + 1
+        key = _maker_key(item)
+        if key:
+            counts[key] = counts.get(key, 0) + 1
+            labels.setdefault(key, f'<span class="maker-handle">{escape(key)}</span>' if not item["maker"] else escape(key))
     if not counts:
         return ""
     ordered = sorted(counts.items(), key=lambda pair: (-pair[1], pair[0].lower()))
     rows = "".join(
-        f'<li><span>{escape(name)}</span><span class="topic-maker-count">{count}</span></li>' for name, count in ordered
+        f'<li><span>{labels[name]}</span><span class="topic-maker-count">{count}</span></li>' for name, count in ordered
     )
     return (
         '<section aria-labelledby="makers-h" class="topic-makers"><div class="section-heading">'
@@ -494,7 +534,7 @@ def _topic_board(page, attributes):
         raise ValueError("topic-board needs a tag attribute")
     pairs = _board_pairs(page, lambda summary: _read_item(summary)["tags"][:1] == [tag])
     items = [_read_item(summary) for summary, _entry, _label in pairs]
-    makers = {item["maker"] for item in items if item["maker"]}
+    makers = {_maker_key(item) for item in items if _maker_key(item)}
     stats = [
         ("Items", len(items)),
         ("Makers", len(makers)),
