@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "c7657017-f0f7-4dfb-9f1f-153e07332863",
+  "issue_id": "ship-c1ed8a87-177d-4226-94f3-02b7e7cfc1bf",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.487Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Rewrite the policies page and status-key copy for the new model",
+    "description": "Rewrite the CMS page `item-policies` (live at version 5):\n- remove the old statuses, the old four dimensions and the hype gap;\n- describe the three layers;\n- describe public AI drafts, how steering works (any signed-in reader can vote; karma never gates voting), editor override with a visible reason, and vote exclusion;\n- describe the new statuses and dimensions.\n\nAlso update the rail notes on home and the copy on sign-in and Submit.\n\nAcceptance: the policies page and every rail note use only the new vocabulary, and the page has a \"How steering works\" anchor that the footer links to.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-573e7042-a7bf-443f-8c96-7c724e3c349c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

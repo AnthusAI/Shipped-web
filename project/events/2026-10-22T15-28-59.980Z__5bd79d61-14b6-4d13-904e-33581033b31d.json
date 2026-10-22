@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "5bd79d61-14b6-4d13-904e-33581033b31d",
+  "issue_id": "ship-15b04c37-da42-42d8-807f-eda4d715345d",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.980Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Voting on stories, concepts and proposals, with downvotes",
+    "description": "Needs Papyrus: reader votes on any subject type (today: items and submissions only), plus downvotes, and the flags \"This is wrong\", \"This belongs under…\" and \"Suggest a better name\" with a short reason.\n\nAny signed-in reader can vote, with no karma gate. Signed-out readers see the controls and get the inline Google sign-in prompt that returns them to the same spot.\n\nAcceptance: a signed-in reader can up- and downvote a proposal and a story, and the snapshot shows net counts.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "071f3f5d-9fe7-4098-b4e0-c9d035f69064",
+  "issue_id": "ship-b3499b4c-e6ec-44de-b0b7-ac7091ad21ca",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.423Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Statuses become Available, Verified and Announced",
+    "description": "Replace the verdicts shipped, verified, pending and vapor with three neutral statuses:\n- **Available**: anyone can use it today.\n- **Verified**: Available, and an editor checked the evidence.\n- **Announced**: claimed, not yet usable or not yet confirmed.\n\nChanges:\n- Update `web/scoring.json` verdicts and the stamp marks in `web/hooks.py` (`_stamp_html`), using the shapes from the Tokens artboard (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r). They must be distinguishable without colour.\n- Migrate the verdict on all 70 published items through the CMS publish path: shipped → available, pending → announced, vapor → announced. Keep `verdictBy` and `verdictAt`.\n- Update the \"How to read a row\" status key on home and the stamp lines on Submit and sign-in.\n\nAcceptance:\n- Every item page shows one of the three words.\n- No page contains the old status words.\n- Item Markdown versions match their pages.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-573e7042-a7bf-443f-8c96-7c724e3c349c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

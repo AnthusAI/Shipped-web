@@ -1,0 +1,34 @@
+{
+  "id": "ship-f799d42d-ec75-4fd3-92cb-297b947a6b5a",
+  "title": "Underrated signal",
+  "description": "Underrated marks signals rated high on Useful and Ready but with few mentions in the corpus: \"Works better than it's talked about.\"\n\n- Start from editor first-pass scores and the knowledge snapshot's per-entity item counts. Add reader means when they exist (5-rating floor).\n- The rule and its threshold are publication data, stated on the policies page.\n- Show a home panel, a signal-page mark and a Weekly line. There is no \"overhyped\" list.\n\nAcceptance: the rule is documented, and the home panel lists only signals that meet it.",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+  "labels": [],
+  "dependencies": [
+    {
+      "target": "ship-ddbf4600-e033-4cbc-8d56-937c15cc2679",
+      "type": "blocked-by"
+    },
+    {
+      "target": "ship-65e14be3-943b-477d-8c62-a561ecf90a7e",
+      "type": "blocked-by"
+    }
+  ],
+  "comments": [],
+  "created_at": "2026-10-22T15:28:59.756786Z",
+  "updated_at": "2026-10-22T15:28:59.949413Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "shipped-product-owner"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

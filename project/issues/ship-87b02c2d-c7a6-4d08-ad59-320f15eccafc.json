@@ -1,0 +1,30 @@
+{
+  "id": "ship-87b02c2d-c7a6-4d08-ad59-320f15eccafc",
+  "title": "Map page: periodic table view",
+  "description": "Build `/map/` with the tabs Table, Graph and River, with Table as the default (Map artboard, https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r).\n\nThe table:\n- Columns are stable, curated task groups (Decide, Route, Guard & judge, Speak, Language, Code, See), stored as publication data.\n- Rows are total parameters; mixture-of-experts models show total and active.\n- Tile borders show the licence; tiles carry two-letter symbols and an \"on X\" mark for \"built on\".\n- Hosted-only models sit in a row below the table.\n- Gaps read \"Nothing we track yet\".\n- Crowded cells show \"+N more\".\n\nIt needs model entities with `taskGroup`, `parametersTotal`, `parametersActive`, `licence`, `symbol` and `builtOn` from Papyrus (engine ask). Until then, build it from item front matter in `web/hooks.py` and mark it Edited by AI.\n\nAcceptance:\n- The live table matches the artboard.\n- Every tile links to its signal.\n- No size is derived from file size.\n- The page works at 390 px with horizontal scroll inside its own box.",
+  "type": "story",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+  "labels": [],
+  "dependencies": [
+    {
+      "target": "ship-ddbf4600-e033-4cbc-8d56-937c15cc2679",
+      "type": "blocked-by"
+    }
+  ],
+  "comments": [],
+  "created_at": "2026-10-22T15:28:59.631676Z",
+  "updated_at": "2026-10-22T15:28:59.795728Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "shipped-product-owner"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

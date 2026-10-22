@@ -1,0 +1,30 @@
+{
+  "id": "ship-2107ddb5-e500-4c49-b2d1-085d0036d039",
+  "title": "Submit and The Weekly rebuilt to the new design",
+  "description": "Submit:\n- new copy;\n- signals start as Announced;\n- \"On the map\" entity confirmation;\n- the \"Propose a concept or a correction\" entry point (placeholder until Reposition 3).\n\nThe Weekly:\n- the archive article and the 600 px email, in this order: lead essay, what moved on the map, concepts born this week, top proposal, Underrated, \"Also out this week\";\n- AI-drafted parts ship as placeholders until Reposition 3.\n\nArtboards: Submit, Roundup and WeeklyEmail (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r).\n\nAcceptance: `/submit/` and `/roundup/` match the artboards, and a test send of the email template renders at 600 px.",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+  "labels": [],
+  "dependencies": [
+    {
+      "target": "ship-ddbf4600-e033-4cbc-8d56-937c15cc2679",
+      "type": "blocked-by"
+    }
+  ],
+  "comments": [],
+  "created_at": "2026-10-22T15:28:59.713398Z",
+  "updated_at": "2026-10-22T15:28:59.890859Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "shipped-product-owner"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

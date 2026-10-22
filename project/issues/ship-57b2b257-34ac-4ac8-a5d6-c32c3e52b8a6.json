@@ -17,10 +17,17 @@
       "text": "2026-10-21 infrastructure state (papyrus-production 712236451410): stack amplify-app-shell-shipped-cms deployed (CMS Amplify app dkycd9pntgo6d, no repository yet); ACM certificate for shipped.anth.us issued and validated (record in the anth.us zone); next: Amplify GitHub connection (Ryan), Google OAuth secrets (script shipped-store-google-secrets.sh), first main build, then edge stack papyrus-edge-shipped and the shipped DNS alias.",
       "created_at": "2026-10-21T11:46:08.158591Z",
       "comment_type": "default"
+    },
+    {
+      "id": "b2c2510c-992e-49d6-b8fb-aa5cf2a5839c",
+      "author": "home",
+      "text": "2026-10-22: Repositioning decided with the product owner. Shipped moves from a verdict board to a living map with three layers (signals, the map, AI-written stories), steered by signed-in readers, with an editor tier that can override them. Tagline: \"In the wild, and mapped as it moves.\" Planned as three epics: ship-573e70 (vocabulary, statuses, dimensions; site only; do before sign-in opens), ship-f4cd69 (page layouts from the round-3 design) and ship-054405 (engine-backed features). Design canvas: https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r",
+      "created_at": "2026-10-22T15:29:07.205908Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T11:42:18.979878Z",
-  "updated_at": "2026-10-22T11:57:02.749636Z",
+  "updated_at": "2026-10-22T15:29:07.205931Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

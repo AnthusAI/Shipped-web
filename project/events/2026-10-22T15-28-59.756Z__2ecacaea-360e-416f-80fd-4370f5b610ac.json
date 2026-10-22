@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "2ecacaea-360e-416f-80fd-4370f5b610ac",
+  "issue_id": "ship-f799d42d-ec75-4fd3-92cb-297b947a6b5a",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.756Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Underrated signal",
+    "description": "Underrated marks signals rated high on Useful and Ready but with few mentions in the corpus: \"Works better than it's talked about.\"\n\n- Start from editor first-pass scores and the knowledge snapshot's per-entity item counts. Add reader means when they exist (5-rating floor).\n- The rule and its threshold are publication data, stated on the policies page.\n- Show a home panel, a signal-page mark and a Weekly line. There is no \"overhyped\" list.\n\nAcceptance: the rule is documented, and the home panel lists only signals that meet it.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}
