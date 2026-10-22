@@ -47,6 +47,7 @@
 .map-tile:focus-visible{outline:3px solid var(--papyrus-focus);outline-offset:2px}
 .map-licence-open{border:3px solid var(--ink)}
 .map-licence-restricted{border:3px dashed var(--ink)}
+.map-licence-custom{border:4px double var(--ink)}
 .map-licence-unstated{border:1px solid var(--rule-strong)}
 .map-tile-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--font-mono);font-size:10px;line-height:1.1}
 .map-tile-status{width:11px;height:11px;flex:none}

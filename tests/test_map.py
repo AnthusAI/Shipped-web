@@ -196,3 +196,26 @@ class MapPageWithoutModelsTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MapLicenceStyleTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+
+        hooks_path = Path(__file__).resolve().parent.parent / "web" / "hooks.py"
+        specification = importlib.util.spec_from_file_location("shipped_hooks_for_licence_styles", hooks_path)
+        cls.hooks = importlib.util.module_from_spec(specification)
+        specification.loader.exec_module(cls.hooks)
+
+    def test_a_stated_licence_that_is_neither_open_nor_restricted_is_custom(self):
+        for licence in ("Llama 4 Community License", "lfm1.0", "Modified MIT"):
+            self.assertEqual(self.hooks._map_licence_style(licence), "custom", licence)
+
+    def test_a_missing_licence_is_unstated_and_known_licences_keep_their_styles(self):
+        self.assertEqual(self.hooks._map_licence_style(None), "unstated")
+        self.assertEqual(self.hooks._map_licence_style(""), "unstated")
+        self.assertEqual(self.hooks._map_licence_style("Apache-2.0"), "open")
+
+    def test_the_tile_label_names_a_custom_licence(self):
+        self.assertEqual(self.hooks._map_licence_phrase("lfm1.0", "custom"), "custom licence: lfm1.0")
