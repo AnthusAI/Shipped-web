@@ -108,6 +108,12 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page("decisions/fixture-guard-one")
         self.assertIn("Editor&#x27;s first pass (AI-assisted)", page)
         self.assertIn("Scored by an AI research pass from the linked sources; a human editor will re-score it.", page)
+        self.assertIn('href="/policies/#scores">How we score', page)
+
+    def test_home_page_links_the_scoring_policy_and_the_footer_links_policies(self):
+        page = self._page(".")
+        self.assertIn('href="/policies/#scores">How we score', page)
+        self.assertIn('href="/policies/">Policies', page)
 
     def test_item_page_without_scoring_says_editor_score(self):
         page = self._page("decisions/fixture-router-two")

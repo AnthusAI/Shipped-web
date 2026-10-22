@@ -188,6 +188,10 @@
           {
             "label": "Submit",
             "href": "/submit/"
+          },
+          {
+            "label": "Policies",
+            "href": "/policies/"
           }
         ]
       }
