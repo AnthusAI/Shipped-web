@@ -8,7 +8,7 @@
 <nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/wiki/task-voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a>
 ::endraw
 
-::include{kind="block" name="knowledge-topic-count" count=entities href="/wiki/" label="All {n} topics"}
+::include{kind="block" name="knowledge-topic-count" count=entities href="/wiki/" label="Topic index · {n} topics"}
 
 ::raw
 </nav>
@@ -20,7 +20,7 @@
 ::include{kind="block" name="desk-board" depends="*" heading="Latest" more="true" level="1"}
 
 ::raw
-<section class="clusters" aria-labelledby="clusters-h"><div class="section-heading"><span class="cintillo">Topic model</span><h2 id="clusters-h">Emerging this month</h2><span class="section-heading-note">Clusters found by the topic model, named by AI</span></div>
+<section class="clusters" aria-labelledby="clusters-h"><div class="section-heading"><span class="cintillo">Clusters</span><h2 id="clusters-h">Emerging clusters this month</h2><span class="section-heading-note">Clusters found by the topic model, named by AI</span></div>
 ::endraw
 
 ::include{kind="block" name="knowledge-clusters" limit=4 terms=5}

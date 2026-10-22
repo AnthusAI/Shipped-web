@@ -2,10 +2,10 @@
 
 ::raw
 <div class="shipped-page topic-page">
-<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Front</a><span aria-hidden="true">/</span><span>Topics</span><span aria-hidden="true">/</span><span>Open TTS</span></nav>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Front</a><span aria-hidden="true">/</span><span>Beats</span><span aria-hidden="true">/</span><span>Open TTS</span></nav>
 <header class="topic-header">
 <div class="topic-header-main">
-<div class="topic-kinds"><span class="topic-kind">TOPIC</span></div>
+<div class="topic-kinds"><span class="topic-kind">BEAT</span></div>
 <h1 class="topic-title">Open TTS</h1>
 <p class="topic-definition">Open-weights text-to-speech and voice-cloning models from the last year. Each entry states the licence of the weights, or says that it is not stated. Editors score each one on whether it is real, useful, notable and novel.</p>
 </div>
@@ -20,14 +20,14 @@
 
 ::raw
 </section>
-<section class="topic-knowledge" aria-labelledby="beat-entities-h"><div class="section-heading"><span class="cintillo">From the wiki</span><h2 id="beat-entities-h">Concepts in this topic</h2></div>
+<section class="topic-knowledge" aria-labelledby="beat-entities-h"><div class="section-heading"><span class="cintillo">From the wiki</span><h2 id="beat-entities-h">Topics in this beat</h2></div>
 ::endraw
 
 ::include{kind="block" name="knowledge-beat" key=open-tts part=entities}
 
 ::raw
 </section>
-<section class="topic-knowledge clusters" aria-labelledby="beat-clusters-h"><div class="section-heading"><span class="cintillo">Topic model</span><h2 id="beat-clusters-h">Themes found here</h2></div>
+<section class="topic-knowledge clusters" aria-labelledby="beat-clusters-h"><div class="section-heading"><span class="cintillo">Clusters</span><h2 id="beat-clusters-h">Clusters found in this beat</h2></div>
 ::endraw
 
 ::include{kind="block" name="knowledge-beat" key=open-tts part=clusters}
