@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from datetime import datetime
 from functools import lru_cache
 from html import escape
@@ -22,6 +23,11 @@ NEWSLETTER_LISTS_PATH = Path(__file__).with_name("newsletter-lists.json")
 ROUNDUP_ARCHIVE_PATH = "/roundup/"
 ROUNDUP_SECTION = "roundup"
 WIKI_ITEM_TYPE = "wiki_page"
+READER_SCRIPT_PATH = "/_plugins/papyrus-reader@1.js"
+READER_STYLESHEET_PATH = "/_plugins/papyrus-reader@1.css"
+PAGE_ITEM_TYPE = "page"
+VERSION_SUFFIX = re.compile(r"-v\d+$")
+SIGN_IN_LINK = re.compile(r'<a href="/sign-in/"[^>]*>Sign in</a>')
 NEWSLETTER_SCRIPT_PATH = "/_plugins/papyrus-newsletter@1.js"
 NEWSLETTER_CONSENT = "Email me the lists I ticked. I can unsubscribe in one click."
 NEWSLETTER_HEADING = "Get the roundup by email"
@@ -80,6 +86,51 @@ def _scoring():
 
 def page_inputs(site):
     return _scoring()
+
+
+def _subject(summary):
+    """The reader subject of a published item: its lineage id, which is the item id without a `-v<n>` version suffix."""
+    return VERSION_SUFFIX.sub("", summary.item_id)
+
+
+def _island(name, props=None, tag="div", css_class="", fallback=""):
+    """A mount point for a reader island; the reader script (loaded by head_extra) finds it by data-island."""
+    class_html = f' class="{escape(css_class, quote=True)}"' if css_class else ""
+    return (
+        f'<{tag}{class_html} data-island="{escape(name, quote=True)}" '
+        f'data-props="{escape(json.dumps(props or {}, separators=(",", ":")), quote=True)}">{fallback}</{tag}>'
+    )
+
+
+def _freshness_html():
+    return _island("Freshness", tag="span", css_class="reader-freshness")
+
+
+def _board_reader_html(summary):
+    subject = _subject(summary)
+    return (
+        '<div class="board-reader">'
+        f'{_island("Vote", {"subject": subject}, tag="span")}{_island("UsedIt", {"subject": subject}, tag="span")}</div>'
+    )
+
+
+def _item_reader_html(summary):
+    subject = _subject(summary)
+    dimensions = [dimension["key"] for dimension in _scoring()["dimensions"]]
+    return (
+        '<section class="item-reader" aria-labelledby="item-reader-h">'
+        '<div class="section-heading"><h2 id="item-reader-h">Readers</h2></div>'
+        f'<div class="item-reader-actions">{_island("Vote", {"subject": subject})}{_island("UsedIt", {"subject": subject})}</div>'
+        f'{_island("Rating", {"subject": subject, "dimensions": dimensions})}</section>'
+    )
+
+
+def _item_comments_html(summary):
+    return (
+        '<section class="item-comments" aria-labelledby="item-comments-h">'
+        '<div class="section-heading"><h2 id="item-comments-h">Comments</h2></div>'
+        f'{_island("Comments", {"subject": _subject(summary)})}</section>'
+    )
 
 
 def _item_key(summary):
@@ -364,7 +415,7 @@ def _checked_note(item):
 
 
 def item_decorator(html, summary, site=None):
-    if summary.type == WIKI_ITEM_TYPE:
+    if summary.type in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE):
         return html
     item = _read_item(summary)
     gap = _hype_gap(item["scores"])
@@ -400,7 +451,7 @@ def item_decorator(html, summary, site=None):
         f"{_strip_links_html(item)}{scores_html}{chips_html}</div>"
         f'<div class="item-stamp-block">{_stamp_html(item["verdict"], " status-stamp-xl")}{note_html}</div></header>'
     )
-    return strip + html + evidence_html
+    return strip + _item_reader_html(summary) + html + evidence_html + _item_comments_html(summary)
 
 
 def _date_label(summary):
@@ -440,6 +491,7 @@ def _board_row_html(position, summary, entry, section_label, site=None):
         f'<div class="board-meta">{"".join(meta)}</div>'
         + (f'<div class="board-entities">{chips}</div>' if chips else "")
         + (f'<div class="board-gap"><span class="kicker">Hype gap</span> {gap_html}</div>' if gap_html else "")
+        + _board_reader_html(summary)
         + "</div>"
         f'<div class="board-status">{_stamp_html(item["verdict"])}</div>'
         f'<div class="board-dimensions">{_dimensions_html(item["scores"], None, agent_tag_html)}</div>'
@@ -482,11 +534,22 @@ def _more_links_html(page):
     return f'<p class="board-more"><span class="kicker">More</span>{links}</p>'
 
 
+def _empty_board(attributes):
+    verdict = attributes["verdict"]
+    heading = attributes.get("heading", "Latest")
+    tag = "h1" if attributes.get("level") == "1" else "h2"
+    return (
+        '<section class="board desk-board desk-board-empty" aria-labelledby="desk-board-h">'
+        f'<div class="board-heading"><{tag} id="desk-board-h">{escape(heading)}</{tag}></div>'
+        f'<p class="board-empty">No item has been stamped {escape(verdict.capitalize())} yet.</p></section>'
+    )
+
+
 def _desk_board(page, attributes):
     wanted_verdict = attributes.get("verdict")
     pairs = _board_pairs(page, lambda summary: not wanted_verdict or _read_item(summary)["verdict"] == wanted_verdict)
     if not pairs:
-        return ""
+        return _empty_board(attributes) if wanted_verdict else ""
     limit = int(attributes.get("limit", BOARD_ROW_LIMIT))
     heading = attributes.get("heading", "Latest")
     tag = "h1" if attributes.get("level") == "1" else "h2"
@@ -494,7 +557,7 @@ def _desk_board(page, attributes):
     return (
         '<section class="board desk-board" aria-labelledby="desk-board-h">'
         f'<div class="board-heading"><{tag} id="desk-board-h">{escape(heading)}</{tag}></div>'
-        '<p class="board-note desk-board-note">Ratings open with reader sign-in</p>'
+        f'<p class="board-note desk-board-note">{_freshness_html()}</p>'
         f"{_board_list_html(pairs[:limit], page.site)}{more_html}</section>"
     )
 
@@ -575,7 +638,7 @@ def _topic_board(page, attributes):
     ranked_html = (
         '<section aria-labelledby="items-h" class="topic-block board desk-board"><div class="section-heading">'
         '<span class="cintillo">Newest first</span><h2 id="items-h">Items in this topic</h2></div>'
-        f'<p class="board-note desk-board-note">Ratings open with reader sign-in</p>{_board_list_html(pairs, page.site)}</section>'
+        f'<p class="board-note desk-board-note">{_freshness_html()}</p>{_board_list_html(pairs, page.site)}</section>'
         if pairs else ""
     )
     return (
@@ -624,7 +687,30 @@ def _newsletter_signup_html():
     )
 
 
+def head_extra(page):
+    return (
+        f'<link rel="stylesheet" href="{READER_STYLESHEET_PATH}">\n'
+        f'<script src="{READER_SCRIPT_PATH}" defer></script>'
+    )
+
+
+def _reader_sign_in(html):
+    """Put the ReaderSignIn island where the static Sign in link is; the link stays inside it for readers without JavaScript."""
+    header_end = html.find("</header>")
+    if header_end < 0:
+        LOGGER.warning("page has no header; reader sign-in left out")
+        return html
+    header, rest = html[:header_end], html[header_end:]
+    mounted, count = SIGN_IN_LINK.subn(
+        lambda link: _island("ReaderSignIn", tag="span", css_class="nav-reader", fallback=link.group(0)), header, count=1
+    )
+    if not count:
+        LOGGER.warning("header has no Sign in link; reader sign-in left out")
+    return mounted + rest
+
+
 def page_finish(html, page):
+    html = _reader_sign_in(html)
     if page.kind != "listing" or page.path != ROUNDUP_ARCHIVE_PATH:
         return html
     heading_end = html.find("</h1>")

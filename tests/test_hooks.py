@@ -1,3 +1,4 @@
+import html
 import json
 import re
 import shutil
@@ -7,10 +8,16 @@ import tempfile
 import unittest
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from reader_privacy import identity_leaks, reader_ids_in, scan_files  # noqa: E402
+
 REPOSITORY_ROOT = Path(__file__).resolve().parent.parent
 FIXTURE_DIRECTORY = REPOSITORY_ROOT / "tests" / "fixtures" / "content"
 STATIC_DIRECTORY = REPOSITORY_ROOT / "web"
 KNOWLEDGE_DIRECTORY = REPOSITORY_ROOT / "tests" / "fixtures" / "knowledge"
+READER_DATA_DIRECTORY = REPOSITORY_ROOT / "tests" / "fixtures" / "reader"
+FIXTURE_SUBJECT = "file:open-weights/fixture-full-contract.md"
 
 
 def _papyrus_executable():
@@ -77,7 +84,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Latest", page)
         self.assertNotIn("Shipped this week", page)
         self.assertEqual(len(re.findall(r'<li class="board-row">', page.split('class="board desk-board"')[1].split("</ol>")[0])), 4)
-        self.assertIn("Ratings open with reader sign-in", page)
+        self.assertNotIn("Ratings open with reader sign-in", page)
         self.assertIn('href="/topics/decision-models/">Decision models', page)
         self.assertIn('href="/topics/open-tts/">Open TTS', page)
         self.assertNotIn("Sample", page)
@@ -100,7 +107,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("sample-mark", self._page("rising"))
 
     def test_placeholder_pages_have_no_sample_marks(self):
-        for relative_path in ("sample/roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents"):
+        for relative_path in ("sample/roundup", "sample/tern-3", "sample/voice-agents"):
             page = self._page(relative_path)
             self.assertNotIn("sample-mark", page)
             self.assertNotIn(">Sample<", page)
@@ -133,7 +140,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn('<meta name="theme-color" content="#C6F432" media="(prefers-color-scheme: dark)">', page)
 
     def test_no_visible_page_says_desk(self):
-        for relative_path in (".", "new", "vapor", "roundup", "sample/tern-3", "topics/decision-models"):
+        for relative_path in (".", "new", "vapor", "roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents", "topics/decision-models"):
             page = re.sub(r'<section class="clusters.*?</section>', "", self._page(relative_path), flags=re.S)
             visible = re.sub(r'class="[^"]*"|id="[^"]*"|aria-labelledby="[^"]*"|href="[^"]*"', "", page)
             self.assertNotRegex(visible.lower(), r"\bdesk\b", relative_path)
@@ -194,6 +201,135 @@ class HooksProjectionTest(unittest.TestCase):
 
 
 
+    # Reader steering (Papyrus 5.22.0 page components).
+
+    def _island_props(self, page, name):
+        return [json.loads(html.unescape(raw)) for raw in re.findall(rf'data-island="{name}" data-props="([^"]*)"', page)]
+
+    def test_every_page_loads_the_reader_script_and_stylesheet(self):
+        for relative_path in (".", "new", "rising", "vapor", "submit", "sign-in", "policies", "open-weights/fixture-full-contract", "topics/open-tts", "sample/tern-3"):
+            page = self._page(relative_path)
+            self.assertIn('<link rel="stylesheet" href="/_plugins/papyrus-reader@1.css">', page, relative_path)
+            self.assertIn('<script src="/_plugins/papyrus-reader@1.js" defer></script>', page, relative_path)
+
+    def test_reader_sign_in_replaces_the_static_link_in_the_header_and_keeps_it_as_a_fallback(self):
+        for relative_path in (".", "submit", "sign-in", "open-weights/fixture-full-contract", "sample/tern-3"):
+            header = self._page(relative_path).split("</header>")[0]
+            self.assertEqual(len(re.findall(r'data-island="ReaderSignIn"', header)), 1, relative_path)
+            self.assertIn('data-island="ReaderSignIn" data-props="{}"><a href="/sign-in/"', header, relative_path)
+            self.assertEqual(header.count(">Sign in</a>"), 1, relative_path)
+
+    def test_board_rows_carry_vote_and_used_it_for_the_lineage_subject_and_one_freshness_per_board(self):
+        for relative_path in (".", "new", "topics/decision-models"):
+            page = self._page(relative_path)
+            rows = len(re.findall(r'<li class="board-row">', page))
+            self.assertGreater(rows, 0, relative_path)
+            self.assertEqual(len(self._island_props(page, "Vote")), rows, relative_path)
+            self.assertEqual(len(self._island_props(page, "UsedIt")), rows, relative_path)
+            board = "board" + page.split('class="board', 1)[1].split("</section>")[0] if relative_path != "topics/decision-models" else page.split('topic-block board desk-board')[1].split("</section>")[0]
+            self.assertEqual(board.count('data-island="Freshness"'), 1, relative_path)
+            self.assertNotIn("Ratings open with reader sign-in", page, relative_path)
+        self.assertIn({"subject": FIXTURE_SUBJECT}, self._island_props(self._page("new"), "Vote"))
+
+    def test_item_page_has_vote_used_it_rating_with_the_four_dimensions_and_comments_after_the_article(self):
+        page = self._page("open-weights/fixture-full-contract")
+        self.assertEqual(self._island_props(page, "Vote"), [{"subject": FIXTURE_SUBJECT}])
+        self.assertEqual(self._island_props(page, "UsedIt"), [{"subject": FIXTURE_SUBJECT}])
+        self.assertEqual(self._island_props(page, "Rating"), [{"subject": FIXTURE_SUBJECT, "dimensions": ["real", "useful", "notable", "novel"]}])
+        self.assertEqual(self._island_props(page, "Comments"), [{"subject": FIXTURE_SUBJECT}])
+        self.assertLess(page.index("</article>"), page.index('data-island="Comments"'))
+
+    def test_subject_is_the_lineage_id_without_a_version_suffix(self):
+        hooks = _load_hooks()
+        for item_id, lineage in (("item-one", "item-one"), ("item-one-v2", "item-one"), ("a-v1-b", "a-v1-b"), ("1f3a-v12", "1f3a")):
+            self.assertEqual(hooks._subject(type("Summary", (), {"item_id": item_id})()), lineage)
+
+    def test_page_items_get_no_verdict_or_score_strip(self):
+        page = self._page("policies")
+        for text in ("Verdict", "status-stamp", "desk-strip", "Pending", "item-reader", "item-comments", "Primary evidence"):
+            self.assertNotIn(text, page)
+        self.assertIn("Fixture policies", page)
+        self.assertNotIn('data-island="Vote"', page)
+
+    def test_submit_page_mounts_the_submit_island_and_says_what_is_true_now(self):
+        page = self._page("submit")
+        self.assertEqual(self._island_props(page, "Submit"), [{}])
+        for text in ("public as soon as you send it", "Editors review submissions after the fact", "sign in"):
+            self.assertIn(text, page)
+        for text in ("is-placeholder", "placeholder-tag", "<fieldset disabled", "not open yet", "Preview", "preview-notice"):
+            self.assertNotIn(text, page)
+
+    def test_sign_in_page_explains_privacy_and_mounts_reader_sign_in(self):
+        page = self._page("sign-in")
+        body = page.split("</header>")[1]
+        self.assertEqual(self._island_props(body, "ReaderSignIn"), [{}])
+        self.assertIn("never published", page)
+        self.assertIn("handle", page)
+        for text in ("is-placeholder", "placeholder-tag", "coming later", "Sign in is coming", "preview-notice"):
+            self.assertNotIn(text, page)
+
+    def test_vapor_log_shows_the_real_empty_state_at_full_strength_above_the_dimmed_sample_rows(self):
+        page = self._page("vapor")
+        empty = page.index("No item has been stamped Vapor yet.")
+        self.assertNotIn("is-placeholder", page[page.rindex("<section", 0, empty):empty])
+        self.assertLess(empty, page.index('class="board is-placeholder"'))
+        self.assertEqual(page.count("<h1"), 1)
+        self.assertIn("Sample vapor rows", page)
+        self.assertNotIn("No item has been stamped Vapor yet.", self._page("."))
+
+    def test_vapor_log_lists_real_vapor_items_instead_of_the_empty_state(self):
+        hooks = _load_hooks()
+        self.assertEqual(hooks._empty_board({"verdict": "vapor", "heading": "Vapor log", "level": "1"}).count("No item has been stamped Vapor yet."), 1)
+        shipped = self._page("topics/decision-models")
+        self.assertNotIn("No item has been stamped", shipped)
+
+    def test_rising_keeps_its_placeholder_with_one_real_line_above_it(self):
+        line = "Rising starts counting once readers vote. Updated every 6 hours."
+        rising = self._page("rising")
+        self.assertIn(line, rising)
+        self.assertLess(rising.index(line), rising.index('class="board is-placeholder"'))
+        self.assertNotIn("is-placeholder", rising[rising.rindex("<p", 0, rising.index(line)):rising.index(line)])
+        home = self._page(".")
+        self.assertEqual(home.count(line), 1)
+        self.assertLess(home.index(line), home.index('class="rail is-placeholder" aria-labelledby="rising-h"'))
+
+    def test_beat_chips_no_longer_point_at_sample_pages(self):
+        for relative_path in (".", "new", "rising", "vapor"):
+            beats = self._page(relative_path).split('aria-label="Editors’ beats"')[1].split("</nav>")[0]
+            self.assertNotIn("/sample/", beats, relative_path)
+            self.assertIn('href="/wiki/task-voice-agents/">Voice agents', beats, relative_path)
+
+    def test_sample_voice_agents_page_says_ai_not_the_desk(self):
+        page = self._page("sample/voice-agents")
+        self.assertIn("FOLLOWED BY AI", page)
+        self.assertIn("<b>AI</b>", page)
+        self.assertNotIn("The desk", page)
+        self.assertIn("is-placeholder", page)
+
+    def test_projected_pages_and_reader_data_fixtures_hold_no_identity(self):
+        data = {path.relative_to(READER_DATA_DIRECTORY).as_posix(): path.read_text(encoding="utf-8") for path in READER_DATA_DIRECTORY.rglob("*.json")}
+        self.assertEqual(set(data), {"items.json", "board.json", "readers.json", "submissions.json", "comments/fixture-item.json"})
+        published = reader_ids_in(data)
+        self.assertEqual(published, {"6f1c2d3e-4a5b-4c6d-8e7f-0a1b2c3d4e5f"})
+        self.assertEqual(scan_files(data, published), {})
+        projected = {
+            path.relative_to(self.output_directory).as_posix(): path.read_bytes()
+            for path in self.output_directory.rglob("*")
+            if path.is_file() and path.suffix in {".html", ".md", ".json", ".xml", ".txt", ".js", ".css"}
+        }
+        self.assertGreater(len(projected), 50)
+        self.assertEqual(scan_files(projected), {})
+
+    def test_the_privacy_scan_catches_what_it_is_for(self):
+        reader_id = "6f1c2d3e-4a5b-4c6d-8e7f-0a1b2c3d4e5f"
+        person = "0b9c7d1e-aaaa-4bbb-8ccc-123456789abc"
+        self.assertEqual(identity_leaks("ss1_" + "A" * 43), ["ss1_" + "A" * 43])
+        self.assertEqual(len(identity_leaks("ssdev_abcdefghij")), 1)
+        self.assertEqual(identity_leaks("write to someone@example.com"), ["someone@example.com"])
+        self.assertEqual(identity_leaks(f"personId {person}", [reader_id]), ["personId", person])
+        self.assertEqual(identity_leaks(f"readerId {reader_id}", [reader_id]), [])
+        self.assertEqual(identity_leaks(f"readerId {reader_id}"), [reader_id])
+
     def test_roundup_archive_has_the_signup_form_and_lists_issues(self):
         page = self._page("roundup")
         self.assertIn("<papyrus-newsletter", page)
@@ -245,6 +381,47 @@ class HooksProjectionTest(unittest.TestCase):
     def test_wiki_listing_page_size_is_fifty(self):
         projection = json.loads((STATIC_DIRECTORY / "projection.json").read_text(encoding="utf-8"))
         self.assertEqual(projection["urls"]["sections"]["wiki"]["pageSize"], 50)
+
+
+def _load_hooks():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("shipped_hooks_under_test", STATIC_DIRECTORY / "hooks.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+class ReaderSteeringConfigurationTest(unittest.TestCase):
+    def setUp(self):
+        self.configuration = (REPOSITORY_ROOT / "papyrus.config.ts").read_text(encoding="utf-8")
+        self.scoring = json.loads((STATIC_DIRECTORY / "scoring.json").read_text(encoding="utf-8"))
+
+    def test_the_plugin_is_listed_with_the_dimensions_and_hype_gap_of_scoring_json(self):
+        self.assertIn('name: "reader-steering"', self.configuration)
+        keys = [dimension["key"] for dimension in self.scoring["dimensions"]]
+        self.assertIn("dimensions: [" + ", ".join(f'"{key}"' for key in keys) + "]", self.configuration)
+        rule = self.scoring["hypeGap"]
+        plus = ", ".join(f'"{key}"' for key in rule["plus"])
+        minus = ", ".join(f'"{key}"' for key in rule["minus"])
+        self.assertIn(f"hypeGap: {{ plus: [{plus}], minus: [{minus}] }}", self.configuration)
+
+    def test_the_snapshot_runs_every_six_hours_and_the_retirement_poll_has_its_secret(self):
+        self.assertIn("snapshot: { schedule: true, intervalHours: 6 }", self.configuration)
+        self.assertIn("retirementPoll: true", self.configuration)
+        site = json.loads((REPOSITORY_ROOT / "infra" / "site.json").read_text(encoding="utf-8"))
+        self.assertIs(site["cms"]["readerRetirementPoll"], True)
+        self.assertIn("prospectusAccountsApiStageArn", site["cms"])
+
+    def test_the_compute_role_is_the_same_one_the_newsletter_plugin_uses(self):
+        roles = re.findall(r'computeRoleArn: "([^"]+)"', self.configuration)
+        self.assertEqual(len(roles), 2)
+        self.assertEqual(roles[0], roles[1])
+
+    def test_moderation_is_human_and_the_site_origin_is_configured_for_the_reader_api(self):
+        self.assertIn('moderation: { mode: "human" }', self.configuration)
+        site = json.loads((REPOSITORY_ROOT / "infra" / "site.json").read_text(encoding="utf-8"))
+        self.assertEqual(site["cms"]["siteOrigin"], "https://shipped.anth.us")
 
 
 class NewsletterConfigurationTest(unittest.TestCase):

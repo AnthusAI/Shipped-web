@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-10-22T10:00:00Z",
+  "items": {
+    "file:open-weights/fixture-full-contract.md": {
+      "up": 5, "usedIt": 2, "comments": 1,
+      "ratings": {
+        "real": {
+          "reader": { "mean": 4.2, "n": 5, "hist": [0, 0, 1, 2, 2] },
+          "editor": { "mean": 4.0, "n": 1, "hist": [0, 0, 0, 1, 0] }
+        }
+      },
+      "editor": 4.0, "reader": 4.2, "hypeGap": { "reader": -1.0, "editor": 2.5 }
+    }
+  }
+}
