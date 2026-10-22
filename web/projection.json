@@ -105,7 +105,8 @@
       "assets/shipped-item-topic.css",
       "assets/shipped-desk.css",
       "assets/shipped-newsletter.css",
-      "assets/shipped-wiki.css"
+      "assets/shipped-wiki.css",
+      "assets/shipped-reader.css"
     ]
   },
   "fonts": {
@@ -141,14 +142,14 @@
       "id": "vapor",
       "path": "vapor",
       "title": "Vapor log",
-      "description": "Placeholder items announced but not something you can use.",
+      "description": "Items announced but not something you can use.",
       "source": "pages/vapor.md"
     },
     {
       "id": "submit",
       "path": "submit",
       "title": "Submit",
-      "description": "Preview of the submission form. Submitting is not open yet.",
+      "description": "Submit a link to something that shipped. Submissions are public at once and editors review them after the fact.",
       "source": "pages/submit.md"
     },
     {
@@ -162,7 +163,7 @@
       "id": "sign-in",
       "path": "sign-in",
       "title": "Sign in",
-      "description": "Reader accounts with Google sign-in are coming. This is a preview.",
+      "description": "Sign in to vote, rate, comment and submit links. Only your handle is ever shown.",
       "source": "pages/sign-in.md"
     },
     {

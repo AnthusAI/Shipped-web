@@ -5,7 +5,7 @@
 ::raw
 <div class="shipped-page">
 
-<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/sample/voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a>
+<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/wiki/task-voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a>
 ::endraw
 
 ::include{kind="block" name="knowledge-topic-count" count=entities href="/wiki/" label="All {n} topics"}
@@ -15,6 +15,7 @@
 <div class="shipped-layout">
 <div class="shipped-main">
 <nav class="view-tabs" aria-label="Views"><a href="/">Front</a><a href="/new/">New</a><a href="/rising/" aria-current="page">Rising</a><a href="/vapor/">Vapor log</a></nav>
+<p class="rising-line">Rising starts counting once readers vote. Updated every 6 hours. <span class="reader-freshness" data-island="Freshness" data-props="{}"></span></p>
 <section class="board is-placeholder" aria-labelledby="board-h">
 <div class="board-heading"><span class="cintillo">Wk 43 · 19–25 Oct</span><h1 id="board-h">Rising in the last 6 hours</h1><span class="placeholder-tag">Placeholder</span></div>
 <div class="board-head kicker" aria-hidden="true"><span>Rank</span><span>Votes / hr · 6-hour window</span><span>Item · entities</span><span>Status</span><span class="board-head-dims"><span>Real</span><span>Useful</span><span>Notable</span><span>Novel</span></span><span>Talk</span></div>

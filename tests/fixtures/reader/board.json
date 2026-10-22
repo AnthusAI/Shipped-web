@@ -1,0 +1,6 @@
+{
+  "generatedAt": "2026-10-22T10:00:00Z",
+  "parameters": { "halfLifeHours": 48, "risingWindowHours": 6, "readerMinimum": 5, "editorWeight": 0.5 },
+  "front": [ { "subject": "file:open-weights/fixture-full-contract.md", "score": 3.5, "editor": 4.0, "reader": null, "readerN": 0, "ageHours": 12.0 } ],
+  "rising": [ { "subject": "file:open-weights/fixture-full-contract.md", "upvotes": 3 } ]
+}
