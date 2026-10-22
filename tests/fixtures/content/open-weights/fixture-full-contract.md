@@ -8,8 +8,10 @@ maker: Fixture Lab
 tags: [open-tts, voice-cloning]
 releasedOn: 2026-10-20
 sourceUrl: "https://source.fixture.example/tts"
-scoreNotes: {real: "Weights are public in the fixture."}
-scores: {real: 4.5, useful: 4, notable: 3.5, novel: 3}
+scoreNotes: {open: "Weights are public in the fixture."}
+scores: {useful: 4, ready: 3.5, advances: 3}
+relations:
+  - {subject: Fixture model, relation: built on, object: Fixture parent}
 evidence:
   - {kind: weights, url: "https://weights.fixture.example/model", check: checked}
   - {kind: eval, url: "https://eval.fixture.example/table", check: partly}
