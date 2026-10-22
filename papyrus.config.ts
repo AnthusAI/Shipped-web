@@ -56,8 +56,8 @@ export default defineSite({
         lists: [
           {
             id: "weekly",
-            name: "The Shipped roundup",
-            description: "One email a week with what shipped and the board's movers.",
+            name: "The Weekly",
+            description: "One email on Fridays: what moved on the map, concepts born this week, and what's new in the wild.",
             kind: "roundup",
             schedule: { draft: "cron(0 13 ? * FRI *)", timezone: "America/New_York" },
             issueType: "newsletter_issue",
@@ -65,8 +65,8 @@ export default defineSite({
           },
           {
             id: "alerts-shipped",
-            name: "Alerts: Shipped",
-            description: "A short email when something is added to the Shipped section.",
+            name: "Alerts: In use",
+            description: "A short email when something is added to the In use section.",
             kind: "alert",
             rule: { sections: ["shipped"] },
             approval: "admin",

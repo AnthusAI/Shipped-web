@@ -30,8 +30,8 @@ VERSION_SUFFIX = re.compile(r"-v\d+$")
 SIGN_IN_LINK = re.compile(r'<a href="/sign-in/"[^>]*>Sign in</a>')
 NEWSLETTER_SCRIPT_PATH = "/_plugins/papyrus-newsletter@1.js"
 NEWSLETTER_CONSENT = "Email me the lists I ticked. I can unsubscribe in one click."
-NEWSLETTER_HEADING = "Get the roundup by email"
-NEWSLETTER_DEK = "Tick the lists you want: the weekly roundup, and a short alert when something is added to a section. Nothing is sent until you confirm your address from the email we send you."
+NEWSLETTER_HEADING = "Get The Weekly by email"
+NEWSLETTER_DEK = "Tick the lists you want: The Weekly, and a short alert when something is added to a section. Nothing is sent until you confirm your address from the email we send you."
 NEWSLETTER_FEED_NOTE = 'Prefer a feed? <a href="/feed.xml">RSS</a> carries the latest items.'
 
 DEPENDS_ON = {"*": [], "item": []}
@@ -83,13 +83,13 @@ READER_KEY_TEXT = (
 STAMP_NOTE_VERBS = {"available": "Confirmed by", "verified": "Verified by"}
 STAMP_NOTE_UNNAMED_VERBS = {"available": "Confirmed on", "verified": "Verified on"}
 FOOTER_LINKS = (
-    ("How ranking works", RANKING_POLICY_PATH),
+    ("How the map works", "/map/"),
+    ("How steering works", "/policies/#steering"),
     ("Policies", "/policies/"),
-    ("Roundups", "/roundup/"),
+    ("All issues", "/roundup/"),
     ("RSS", "/feed.xml"),
-    ("Submit", "/submit/"),
 )
-FOOTER_LINE = "AI that shipped."
+FOOTER_LINE = "Published by Anthus AI Solutions."
 
 
 @lru_cache(maxsize=1)
