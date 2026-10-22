@@ -642,6 +642,8 @@ def footer(page):
 def block(name, attributes, page):
     if name == "desk-board":
         return _desk_board(page, attributes)
+    if name == "front":
+        return _front_block(page, attributes)
     if name == "topic-board":
         return _topic_board(page, attributes)
     raise ValueError(f"unknown block {name!r}")
@@ -667,6 +669,68 @@ def _newsletter_signup_html():
         f'<p class="newsletter-feed-note">{NEWSLETTER_FEED_NOTE}</p>'
         '</section>'
     )
+
+
+FRONT_NEWSLETTER_HEADING = "The Weekly"
+FRONT_NEWSLETTER_DEK = "In the wild, and mapped as it moves. One email on Fridays."
+FRONT_NEWSLETTER_FORM_ID = "front-page"
+
+
+def _front_stat_html(number, singular, plural):
+    label = singular if number == 1 else plural
+    return f'<span class="front-stat"><b>{number}</b> {escape(label)}</span>'
+
+
+def _front_map_figures(page):
+    knowledge = page.site.knowledge
+    index = knowledge.index() or {}
+    clusters = knowledge.clusters() or {}
+    entities = index.get("entities") or []
+    named_clusters = [cluster for cluster in clusters.get("clusters") or [] if cluster.get("name")]
+    weeks = max((int(entity.get("weeksOfHistory") or 0) for entity in entities), default=0)
+    return {
+        "entities": int(index.get("entityCount") or 0),
+        "clusters": len(named_clusters),
+        "weeks": weeks,
+    }
+
+
+def _front_stats_html(page):
+    figures = _front_map_figures(page)
+    stats = [_front_stat_html(len(_board_pairs(page, lambda summary: True)), "signal", "signals")]
+    if figures["entities"]:
+        stats.append(_front_stat_html(figures["entities"], "entity on the map", "entities on the map"))
+    if figures["clusters"]:
+        stats.append(_front_stat_html(figures["clusters"], "cluster", "clusters"))
+    if figures["weeks"]:
+        stats.append(_front_stat_html(figures["weeks"], "week of map history", "weeks of map history"))
+    return f'<p class="front-stats">{"".join(stats)}</p>'
+
+
+def _front_newsletter_html():
+    lists = _newsletter_lists()
+    list_ids = ",".join(entry["id"] for entry in lists)
+    return (
+        '<section class="front-weekly" aria-labelledby="front-weekly-heading">'
+        '<div class="front-weekly-copy">'
+        f'<h2 id="front-weekly-heading">{escape(FRONT_NEWSLETTER_HEADING)}</h2>'
+        f'<p>{escape(FRONT_NEWSLETTER_DEK)}</p></div>'
+        '<div class="front-weekly-form">'
+        f'<papyrus-newsletter lists="{escape(list_ids, quote=True)}" '
+        f'data-lists="{escape(json.dumps(lists), quote=True)}" '
+        f'consent="{escape(NEWSLETTER_CONSENT, quote=True)}" form-id="{FRONT_NEWSLETTER_FORM_ID}" '
+        'button="Subscribe" label="Email address"></papyrus-newsletter>'
+        f'<script src="{NEWSLETTER_SCRIPT_PATH}" defer></script></div></section>'
+    )
+
+
+def _front_block(page, attributes):
+    part = attributes.get("part")
+    if part == "stats":
+        return _front_stats_html(page)
+    if part == "newsletter":
+        return _front_newsletter_html()
+    raise ValueError(f"unknown front part {part!r}")
 
 
 def head_extra(page):
