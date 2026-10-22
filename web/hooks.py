@@ -25,7 +25,7 @@ NEWSLETTER_SCRIPT_PATH = "/_plugins/papyrus-newsletter@1.js"
 NEWSLETTER_CONSENT = "Email me the lists I ticked. I can unsubscribe in one click."
 NEWSLETTER_HEADING = "Get the roundup by email"
 NEWSLETTER_DEK = "Tick the lists you want: the weekly roundup, and a short alert when something is added to a section. Nothing is sent until you confirm your address from the email we send you."
-NEWSLETTER_FEED_NOTE = 'Prefer a feed? <a href="/feed.xml">RSS</a> carries the latest items. Past issues are listed below.'
+NEWSLETTER_FEED_NOTE = 'Prefer a feed? <a href="/feed.xml">RSS</a> carries the latest items.'
 
 DEPENDS_ON = {"*": [], "item": []}
 
