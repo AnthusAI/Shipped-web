@@ -16,3 +16,8 @@
 .reader-submit{max-width:44rem}
 .reader-signin{min-height:2.5rem}
 .board-reader .papyrus-reader-status{display:none}
+.board-help{display:block;margin-top:4px;max-width:70ch;line-height:1.5}
+.reader-key{margin:0;max-width:70ch;font-family:var(--font-mono);font-size:12px;line-height:1.5;color:var(--muted)}
+.board-talk-none{color:var(--muted);cursor:default}
+.item-comments .papyrus-reader-comment-list:empty::before{content:"No comments yet.";display:block;padding:10px 0;font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.item-comments .papyrus-reader-comments:has(.papyrus-reader-comment-list:empty) .papyrus-reader-comment-count{display:none}
