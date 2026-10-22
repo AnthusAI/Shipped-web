@@ -135,7 +135,7 @@
       "id": "rising",
       "path": "rising",
       "title": "Rising",
-      "description": "Placeholder items gaining votes fastest in the last 6 hours.",
+      "description": "Items gaining the most upvotes in the last 6 hours.",
       "source": "pages/rising.md"
     },
     {
@@ -149,7 +149,7 @@
       "id": "submit",
       "path": "submit",
       "title": "Submit",
-      "description": "Submit a link to something that shipped. Submissions are public at once and editors review them after the fact.",
+      "description": "Submitting opens with reader sign-in, soon. Submissions will be public at once and editors will review them after the fact.",
       "source": "pages/submit.md"
     },
     {
@@ -163,7 +163,7 @@
       "id": "sign-in",
       "path": "sign-in",
       "title": "Sign in",
-      "description": "Sign in to vote, rate, comment and submit links. Only your handle is ever shown.",
+      "description": "Reader sign-in for Shipped opens soon.",
       "source": "pages/sign-in.md"
     },
     {
