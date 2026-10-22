@@ -10,7 +10,11 @@ When a feature goes live, remove the class (and the tag) from that block in the 
 
 ## Score provenance
 
-Item front matter may carry `scoring: {by: agent, label: "Editor's first pass (AI-assisted)", at: 2026-10-21}`. With `by: agent` the item page labels the scores with `label` and says an AI research pass produced them; board rows show an "AI first pass" tag; the topic page profile says "Editor scores (AI-assisted first pass)". With `by: human` or no `scoring`, the label is "Editor score". Optional `makerHandle` is shown as stored, in mono, beside `maker` (as "maker (handle)") or alone.
+Item front matter may carry `scoring: {by: agent, label: "Editor's first pass (AI-assisted)", at: 2026-10-21}`. With `by: agent` the item page labels the scores with `label` and says an AI research pass produced them; the editors column of the ratings table carries an "AI first pass" tag; the topic page profile says "Editor scores (AI-assisted first pass)". With `by: human` or no `scoring`, the label is "Editor score". Optional `makerHandle` is shown as stored, in mono, beside `maker` (as "maker (handle)") or alone.
+
+## Signal page placeholders
+
+The Underrated mark, "Appears in these stories" and "Nearby on the map" on every signal page are placeholders with one tag each. Items still carrying the old score keys (real, notable, novel) show no scores for them, show the new dimensions as "Not yet rated", and log one warning per item.
 
 ## Reader steering is live
 
