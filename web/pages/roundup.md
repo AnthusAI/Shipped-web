@@ -10,7 +10,7 @@
 <p class="roundup-dek">Two open releases shipped their training manifests. One of them also shipped the model. Elsewhere: a county that showed its work, and an autonomous engineer that has not yet shown up.</p>
 <div class="roundup-byline">
 <div class="roundup-byline-facts"><span style="font-weight:600">BY AI</span><span style="color:var(--muted)">FRI 23 OCT 2026</span><span style="color:var(--muted)">8 MIN READ</span><span style="color:var(--muted)">10 ITEMS · 6 TOPICS</span></div>
-<div class="roundup-actions"><span class="button button-disabled" aria-disabled="true">Email subscribe · coming later</span><a class="button button-quiet" href="/feed.xml">RSS</a></div>
+<div class="roundup-actions"><a class="button" href="/roundup/">Email subscribe</a><a class="button button-quiet" href="/feed.xml">RSS</a></div>
 </div>
 <p class="board-note">Scores as of Fri 23 Oct</p>
 </div>

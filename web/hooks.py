@@ -17,6 +17,15 @@ from urllib.parse import urlparse
 LOGGER = logging.getLogger("shipped.hooks")
 
 SCORING_PATH = Path(__file__).with_name("scoring.json")
+NEWSLETTER_LISTS_PATH = Path(__file__).with_name("newsletter-lists.json")
+
+ROUNDUP_ARCHIVE_PATH = "/roundup/"
+ROUNDUP_SECTION = "roundup"
+NEWSLETTER_SCRIPT_PATH = "/_plugins/papyrus-newsletter@1.js"
+NEWSLETTER_CONSENT = "Email me the lists I ticked. I can unsubscribe in one click."
+NEWSLETTER_HEADING = "Get the roundup by email"
+NEWSLETTER_DEK = "Tick the lists you want: the weekly roundup, and a short alert when something is added to a section. Nothing is sent until you confirm your address from the email we send you."
+NEWSLETTER_FEED_NOTE = 'Prefer a feed? <a href="/feed.xml">RSS</a> carries the latest items. Past issues are listed below.'
 
 DEPENDS_ON = {"*": [], "item": []}
 
@@ -439,7 +448,7 @@ def _board_pairs(page, keep):
     pairs = [
         (summary, entries_by_id[summary.item_id], section_labels[summary.section])
         for summary in page.summaries
-        if summary.section in section_labels and summary.item_id in entries_by_id and keep(summary)
+        if summary.section in section_labels and summary.section != ROUNDUP_SECTION and summary.item_id in entries_by_id and keep(summary)
     ]
     pairs.sort(key=lambda triple: (_sort_date(triple[0]), triple[0].slug), reverse=True)
     return pairs
@@ -582,3 +591,36 @@ def block(name, attributes, page):
     if name == "topic-board":
         return _topic_board(page, attributes)
     raise ValueError(f"unknown block {name!r}")
+
+
+@lru_cache(maxsize=1)
+def _newsletter_lists():
+    return json.loads(NEWSLETTER_LISTS_PATH.read_text(encoding="utf-8"))
+
+
+def _newsletter_signup_html():
+    lists = _newsletter_lists()
+    list_ids = ",".join(entry["id"] for entry in lists)
+    return (
+        '<section class="newsletter-signup" aria-labelledby="newsletter-signup-heading">'
+        f'<h2 id="newsletter-signup-heading">{escape(NEWSLETTER_HEADING)}</h2>'
+        f'<p class="newsletter-dek">{escape(NEWSLETTER_DEK)}</p>'
+        f'<papyrus-newsletter lists="{escape(list_ids, quote=True)}" '
+        f'data-lists="{escape(json.dumps(lists), quote=True)}" '
+        f'consent="{escape(NEWSLETTER_CONSENT, quote=True)}" form-id="roundup-archive" '
+        'button="Subscribe" label="Email address"></papyrus-newsletter>'
+        f'<script src="{NEWSLETTER_SCRIPT_PATH}" defer></script>'
+        f'<p class="newsletter-feed-note">{NEWSLETTER_FEED_NOTE}</p>'
+        '</section>'
+    )
+
+
+def page_finish(html, page):
+    if page.kind != "listing" or page.path != ROUNDUP_ARCHIVE_PATH:
+        return html
+    heading_end = html.find("</h1>")
+    if heading_end < 0:
+        LOGGER.warning("roundup archive has no heading; newsletter signup left out")
+        return html
+    insert_at = heading_end + len("</h1>")
+    return html[:insert_at] + _newsletter_signup_html() + html[insert_at:]
