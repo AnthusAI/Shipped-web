@@ -102,12 +102,14 @@
       "css/site-theme.css",
       "assets/shipped-components.css",
       "assets/shipped-forms-roundup.css",
+      "assets/shipped-story.css",
       "assets/shipped-item-topic.css",
       "assets/shipped-desk.css",
       "assets/shipped-newsletter.css",
       "assets/shipped-wiki.css",
       "assets/shipped-reader.css",
       "assets/shipped-front.css",
+      "assets/shipped-signal.css",
       "assets/shipped-map.css"
     ]
   },
@@ -150,9 +152,16 @@
     {
       "id": "submit",
       "path": "submit",
-      "title": "Submit",
-      "description": "Submitting opens with reader sign-in, soon. Submissions will be public at once and editors will review them after the fact.",
+      "title": "Add something in the wild",
+      "description": "Link to the thing itself. New signals start as Announced until someone has checked that anyone can use them.",
       "source": "pages/submit.md"
+    },
+    {
+      "id": "sample-story",
+      "path": "sample/story",
+      "title": "Decision models are starting to have family trees (placeholder story)",
+      "description": "A placeholder story page that previews the Shipped story design.",
+      "source": "pages/story-sample.md"
     },
     {
       "id": "sample-roundup",

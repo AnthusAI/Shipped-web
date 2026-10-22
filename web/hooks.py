@@ -69,18 +69,25 @@ AGENT_SCORING = "agent"
 DEFAULT_SCORES_LABEL = "Editor score"
 DEFAULT_AGENT_SCORES_LABEL = "Editor's first pass (AI-assisted)"
 AGENT_SCORING_NOTICE = "Scored by an AI research pass from the linked sources; a human editor will re-score it."
-AGENT_TAG_TEXT = "AI first pass"
 SCORING_POLICY_PATH = "/policies/#scores"
 RANKING_POLICY_PATH = "/policies/#ranking"
 BOARD_HELP_TEXT = (
-    "Newest first. Scores are the editor’s, and the editor’s score is the headline figure. "
-    "Once readers sign in, upvotes and ratings from readers will be counted apart, on each item."
+    "Newest first. Each signal is Available, Verified or Announced. "
+    "Upvotes and ratings from readers are counted apart, on each signal."
 )
 READER_KEY_TEXT = (
-    "Upvotes count the readers who want this seen. Ratings are 1 to 5 scores on the four dimensions; the rating count is the number of readers who rated it. "
-    "The editor’s score is shown on its own and is the headline figure. Once readers sign in, their ratings will pull a score toward the readers’ view only as more of them rate, "
-    "and a reader mean from fewer than 5 ratings is too few to print."
+    "Upvotes count the readers who want this seen. Ratings are 1 to 5 scores on the four dimensions, counted apart from upvotes. "
+    "Readers and editors are shown separately, and a reader mean from fewer than 5 ratings is too few to print."
 )
+NOT_YET_RATED_TEXT = "Not yet rated"
+AI_STAMP_NOTE = "Stamped by AI, first pass"
+AWAITING_EDITOR_TEXT = "awaiting an editor check"
+EVIDENCE_NOTE_FOR_SOURCE = "Source of this signal"
+SOURCE_EVIDENCE_KIND = "Release"
+UNDERRATED_PLACEHOLDER_TEXT = "Shown here when Useful and Ready are both high and the signal has few mentions. Works better than it\u2019s talked about."
+STORIES_PLACEHOLDER_TEXT = "Stories that cite this signal will be listed here, with who approved them."
+NEARBY_PLACEHOLDER_TEXT = "Signals that share entities or a cluster with this one will be listed here."
+WARNINGS_ALREADY_LOGGED = set()
 STAMP_NOTE_VERBS = {"available": "Confirmed by", "verified": "Verified by"}
 STAMP_NOTE_UNNAMED_VERBS = {"available": "Confirmed on", "verified": "Verified on"}
 FOOTER_LINKS = (
@@ -135,16 +142,9 @@ def _board_reader_html(summary):
     )
 
 
-def _item_reader_html(summary):
+def _signal_actions_html(summary):
     subject = _subject(summary)
-    dimensions = [dimension["key"] for dimension in _scoring()["dimensions"]]
-    return (
-        '<section class="item-reader" aria-labelledby="item-reader-h">'
-        '<div class="section-heading"><h2 id="item-reader-h">Readers</h2></div>'
-        f'<p class="reader-key">{escape(READER_KEY_TEXT)} <a href="{RANKING_POLICY_PATH}">How ranking works &rarr;</a></p>'
-        f'<div class="item-reader-actions">{_island("Vote", {"subject": subject})}{_island("UsedIt", {"subject": subject})}</div>'
-        f'{_island("Rating", {"subject": subject, "dimensions": dimensions})}</section>'
-    )
+    return f'<div class="signal-actions">{_island("Vote", {"subject": subject})}{_island("UsedIt", {"subject": subject})}</div>'
 
 
 def _item_comments_html(summary):
@@ -160,7 +160,10 @@ def _item_key(summary):
 
 
 def _warn(summary, message):
-    LOGGER.warning("item %s: %s", _item_key(summary), message)
+    warning = (_item_key(summary), message)
+    if warning not in WARNINGS_ALREADY_LOGGED:
+        WARNINGS_ALREADY_LOGGED.add(warning)
+        LOGGER.warning("item %s: %s", warning[0], message)
 
 
 def _text(value):
@@ -176,13 +179,16 @@ def _read_scores(summary, front):
         return {}
     known = {dimension["key"] for dimension in _scoring()["dimensions"]}
     scores = {}
+    retired_keys = []
     for key, value in raw.items():
         if key not in known:
-            _warn(summary, f"score for unknown dimension {key!r} left out")
+            retired_keys.append(key)
         elif isinstance(value, bool) or not isinstance(value, (int, float)) or not MINIMUM_SCORE <= value <= MAXIMUM_SCORE:
             _warn(summary, f"score {key}={value!r} is not a number from 1 to 5; left out")
         else:
             scores[key] = float(value)
+    if retired_keys:
+        _warn(summary, f"scores carry retired dimensions {sorted(retired_keys)!r}; left out")
     return scores
 
 
@@ -228,6 +234,23 @@ def _read_entities(summary, front):
         else:
             _warn(summary, f"entity {position} needs a kind and a name; left out")
     return entities
+
+
+def _read_relations(summary, front):
+    raw = front.get("relations")
+    if raw is None:
+        return []
+    if not isinstance(raw, list):
+        _warn(summary, "relations is not a list; left out")
+        return []
+    relations = []
+    for position, entry in enumerate(raw):
+        fields = [_text(entry.get(field)) for field in ("subject", "relation", "object")] if isinstance(entry, dict) else []
+        if len(fields) == 3 and all(fields):
+            relations.append(dict(zip(("subject", "relation", "object"), fields)))
+        else:
+            _warn(summary, f"relation {position} needs a subject, a relation and an object; left out")
+    return relations
 
 
 def _read_verdict(summary, front):
@@ -276,8 +299,8 @@ def _read_tags(front):
 def _read_scoring(front):
     raw = front.get("scoring")
     if not isinstance(raw, dict):
-        return {"by": None, "label": None}
-    return {"by": _text(raw.get("by")), "label": _text(raw.get("label"))}
+        return {"by": None, "label": None, "at": None}
+    return {"by": _text(raw.get("by")), "label": _text(raw.get("label")), "at": _date_text(raw.get("at"))}
 
 
 def _is_agent_scored(item):
@@ -300,6 +323,7 @@ def _read_item(summary):
         "maker": _text(front.get("maker")),
         "maker_handle": _text(front.get("makerHandle")),
         "scoring": _read_scoring(front),
+        "relations": _read_relations(summary, front),
     }
 
 
@@ -331,7 +355,7 @@ def _score_dimension_html(label, score, note=None):
     if score is None:
         return (
             f'<div class="score-dimension is-low"><span class="score-dimension-name">{escape(label)}</span>'
-            f'<span class="score-dimension-value" aria-label="{escape(label)} not scored">&mdash;</span>{note_html}</div>'
+            f'<span class="score-dimension-value score-dimension-unrated">{NOT_YET_RATED_TEXT}</span>{note_html}</div>'
         )
     filled = round(score)
     segments = "".join(
@@ -343,14 +367,6 @@ def _score_dimension_html(label, score, note=None):
         f'<span class="score-dimension-value">{score:.1f}</span>'
         f'<span class="score-meter" role="img" aria-label="{escape(label)} {score:.1f} out of 5, editor score">{segments}</span>{note_html}</div>'
     )
-
-
-def _dimensions_html(scores, notes=None, trailing_html=""):
-    notes = notes or {}
-    return "".join(
-        _score_dimension_html(dimension["label"], scores.get(dimension["key"]), notes.get(dimension["key"]))
-        for dimension in _scoring()["dimensions"]
-    ) + trailing_html
 
 
 def _full_date_label(iso_date):
@@ -418,42 +434,170 @@ def _checked_note(item):
     return f"{STAMP_NOTE_UNNAMED_VERBS[verdict]} {when}" if when else ""
 
 
+def _stamp_provenance(item):
+    human_note = _checked_note(item)
+    if human_note:
+        return human_note
+    if item["scoring"]["by"] == AGENT_SCORING:
+        when = f' on {escape(_full_date_label(item["scoring"]["at"]))}' if item["scoring"]["at"] else ""
+        return f"{AI_STAMP_NOTE}{when} &middot; {AWAITING_EDITOR_TEXT}"
+    return ""
+
+
+def _signal_meta_html(item):
+    maker_html = f'<span class="kicker maker-display">{_maker_html(item)}</span>' if _maker_key(item) else ""
+    return f'<div class="signal-meta"><span class="cintillo">Signal</span>{maker_html}{_strip_links_html(item)}</div>'
+
+
+def _signal_status_html(item, summary):
+    meaning = escape(_scoring().get("verdictMeanings", {}).get(item["verdict"], ""))
+    provenance = _stamp_provenance(item)
+    provenance_html = f'<span class="signal-status-provenance">{provenance}</span>' if provenance else ""
+    return (
+        '<div class="signal-status">'
+        f'<div class="signal-status-line">{_stamp_html(item["verdict"], " status-stamp-lg")}'
+        f'<span class="signal-status-meaning">{meaning}</span>{provenance_html}</div>'
+        f'{_signal_actions_html(summary)}</div>'
+    )
+
+
+def _section_heading_html(number, heading_id, heading, note_html=""):
+    return (
+        f'<div class="section-heading"><span class="cintillo">{number}</span>'
+        f'<h2 id="{heading_id}">{escape(heading)}</h2>{note_html}</div>'
+    )
+
+
+def _evidence_section_html(item):
+    rows = "".join(_evidence_row_html(entry) for entry in item["evidence"])
+    if not rows and item["source_url"]:
+        parsed = urlparse(item["source_url"])
+        rows = (
+            f'<div class="evidence-row"><span class="evidence-type">{SOURCE_EVIDENCE_KIND}</span>'
+            f'<div class="evidence-body"><a class="evidence-link" href="{escape(item["source_url"], quote=True)}" rel="nofollow noopener">'
+            f'{escape(parsed.netloc + parsed.path.rstrip("/"))}</a></div>'
+            f'<span class="check">{EVIDENCE_NOTE_FOR_SOURCE}</span></div>'
+        )
+    if not rows:
+        return ""
+    return (
+        '<section class="signal-section desk-evidence" aria-labelledby="desk-evidence-h">'
+        f'{_section_heading_html("02", "desk-evidence-h", "Primary evidence")}{rows}</section>'
+    )
+
+
+def _relation_row_html(relation):
+    return (
+        f'<div class="signal-relation"><b>{escape(relation["subject"])}</b>'
+        f'<span class="signal-relation-name"><svg viewBox="0 0 100 10" width="100" height="10" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">'
+        f'<path d="M0 5h90"/><path d="M86 0.5l8 4.5-8 4.5"/></svg>{escape(relation["relation"])}</span>'
+        f'<b>{escape(relation["object"])}</b></div>'
+    )
+
+
+def _map_section_html(item, site):
+    chips = _entity_chips_html(item["entities"], site)
+    relations = "".join(_relation_row_html(relation) for relation in item["relations"])
+    if not chips and not relations:
+        return ""
+    chips_html = f'<div class="desk-entities">{chips}</div>' if chips else ""
+    return (
+        '<section class="signal-section" aria-labelledby="signal-map-h">'
+        f'{_section_heading_html("03", "signal-map-h", "On the map")}{chips_html}{relations}</section>'
+    )
+
+
+def _editor_cell_html(dimension, item):
+    score = item["scores"].get(dimension["key"])
+    note = item["score_notes"].get(dimension["key"])
+    tag_html = f'<span class="signal-editor-tag">AI first pass</span>' if score is not None and _is_agent_scored(item) else ""
+    return (
+        f'<div class="signal-editor"><span class="signal-cell-label">Editors</span>'
+        f'{_score_dimension_html(dimension["label"], score, note)}{tag_html}</div>'
+    )
+
+
+def _dimension_row_html(dimension, item, summary):
+    island = _island("Rating", {"subject": _subject(summary), "dimensions": [dimension["key"]]}, css_class="signal-rating-island")
+    return (
+        f'<div class="signal-dimension" data-dimension="{escape(dimension["key"], quote=True)}">'
+        f'<div class="signal-dimension-name"><b>{escape(dimension["label"])}</b><span>{escape(dimension["question"])}</span></div>'
+        f'<span class="signal-cell-label signal-cell-label-readers">Readers</span>{island}'
+        f'{_editor_cell_html(dimension, item)}'
+        '<span class="signal-cell-label signal-cell-label-yours">Your rating</span></div>'
+    )
+
+
+def _scores_label_html(item):
+    if not item["scores"]:
+        return ""
+    agent_scored = _is_agent_scored(item)
+    label = (item["scoring"]["label"] or DEFAULT_AGENT_SCORES_LABEL) if agent_scored else DEFAULT_SCORES_LABEL
+    provenance_html = (
+        f'<p class="scoring-provenance">{escape(AGENT_SCORING_NOTICE)} <a href="{SCORING_POLICY_PATH}">How we score &rarr;</a></p>'
+        if agent_scored else ""
+    )
+    return f'<div class="signal-scores-label"><p class="kicker">{escape(label)}</p>{provenance_html}</div>'
+
+
+def _ratings_section_html(item, summary):
+    rows = "".join(_dimension_row_html(dimension, item, summary) for dimension in _scoring()["dimensions"])
+    note = '<span class="kicker section-heading-note">1&ndash;5 &middot; readers and editors counted separately &middot; under 5 ratings shows &ldquo;too few&rdquo;</span>'
+    return (
+        '<section class="signal-section signal-ratings" aria-labelledby="signal-ratings-h">'
+        f'{_section_heading_html("04", "signal-ratings-h", "Ratings", note)}'
+        f'<p class="reader-key">{escape(READER_KEY_TEXT)} <a href="{RANKING_POLICY_PATH}">How ranking works &rarr;</a></p>'
+        f'{_scores_label_html(item)}'
+        '<div class="signal-dimension-head kicker" aria-hidden="true"><span>Dimension</span><span>Readers</span><span>Editors</span><span>Your rating</span></div>'
+        f'{rows}</section>'
+    )
+
+
+def _underrated_placeholder_html():
+    return (
+        '<div class="signal-underrated is-placeholder"><span class="placeholder-tag">Placeholder</span>'
+        '<span class="underrated-mark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'
+        '<path d="M2 13.5h12"/><path d="M4 11l4-4 2 2 3.5-3.5"/><path d="M10 5.5h3.5V9"/></svg>Underrated</span>'
+        f'<span>{escape(UNDERRATED_PLACEHOLDER_TEXT)}</span></div>'
+    )
+
+
+def _rail_placeholder_html(heading_id, heading, text):
+    return (
+        f'<section class="signal-rail-block is-placeholder" aria-labelledby="{heading_id}"><span class="placeholder-tag">Placeholder</span>'
+        f'<h2 id="{heading_id}">{escape(heading)}</h2><p>{escape(text)}</p></section>'
+    )
+
+
+def _article_with_status(html, item, summary):
+    status = _signal_status_html(item, summary)
+    summary_heading = _section_heading_html("01", "signal-summary-h", "Summary")
+    header_end = html.find("</header>")
+    if header_end < 0:
+        return status + summary_heading + html
+    insert_at = header_end + len("</header>")
+    return html[:insert_at] + status + summary_heading + html[insert_at:]
+
+
 def item_decorator(html, summary, site=None):
     if summary.type in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE):
         return html
     item = _read_item(summary)
-    note = _checked_note(item)
-    note_html = f'<div class="item-stamp-note">{note}</div>' if note else ""
-    maker_html = f'<span class="kicker maker-display">{_maker_html(item)}</span>' if _maker_key(item) else ""
-    chips = _entity_chips_html(item["entities"], site)
-    chips_html = f'<div class="desk-entities">{chips}</div>' if chips else ""
-    scores_html = ""
-    if item["scores"]:
-        notes_class = " has-notes" if item["score_notes"] else ""
-        agent_scored = _is_agent_scored(item)
-        scores_label = (item["scoring"]["label"] or DEFAULT_AGENT_SCORES_LABEL) if agent_scored else DEFAULT_SCORES_LABEL
-        provenance_html = (
-            f'<p class="scoring-provenance">{escape(AGENT_SCORING_NOTICE)} <a href="{SCORING_POLICY_PATH}">How we score &rarr;</a></p>'
-            if agent_scored else ""
-        )
-        scores_html = (
-            f'<div class="desk-scores{notes_class}"><p class="kicker">{escape(scores_label)}</p>{provenance_html}'
-            f'<div class="desk-score-grid">{_dimensions_html(item["scores"], item["score_notes"])}</div></div>'
-        )
-    evidence_html = ""
-    if item["evidence"]:
-        rows = "".join(_evidence_row_html(entry) for entry in item["evidence"])
-        evidence_html = (
-            '<section class="desk-evidence" aria-labelledby="desk-evidence-h"><div class="section-heading">'
-            '<h2 id="desk-evidence-h">Primary evidence</h2></div>' + rows + "</section>"
-        )
-    strip = (
-        '<header class="item-header desk-strip"><div class="item-header-main">'
-        f'<div class="item-header-meta"><span class="kicker kicker-ink">Verdict</span>{maker_html}</div>'
-        f"{_strip_links_html(item)}{scores_html}{chips_html}</div>"
-        f'<div class="item-stamp-block">{_stamp_html(item["verdict"], " status-stamp-xl")}{note_html}</div></header>'
+    main = (
+        _article_with_status(html, item, summary)
+        + _evidence_section_html(item)
+        + _map_section_html(item, site)
+        + _ratings_section_html(item, summary)
+        + _underrated_placeholder_html()
     )
-    return strip + _item_reader_html(summary) + html + evidence_html + _item_comments_html(summary)
+    rail = (
+        _rail_placeholder_html("signal-stories-h", "Appears in these stories", STORIES_PLACEHOLDER_TEXT)
+        + _rail_placeholder_html("signal-nearby-h", "Nearby on the map", NEARBY_PLACEHOLDER_TEXT)
+    )
+    return (
+        f'{_signal_meta_html(item)}<div class="signal-layout"><div class="signal-main">{main}</div>'
+        f'<aside class="signal-rail" aria-label="Related">{rail}</aside></div>{_item_comments_html(summary)}'
+    )
 
 
 def _date_label(summary):
@@ -466,35 +610,16 @@ def _date_label(summary):
         return published[:10]
 
 
-def _source_domain(item):
-    if item["source_url"]:
-        return urlparse(item["source_url"]).netloc
-    for entry in item["evidence"]:
-        return urlparse(entry["url"]).netloc
-    return ""
-
-
 def _board_row_html(position, summary, entry, section_label, site=None):
     item = _read_item(summary)
-    meta = [f"<b>{escape(_source_domain(item))}</b>"] if _source_domain(item) else []
-    meta.append(f"<span>&sect; {escape(section_label)}</span>")
-    if _maker_key(item):
-        meta.append(f"<span>{_maker_html(item)}</span>")
     date_label = _date_label(summary)
-    if date_label:
-        meta.append(f"<span>{escape(date_label)}</span>")
-    chips = _entity_chips_html(item["entities"], site)
-    agent_tag_html = f'<span class="ai-first-pass-tag">{AGENT_TAG_TEXT}</span>' if _is_agent_scored(item) else ""
     return (
         '<li class="board-row">'
-        f'<span class="board-rank">{position}</span>'
-        f'<div class="board-main"><a class="board-title" href="{escape(entry.url, quote=True)}">{escape(entry.title)}</a>'
-        f'<div class="board-meta">{"".join(meta)}</div>'
-        + (f'<div class="board-entities">{chips}</div>' if chips else "")
-        + _board_reader_html(summary)
-        + "</div>"
         f'<div class="board-status">{_stamp_html(item["verdict"])}</div>'
-        f'<div class="board-dimensions">{_dimensions_html(item["scores"], None, agent_tag_html)}</div>'
+        f'<div class="board-main"><a class="board-title" href="{escape(entry.url, quote=True)}">{escape(entry.title)}</a>'
+        f'{_board_reader_html(summary)}</div>'
+        f'<span class="board-section">&sect; {escape(section_label)}</span>'
+        f'<span class="board-date">{escape(date_label)}</span>'
         "</li>"
     )
 
@@ -519,12 +644,7 @@ def _board_list_html(pairs, site=None):
     body = "".join(
         _board_row_html(position, summary, entry, label, site) for position, (summary, entry, label) in enumerate(pairs, start=1)
     )
-    head_dimensions = "".join(f'<span>{escape(dimension["label"])}</span>' for dimension in _scoring()["dimensions"])
-    return (
-        f'<div class="board-head kicker" aria-hidden="true"><span>Rank</span><span>Item</span><span>Status</span>'
-        f'<span class="board-head-dims">{head_dimensions}</span></div>'
-        f'<ol class="board-list">{body}</ol>'
-    )
+    return f'<ol class="board-list">{body}</ol>'
 
 
 def _more_links_html(page):
@@ -1344,6 +1464,18 @@ def _front_block(page, attributes):
     raise ValueError(f"unknown front part {part!r}")
 
 
+WEEKLY_ARCHIVE_STRAP = "In the wild, and mapped as it moves."
+WEEKLY_SAMPLE_ISSUE_PATH = "/sample/roundup/"
+WEEKLY_SAMPLE_ISSUE_LABEL = "See what an issue will look like (placeholder)"
+
+
+def _weekly_archive_intro_html():
+    return (
+        f'<p class="weekly-archive-strap">{escape(WEEKLY_ARCHIVE_STRAP)}</p>'
+        f'<p class="weekly-archive-sample"><a href="{WEEKLY_SAMPLE_ISSUE_PATH}">{escape(WEEKLY_SAMPLE_ISSUE_LABEL)}</a></p>'
+    )
+
+
 def head_extra(page):
     return (
         f'<link rel="stylesheet" href="{READER_STYLESHEET_PATH}">\n'
@@ -1375,4 +1507,4 @@ def page_finish(html, page):
         LOGGER.warning("roundup archive has no heading; newsletter signup left out")
         return html
     insert_at = heading_end + len("</h1>")
-    return html[:insert_at] + _newsletter_signup_html() + html[insert_at:]
+    return html[:insert_at] + _weekly_archive_intro_html() + _newsletter_signup_html() + html[insert_at:]
