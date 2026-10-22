@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import logging
+import math
 import re
 from datetime import datetime
 from functools import lru_cache
@@ -639,7 +640,642 @@ def footer(page):
     )
 
 
+MAP_VIEW_PATH = Path(__file__).with_name("map-view.json")
+MAP_BLOCK_NAMES = ("map-header", "periodic-table", "map-graph", "map-river")
+MAP_MODEL_KEY = "model"
+MAP_SYMBOL_PATTERN = re.compile(r"^[A-Z][a-z]$")
+MAP_UNSTATED_LICENCE_WORDS = ("", "not stated", "unstated", "none", "unknown")
+MAP_LICENCE_PHRASES = {
+    "open": "open licence",
+    "restricted": "non-commercial or research licence",
+    "unstated": "licence not stated",
+}
+MAP_CENTRE_LIMIT = 5
+MAP_CENTRE_SCAN_LIMIT = 12
+MAP_NEIGHBOURS_PER_RELATION = 10
+MAP_NEW_ENTITY_LIMIT = 8
+MAP_PATTERN_COUNT = 6
+MAP_PATTERN_ID_PREFIX = "map-pattern-"
+MAP_CLUSTER_STATE_WORDS = {"new": "New", "growing": "Growing", "cooling": "Cooling"}
+MAP_CLUSTER_STATE_MARKS = {"new": "●", "growing": "▲", "cooling": "▼"}
+MAP_RIVER_WEEKS = 26
+MAP_RIVER_STREAM_LABELS = ("Sample stream A", "Sample stream B", "Sample stream C", "Sample stream D")
+MAP_RIVER_BASES = (6, 4, 3, 2)
+MAP_RIVER_SWINGS = (3, 4, 2, 3)
+MAP_RIVER_PHASES = (0, 5, 11, 17)
+MAP_RIVER_MARKS = ((9, "born"), (15, "split"), (21, "merged"))
+MAP_RIVER_COLUMN_WIDTH = 40
+MAP_RIVER_MARK_SIZE = 24
+MAP_RIVER_HEIGHT = 240
+MAP_RIVER_MARK_BAND = 28
+MAP_RIVER_UNIT_HEIGHT = 8
+MAP_COLD_START_TEXT = (
+    "This is the first build, so there is nothing to replay yet. Each Friday adds a column here; "
+    "after 8 weeks the river below starts to show births, merges and splits."
+)
+MAP_WHY_TABLE_NOTE = (
+    "Most AI periodic tables map concepts (prompts, RAG, agents), and the product ones turn into logo walls because a tile’s "
+    "position says little. This one places real signals on two measurable axes, task group and parameter size, so an empty "
+    "cell is a plain fact about what we track. Mendeleev ordered elements by weight and by behaviour; the MIT CSAIL I-Con table "
+    "and the DevOps tools table showed that empty cells and community-picked products make a table worth reading."
+)
+MAP_TILE_LEGEND = (
+    ("open", "Thick solid border", "open licence stated (Apache-2.0, MIT)"),
+    ("restricted", "Dashed border", "non-commercial or research-only licence"),
+    ("unstated", "Thin border", "licence not stated, or custom terms"),
+)
+MAP_STATUS_LEGEND = (
+    ("available", "Available"),
+    ("verified", "Verified"),
+    ("announced", "Announced"),
+)
+MAP_PATTERN_SHAPES = (
+    '<rect class="map-pattern-ink" width="6" height="6"/>',
+    '<rect class="map-pattern-brand" width="6" height="6"/>',
+    '<rect class="map-pattern-ground" width="6" height="6"/><path class="map-pattern-line" d="M-1 7L7 -1M-1 1L1 -1M5 7L7 5"/>',
+    '<rect class="map-pattern-ground" width="6" height="6"/><circle class="map-pattern-ink" cx="3" cy="3" r="1.2"/>',
+    '<rect class="map-pattern-ground" width="6" height="6"/><path class="map-pattern-line" d="M0 1.5H6"/>',
+    '<rect class="map-pattern-ground" width="6" height="6"/><path class="map-pattern-line" d="M0 1.5H6M1.5 0V6"/>',
+)
+MAP_RIVER_MARK_SHAPES = {
+    "born": ('<circle cx="8" cy="8" r="5" fill="currentColor"/>', "Cluster born"),
+    "split": ('<path d="M8 2v6M8 8l-4.5 5.5M8 8l4.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8"/>', "Cluster split"),
+    "merged": ('<path d="M3.5 2.5L8 8l4.5-5.5M8 8v6" fill="none" stroke="currentColor" stroke-width="1.8"/>', "Clusters merged"),
+}
+
+
+@lru_cache(maxsize=1)
+def _map_view():
+    return json.loads(MAP_VIEW_PATH.read_text(encoding="utf-8"))
+
+
+def _map_positive_number(value):
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
+        return None
+    return float(value)
+
+
+def _map_size_text(billions):
+    if billions < 0.1:
+        return f"{billions * 1000:g}M"
+    return f"{billions:g}B"
+
+
+def _map_range_text(low, high):
+    if high < 0.1:
+        return f"{low * 1000:g}–{high * 1000:g}M"
+    return f"{low:g}–{high:g}B"
+
+
+def _map_read_range(raw):
+    if isinstance(raw, (list, tuple)):
+        numbers = [_map_positive_number(value) for value in raw]
+    elif isinstance(raw, str):
+        numbers = [float(value) for value in re.findall(r"\d+(?:\.\d+)?", raw)]
+    else:
+        return None
+    if len(numbers) != 2 or None in numbers or not numbers[0] < numbers[1]:
+        return None
+    return (numbers[0], numbers[1])
+
+
+def _map_licence_style(licence):
+    text = (licence or "").strip().lower()
+    if text in MAP_UNSTATED_LICENCE_WORDS:
+        return "unstated"
+    table = _map_view()["table"]
+    if any(marker in text for marker in table["restrictedLicenceMarkers"]):
+        return "restricted"
+    if any(text.startswith(marker) for marker in table["openLicenceMarkers"]):
+        return "open"
+    return "unstated"
+
+
+def _map_read_model(summary, entry, group_keys):
+    front = summary.front_matter or {}
+    raw = front.get(MAP_MODEL_KEY)
+    if not isinstance(raw, dict):
+        return None
+    group = _text(raw.get("taskGroup"))
+    if group not in group_keys:
+        _warn(summary, f"model.taskGroup {group!r} is not one of the task groups; left out of the table")
+        return None
+    return {
+        "slug": summary.slug,
+        "url": entry.url,
+        "name": _text(raw.get("name")) or entry.title,
+        "group": group,
+        "hosted": raw.get("hosted") is True,
+        "total": _map_positive_number(raw.get("parametersTotal")),
+        "active": _map_positive_number(raw.get("parametersActive")),
+        "range": _map_read_range(raw.get("parameterRange")),
+        "licence": _text(raw.get("licence")),
+        "declared_symbol": _text(raw.get("symbol")),
+        "built_on": _text(raw.get("builtOn")),
+        "verdict": _read_verdict(summary, front),
+        "date_label": _date_label(summary),
+        "sort_date": _sort_date(summary),
+        "summary": summary,
+    }
+
+
+def _map_derive_symbol(name, taken):
+    letters = re.sub(r"[^A-Za-z]", "", name or "").lower() or "x"
+    first = letters[0].upper()
+    for second in letters[1:] + "abcdefghijklmnopqrstuvwxyz":
+        if first + second not in taken:
+            return first + second
+    return next(
+        upper + lower
+        for upper in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for lower in "abcdefghijklmnopqrstuvwxyz"
+        if upper + lower not in taken
+    )
+
+
+def _map_assign_symbols(models):
+    taken = set()
+    ordered = sorted(models, key=lambda model: model["slug"])
+    for model in ordered:
+        declared = model["declared_symbol"]
+        if declared and MAP_SYMBOL_PATTERN.match(declared) and declared not in taken:
+            model["symbol"] = declared
+            taken.add(declared)
+        else:
+            model["symbol"] = None
+    for model in ordered:
+        if model["symbol"] is None:
+            if model["declared_symbol"]:
+                _warn(model["summary"], f"model.symbol {model['declared_symbol']!r} is not a unique two-letter symbol; one was derived")
+            model["symbol"] = _map_derive_symbol(model["name"], taken)
+            taken.add(model["symbol"])
+
+
+def _map_resolve_built_on(models):
+    by_label = {}
+    for model in models:
+        for label in (model["name"], model["symbol"], model["slug"]):
+            by_label.setdefault(label.lower(), model)
+    for model in models:
+        wanted = model["built_on"]
+        found = by_label.get(wanted.lower()) if wanted else None
+        model["built_on_model"] = found if found is not model else None
+
+
+def _map_size_for_band(model):
+    if model["total"] is not None:
+        return model["total"]
+    return model["range"][1] if model["range"] else None
+
+
+def _map_band_key(model):
+    table = _map_view()["table"]
+    size = _map_size_for_band(model)
+    if size is None:
+        return table["unstatedBand"]["key"]
+    chosen = table["bands"][0]["key"]
+    for band in table["bands"]:
+        if size >= band["from"]:
+            chosen = band["key"]
+    return chosen
+
+
+def _map_mass_text(model):
+    if model["range"]:
+        return _map_range_text(*model["range"])
+    if model["total"] is None:
+        return "hosted" if model["hosted"] else "—"
+    if model["active"] is not None:
+        return f"{_map_size_text(model['total'])} / {_map_size_text(model['active'])} active"
+    return _map_size_text(model["total"])
+
+
+def _map_built_on_text(model):
+    if not model["built_on"]:
+        return ""
+    found = model["built_on_model"]
+    return f"on {found['symbol']}" if found else f"on {model['built_on']}"
+
+
+def _map_status_mark_html(verdict):
+    icon = STAMP_ICONS.get(verdict, FALLBACK_STAMP_ICON)
+    return (
+        f'<svg class="map-tile-status" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">{icon}</svg>'
+    )
+
+
+def _map_tile_label(model, group_label):
+    licence_style = _map_licence_style(model["licence"])
+    parts = [
+        model["name"], f"symbol {model['symbol']}", group_label, _map_mass_text(model),
+        f"{model['licence']} licence" if model["licence"] else MAP_LICENCE_PHRASES[licence_style],
+        model["verdict"].capitalize(),
+    ]
+    if model["built_on"]:
+        parts.append(f"built on {model['built_on_model']['name'] if model['built_on_model'] else model['built_on']}")
+    if model["date_label"]:
+        parts.append(f"released {model['date_label']}")
+    return ", ".join(parts)
+
+
+def _map_tile_html(model, group_labels, group_shorts):
+    style = _map_licence_style(model["licence"])
+    foot = group_shorts[model["group"]] if model["hosted"] else _map_built_on_text(model)
+    return (
+        f'<a class="map-tile map-licence-{style}" href="{escape(model["url"], quote=True)}" '
+        f'aria-label="{escape(_map_tile_label(model, group_labels[model["group"]]), quote=True)}">'
+        f'<span class="map-tile-top"><span class="map-tile-date">{escape(model["date_label"])}</span>{_map_status_mark_html(model["verdict"])}</span>'
+        f'<span class="map-tile-symbol">{escape(model["symbol"])}</span>'
+        f'<span class="map-tile-name">{escape(model["name"])}</span>'
+        f'<span class="map-tile-mass">{escape(_map_mass_text(model))}</span>'
+        f'<span class="map-tile-foot">{escape(foot)}</span></a>'
+    )
+
+
+def _map_cell_html(models, group_labels, group_shorts):
+    table = _map_view()["table"]
+    if not models:
+        return f'<span class="map-gap">{escape(table["emptyCell"])}</span>'
+    ordered = sorted(models, key=lambda model: (model["sort_date"], model["name"]), reverse=True)
+    limit = table["crowdedCellLimit"]
+    tiles = [_map_tile_html(model, group_labels, group_shorts) for model in ordered]
+    shown, hidden = tiles[:limit], tiles[limit:]
+    more_html = (
+        f'<details class="map-more"><summary class="map-more-summary"><span class="map-more-closed">+{len(hidden)} more</span>'
+        f'<span class="map-more-open">Show fewer</span></summary><div class="map-more-tiles">{"".join(hidden)}</div></details>'
+        if hidden else ""
+    )
+    return f'<div class="map-cell-tiles">{"".join(shown)}{more_html}</div>'
+
+
+def _map_model_count_text(count):
+    return f"{count} model" + ("" if count == 1 else "s")
+
+
+def _map_row_head_html(kicker, label, note):
+    return (
+        f'<th scope="row" class="map-row-head"><span class="kicker">{escape(kicker)}</span>'
+        f'<b>{escape(label)}</b><span class="map-row-note">{escape(note)}</span></th>'
+    )
+
+
+def _map_legend_html():
+    border_rows = "".join(
+        f'<li><span class="map-legend-tile map-licence-{style}" aria-hidden="true"></span><span><b>{escape(label)}</b> · {escape(text)}</span></li>'
+        for style, label, text in MAP_TILE_LEGEND
+    )
+    status_rows = "".join(
+        f'<li><svg class="map-legend-status" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">{STAMP_ICONS[key]}</svg>'
+        f'<span><b>{label}</b></span></li>'
+        for key, label in MAP_STATUS_LEGEND
+    )
+    return (
+        '<section class="map-legend" aria-labelledby="map-legend-h"><h2 id="map-legend-h">How to read a tile</h2>'
+        f'<ul class="map-legend-list">{border_rows}</ul>'
+        f'<ul class="map-legend-status-list">{status_rows}</ul>'
+        '<ul class="map-legend-rules">'
+        '<li><b>Symbol</b> · two letters, unique across the table, and stable once assigned.</li>'
+        '<li><b>Size</b> · Rows: total parameters. Mixture-of-experts shows total / active.</li>'
+        '<li><b>On X</b> · built on another model in the table.</li>'
+        '<li><b>Top of a tile</b> · date shipped, and the status mark.</li>'
+        '</ul></section>'
+    )
+
+
+def _map_knowledge_source(page):
+    lookup = getattr(page.site, "knowledge", None) if page.site is not None else None
+    return getattr(lookup, "_source", None)
+
+
+def _map_knowledge_index(page):
+    source = _map_knowledge_source(page)
+    return source.index() if source is not None else None
+
+
+def _map_edited_on(page, models=()):
+    index = _map_knowledge_index(page)
+    stamp = (index or {}).get("asOf") or max((model["sort_date"] for model in models), default="")
+    return _full_date_label(stamp[:10]) if stamp else ""
+
+
+def _map_why_html(edited_on):
+    stamp = f'<p class="map-edited kicker">Edited by AI on {escape(edited_on)}</p>' if edited_on else ""
+    return (
+        '<section class="map-why" aria-labelledby="map-why-h"><h2 id="map-why-h">Why a periodic table</h2>'
+        f'<p>{escape(MAP_WHY_TABLE_NOTE)}</p>{stamp}</section>'
+    )
+
+
+def _map_groups_definition_html():
+    rows = "".join(
+        f'<div><dt>{escape(group["label"])}</dt><dd>{escape(group["definition"])}</dd></div>' for group in _map_view()["table"]["groups"]
+    )
+    return f'<dl class="map-group-definitions">{rows}</dl>'
+
+
+def _periodic_table(page, attributes):
+    table = _map_view()["table"]
+    groups = table["groups"]
+    group_keys = {group["key"] for group in groups}
+    entries_by_id = {entry.item_id: entry for entry in page.entries if entry.url}
+    models = [
+        model
+        for summary in page.summaries
+        if summary.type not in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE) and summary.section != ROUNDUP_SECTION and summary.item_id in entries_by_id
+        for model in [_map_read_model(summary, entries_by_id[summary.item_id], group_keys)]
+        if model
+    ]
+    edited_on = _map_edited_on(page, models)
+    if not models:
+        return (
+            f'<p class="map-empty">{escape(table["emptyTable"])}</p>{_map_groups_definition_html()}'
+            f'{_map_legend_html()}{_map_why_html(edited_on)}'
+        )
+    _map_assign_symbols(models)
+    _map_resolve_built_on(models)
+    group_labels = {group["key"]: group["label"] for group in groups}
+    group_shorts = {group["key"]: group["short"] for group in groups}
+    on_table = [model for model in models if not model["hosted"]]
+    hosted = [model for model in models if model["hosted"]]
+    bands = table["bands"] + [table["unstatedBand"]]
+    head_cells = "".join(
+        f'<th scope="col" class="map-group-head"><span class="kicker">Group {position}</span><b>{escape(group["label"])}</b>'
+        f'<span class="map-group-definition">{escape(group["definition"])}</span>'
+        f'<span class="map-group-count">{_map_model_count_text(sum(1 for model in on_table if model["group"] == group["key"]))}</span></th>'
+        for position, group in enumerate(groups, start=1)
+    )
+    body_rows = []
+    for position, band in enumerate(bands, start=1):
+        cells = "".join(
+            '<td class="map-cell">'
+            + _map_cell_html([m for m in on_table if m["group"] == group["key"] and _map_band_key(m) == band["key"]], group_labels, group_shorts)
+            + "</td>"
+            for group in groups
+        )
+        body_rows.append(f"<tr>{_map_row_head_html(f'Period {position}', band['label'], band['note'])}{cells}</tr>")
+    hosted_row = table["hostedRow"]
+    hosted_html = (
+        '<tbody class="map-hosted"><tr>'
+        f'{_map_row_head_html(hosted_row["kicker"], hosted_row["label"], hosted_row["note"])}'
+        f'<td class="map-cell" colspan="{len(groups)}">{_map_cell_html(hosted, group_labels, group_shorts)}</td></tr></tbody>'
+    )
+    return (
+        '<div class="map-table-scroll" tabindex="0" role="region" aria-labelledby="map-table-h">'
+        '<table class="map-table"><caption id="map-table-h" class="map-sr-only">Models we track: columns are task groups, rows are total parameter bands.</caption>'
+        f'<thead><tr><td class="map-corner"></td>{head_cells}</tr></thead>'
+        f'<tbody>{"".join(body_rows)}</tbody>{hosted_html}</table></div>'
+        f'{_map_legend_html()}{_map_why_html(edited_on)}'
+    )
+
+
+def _map_header(page, attributes):
+    index = _map_knowledge_index(page) or {}
+    source = _map_knowledge_source(page)
+    clusters = (source.clusters() if source is not None else None) or {}
+    named_clusters = sum(1 for cluster in clusters.get("clusters") or [] if cluster.get("name"))
+    signals = len(_board_pairs(page, lambda summary: True))
+    stats = [("Signals", signals)]
+    if index.get("entityCount") is not None:
+        stats.append(("Entities", index["entityCount"]))
+    if clusters:
+        stats.append(("Clusters", named_clusters))
+    rows = "".join(f"<div><dt>{escape(label)}</dt><dd>{value}</dd></div>" for label, value in stats)
+    return f'<dl class="map-stats">{rows}</dl>'
+
+
+def _map_relation_key(relation):
+    return re.sub(r"[^a-z]", "", str(relation or "").lower())
+
+
+def _map_relation_style(relation):
+    view = _map_view()
+    style = dict(view["defaultRelation"])
+    style["label"] = str(relation or "related").replace("_", " ").replace("-", " ")
+    style.update(view["relations"].get(_map_relation_key(relation), {}))
+    return style
+
+
+def _map_line_glyph_html(style):
+    line_end = 34 if style["arrow"] else 42
+    dash = f' stroke-dasharray="{style["dash"]}"' if style["dash"] else ""
+    arrow = '<path d="M34 0.5L43 5L34 9.5z" fill="currentColor"/>' if style["arrow"] else ""
+    return (
+        '<svg class="map-line-glyph" viewBox="0 0 44 10" width="44" height="10" aria-hidden="true">'
+        f'<line x1="3" y1="5" x2="{line_end}" y2="5" stroke="currentColor" stroke-width="{style["width"]}"{dash} stroke-linecap="round"/>{arrow}</svg>'
+    )
+
+
+def _map_neighbour_columns_html(neighbours, kinds, links):
+    groups = {}
+    for neighbour in neighbours:
+        groups.setdefault(_map_relation_key(neighbour.get("relation")), []).append(neighbour)
+    peak = max(int(neighbour.get("weight") or 0) for neighbour in neighbours) or 1
+    ordered = sorted(groups.values(), key=lambda members: -sum(int(member.get("weight") or 0) for member in members))
+    columns = []
+    for members in ordered:
+        style = _map_relation_style(members[0].get("relation"))
+        members = sorted(members, key=lambda member: (-int(member.get("weight") or 0), str(member.get("name") or "")))
+        entries = []
+        for member in members[:MAP_NEIGHBOURS_PER_RELATION]:
+            weight = int(member.get("weight") or 0)
+            kind = escape(kinds.get(str(member.get("kind")), str(member.get("kind") or "")))
+            href = links.get(str(member.get("key")))
+            label = f"<i>{kind}</i>{escape(str(member.get('name') or ''))}"
+            chip = f'<a class="map-chip" href="{escape(href, quote=True)}">{label}</a>' if href else f'<span class="map-chip">{label}</span>'
+            entries.append(
+                f'<li>{chip}<span class="map-weight" aria-hidden="true"><span style="width:{round(100 * weight / peak)}%"></span></span>'
+                f'<span class="map-weight-number" title="Signals that link both">{weight}</span></li>'
+            )
+        extra = len(members) - MAP_NEIGHBOURS_PER_RELATION
+        extra_html = f'<p class="map-neighbour-more">+{extra} more in the wiki</p>' if extra > 0 else ""
+        columns.append(
+            f'<div class="map-neighbour-column"><h4>{_map_line_glyph_html(style)}<span>{escape(style["label"])}</span></h4>'
+            f'<ul>{"".join(entries)}</ul>{extra_html}</div>'
+        )
+    return f'<div class="map-neighbours">{"".join(columns)}</div>'
+
+
+def _map_centres(source, index):
+    by_key = {str(entity.get("key")): entity for entity in index.get("entities") or []}
+    ranked = [key for key in index.get("trending") or [] if key in by_key]
+    ranked += [key for key, _ in sorted(by_key.items(), key=lambda pair: -int(pair[1].get("itemCount") or 0)) if key not in ranked]
+    centres = []
+    for key in ranked[:MAP_CENTRE_SCAN_LIMIT]:
+        entity = source.entity(key)
+        if entity and entity.get("neighbours"):
+            centres.append(entity)
+        if len(centres) == MAP_CENTRE_LIMIT:
+            break
+    return centres
+
+
+def _map_new_entities_html(index):
+    entities = [entity for entity in index.get("entities") or [] if entity.get("isNew")]
+    entities.sort(key=lambda entity: (-int(entity.get("itemCount") or 0), str(entity.get("name") or "")))
+    kinds = {str(kind.get("key")): str(kind.get("label") or kind.get("key")) for kind in index.get("kinds") or []}
+    if not entities:
+        body = '<p class="map-empty">Nothing is new on the map this week.</p>'
+    else:
+        rows = "".join(
+            '<li><svg viewBox="0 0 16 16" width="16" height="16" role="img" aria-label="New"><circle cx="8" cy="8" r="5" fill="currentColor"/></svg>'
+            + (f'<a href="{escape(entity["href"], quote=True)}">{escape(str(entity.get("name")))}</a>' if entity.get("href") else f'<span>{escape(str(entity.get("name")))}</span>')
+            + f'<span class="kicker">{escape(kinds.get(str(entity.get("kind")), str(entity.get("kind") or "")))}</span></li>'
+            for entity in entities[:MAP_NEW_ENTITY_LIMIT]
+        )
+        body = f'<p class="map-new-count kicker">{len(entities)} new of {index.get("entityCount", len(index.get("entities") or []))} on the map</p><ul>{rows}</ul>'
+    return (
+        '<aside class="map-new" aria-labelledby="map-new-h"><h2 id="map-new-h">New on the map this week</h2>'
+        f'{body}<a class="map-new-link" href="/wiki/">All of them in the wiki</a></aside>'
+    )
+
+
+def _map_graph(page, attributes):
+    source = _map_knowledge_source(page)
+    index = source.index() if source is not None else None
+    if not index:
+        return '<p class="map-empty">The concept graph appears once the first knowledge snapshot is published.</p>'
+    kinds = {str(kind.get("key")): str(kind.get("label") or kind.get("key")) for kind in index.get("kinds") or []}
+    links = {str(entity.get("key")): entity["href"] for entity in index.get("entities") or [] if entity.get("href")}
+    centres = _map_centres(source, index)
+    if not centres:
+        return f'<div class="map-graph-layout"><p class="map-empty">No concept has recorded connections yet.</p>{_map_new_entities_html(index)}</div>'
+    inputs, labels, panels = [], [], []
+    present_relations = {}
+    for position, entity in enumerate(centres):
+        identifier = f"map-centre-{position}"
+        checked = " checked" if position == 0 else ""
+        inputs.append(f'<input class="map-centre-input" type="radio" name="map-centre" id="{identifier}"{checked}>')
+        labels.append(f'<label for="{identifier}">{escape(str(entity.get("name")))}</label>')
+        for neighbour in entity["neighbours"]:
+            present_relations[_map_relation_key(neighbour.get("relation"))] = _map_relation_style(neighbour.get("relation"))
+        count = int(entity.get("itemCount") or 0)
+        page_link = (
+            f'<a class="map-open-concept" href="{escape(entity["href"], quote=True)}">Open concept page</a>' if entity.get("href") else ""
+        )
+        panels.append(
+            f'<article class="map-centre-panel" data-centre="{identifier}">'
+            f'<div class="map-centre-card"><span class="kicker">{escape(kinds.get(str(entity.get("kind")), str(entity.get("kind") or "")))} · selected</span>'
+            f'<h3>{escape(str(entity.get("name")))}</h3><p class="map-centre-count">{count} signal{"" if count == 1 else "s"}</p>{page_link}</div>'
+            f'{_map_neighbour_columns_html(entity["neighbours"], kinds, links)}</article>'
+        )
+    lines_legend = "".join(
+        f'<li>{_map_line_glyph_html(style)}<span>{escape(style["label"])}</span></li>' for style in present_relations.values()
+    )
+    return (
+        '<div class="map-graph-layout"><div class="map-graph-main">'
+        '<div class="map-centre-picker"><span class="kicker">Centre on</span>'
+        f'{"".join(inputs)}<div class="map-centre-labels" role="group" aria-label="Centre the graph on">{"".join(labels)}</div>'
+        f'<div class="map-centre-panels">{"".join(panels)}</div></div>'
+        f'<div class="map-lines"><span class="kicker">Lines</span><ul>{lines_legend}</ul>'
+        '<p class="map-lines-note">Weight is the number of signals that link both ends.</p></div></div>'
+        f'{_map_new_entities_html(index)}</div>'
+    )
+
+
+def _map_pattern_defs_html():
+    patterns = "".join(
+        f'<pattern id="{MAP_PATTERN_ID_PREFIX}{position}" width="6" height="6" patternUnits="userSpaceOnUse">{shape}</pattern>'
+        for position, shape in enumerate(MAP_PATTERN_SHAPES)
+    )
+    return f'<svg class="map-pattern-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>{patterns}</defs></svg>'
+
+
+def _map_now_html(clusters):
+    named = [cluster for cluster in clusters.get("clusters") or [] if cluster.get("name")]
+    if not named:
+        return '<p class="map-empty">No clusters have been named yet.</p>'
+    named.sort(key=lambda cluster: -int(cluster.get("itemCount") or 0))
+    peak = max(int(cluster.get("itemCount") or 0) for cluster in named) or 1
+    rows = []
+    for position, cluster in enumerate(named):
+        count = int(cluster.get("itemCount") or 0)
+        state = str(cluster.get("state") or "")
+        state_html = (
+            f'<span class="map-cluster-state">{MAP_CLUSTER_STATE_MARKS[state]} {MAP_CLUSTER_STATE_WORDS[state]}</span>' if state in MAP_CLUSTER_STATE_WORDS else ""
+        )
+        name = escape(str(cluster["name"]))
+        link = cluster.get("href")
+        title = f'<a href="{escape(link, quote=True)}">{name}</a>' if link and str(link).startswith("/") else name
+        width = max(4, round(240 * count / peak))
+        rows.append(
+            f'<li><span class="map-cluster-name">{title}</span>'
+            f'<svg class="map-cluster-bar" viewBox="0 0 240 14" width="240" height="14" role="img" aria-label="{count} signals">'
+            f'<rect x="0.75" y="0.75" width="{width - 1.5}" height="12.5" fill="url(#{MAP_PATTERN_ID_PREFIX}{position % MAP_PATTERN_COUNT})" stroke="currentColor" stroke-width="1.5"/></svg>'
+            f'<span class="map-cluster-count">{count} signals</span>{state_html}</li>'
+        )
+    return f'<ul class="map-cluster-list">{"".join(rows)}</ul>'
+
+
+def _map_sample_river_html():
+    values = [
+        [
+            max(1, round(MAP_RIVER_BASES[stream] + MAP_RIVER_SWINGS[stream] * math.sin((week + MAP_RIVER_PHASES[stream]) / 4)))
+            for week in range(MAP_RIVER_WEEKS)
+        ]
+        for stream in range(len(MAP_RIVER_STREAM_LABELS))
+    ]
+    width = MAP_RIVER_COLUMN_WIDTH * MAP_RIVER_WEEKS
+    total_height = MAP_RIVER_HEIGHT + MAP_RIVER_MARK_BAND
+    columns = []
+    for week in range(MAP_RIVER_WEEKS):
+        floor = total_height
+        for stream in range(len(MAP_RIVER_STREAM_LABELS)):
+            height = values[stream][week] * MAP_RIVER_UNIT_HEIGHT
+            floor -= height
+            columns.append(
+                f'<rect x="{week * MAP_RIVER_COLUMN_WIDTH + 1}" y="{floor}" width="{MAP_RIVER_COLUMN_WIDTH - 2}" height="{height - 1}" '
+                f'fill="url(#{MAP_PATTERN_ID_PREFIX}{stream % MAP_PATTERN_COUNT})" stroke="currentColor" stroke-width="1"/>'
+            )
+    marks = "".join(
+        f'<svg x="{(week - 1) * MAP_RIVER_COLUMN_WIDTH + (MAP_RIVER_COLUMN_WIDTH - MAP_RIVER_MARK_SIZE) // 2}" y="2" width="{MAP_RIVER_MARK_SIZE}" height="{MAP_RIVER_MARK_SIZE}" viewBox="0 0 16 16" aria-label="{MAP_RIVER_MARK_SHAPES[kind][1]}">{MAP_RIVER_MARK_SHAPES[kind][0]}</svg>'
+        for week, kind in MAP_RIVER_MARKS
+    )
+    stream_labels = "".join(
+        f'<li><svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><rect x="0.75" y="0.75" width="12.5" height="12.5" fill="url(#{MAP_PATTERN_ID_PREFIX}{stream % MAP_PATTERN_COUNT})" stroke="currentColor" stroke-width="1.5"/></svg>{escape(label)}</li>'
+        for stream, label in reversed(list(enumerate(MAP_RIVER_STREAM_LABELS)))
+    )
+    legend = "".join(
+        f'<li><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">{MAP_RIVER_MARK_SHAPES[kind][0]}</svg>{label}</li>'
+        for kind, label in (("born", "Born"), ("split", "Split"), ("merged", "Merged"))
+    )
+    return (
+        '<section class="map-river-sample is-placeholder" aria-labelledby="map-river-h"><span class="placeholder-tag">Placeholder</span>'
+        '<div class="section-heading"><span class="cintillo">Over time</span><h2 id="map-river-h">Cluster river</h2>'
+        '<span class="section-heading-note">Sample 26-week history, not real data</span></div>'
+        '<p class="map-river-note">The river will show signals per cluster per week, with a time scrubber. This is a sample drawn from made-up numbers to show the design.</p>'
+        '<div class="map-river-figure">'
+        f'<svg class="map-river-chart" viewBox="0 0 {width} {total_height}" role="img" aria-label="Sample stacked river of four made-up streams over 26 weeks, with a birth in week 9, a split in week 15 and a merge in week 21. Placeholder data.">{marks}{"".join(columns)}</svg>'
+        f'<ul class="map-river-labels">{stream_labels}</ul></div>'
+        '<div class="map-river-axis kicker"><span>Wk 1</span><span>Wk 6</span><span>Wk 12</span><span>Wk 18</span><span>Wk 26</span></div>'
+        f'<ul class="map-river-legend">{legend}<li>Each stream is labelled at its end and filled with its own pattern.</li></ul></section>'
+    )
+
+
+def _map_river(page, attributes):
+    source = _map_knowledge_source(page)
+    clusters = (source.clusters() if source is not None else None) or {}
+    now_html = (
+        '<section class="map-now" aria-labelledby="map-now-h"><div class="section-heading"><span class="cintillo">Now</span>'
+        '<h2 id="map-now-h">Clusters this week</h2></div>'
+        f'{_map_now_html(clusters)}'
+        f'<div class="map-cold-start"><b>No history yet</b><p>{escape(MAP_COLD_START_TEXT)}</p></div></section>'
+    )
+    return _map_pattern_defs_html() + now_html + _map_sample_river_html()
+
+
+def _map_block(name, attributes, page):
+    if name == "map-header":
+        return _map_header(page, attributes)
+    if name == "periodic-table":
+        return _periodic_table(page, attributes)
+    if name == "map-graph":
+        return _map_graph(page, attributes)
+    return _map_river(page, attributes)
+
+
 def block(name, attributes, page):
+    if name in MAP_BLOCK_NAMES:
+        return _map_block(name, attributes, page)
     if name == "desk-board":
         return _desk_board(page, attributes)
     if name == "front":

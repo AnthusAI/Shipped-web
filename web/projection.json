@@ -107,7 +107,8 @@
       "assets/shipped-newsletter.css",
       "assets/shipped-wiki.css",
       "assets/shipped-reader.css",
-      "assets/shipped-front.css"
+      "assets/shipped-front.css",
+      "assets/shipped-map.css"
     ]
   },
   "fonts": {
@@ -138,6 +139,13 @@
       "title": "Rising",
       "description": "Items gaining the most upvotes in the last 6 hours.",
       "source": "pages/rising.md"
+    },
+    {
+      "id": "map",
+      "path": "map",
+      "title": "The map",
+      "description": "How the field is taking shape: every model we track as a periodic table, how concepts connect, and how clusters change week to week.",
+      "source": "pages/map.md"
     },
     {
       "id": "submit",
