@@ -407,7 +407,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("<b>4</b> signals", page)
         self.assertIn("1 entities on the map", page)
         self.assertNotIn("weeks of map history", page)
-        self.assertEqual(page.count('class="placeholder-tag"'), 3)
+        self.assertEqual(page.count('class="placeholder-tag"'), 1)
         self.assertNotIn("front-underrated", page)
         self.assertIn("Draft · not yet approved", page)
         self.assertIn("Approved by <b>fixture-editor</b>", page)
