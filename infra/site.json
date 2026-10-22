@@ -23,7 +23,8 @@
       "PAPYRUS_OAUTH_REDIRECT_URLS": "http://localhost:3001/,https://shipped.anth.us/,https://main.dkycd9pntgo6d.amplifyapp.com/"
     },
     "siteOrigin": "https://shipped.anth.us",
-    "prospectusAccountsApiStageArn": "arn:aws:execute-api:us-east-1:712236451410:bnh9mctvo9/api"
+    "prospectusAccountsApiStageArn": "arn:aws:execute-api:us-east-1:712236451410:bnh9mctvo9/api",
+    "readerRetirementPoll": true
   },
   "github": {
     "owner": "AnthusAI",
