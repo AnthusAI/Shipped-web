@@ -98,6 +98,10 @@
     "lastmod": true
   },
   "chrome": {
+    "ga_measurement_id": "G-31SC26SDGX",
+    "consent_mode": {
+      "privacy_policy_url": "/policies/#privacy"
+    },
     "stylesheets": [
       "css/site-theme.css",
       "assets/shipped-components.css",
@@ -217,7 +221,21 @@
   ],
   "footer": {
     "text": "Published by Anthus AI Solutions.",
-    "columns": []
+    "columns": [
+      {
+        "title": "Privacy",
+        "links": [
+          {
+            "label": "Privacy policy",
+            "href": "/policies/#privacy"
+          },
+          {
+            "label": "Cookie settings",
+            "href": "#cookie-settings"
+          }
+        ]
+      }
+    ]
   },
   "hooks": "hooks.py",
   "agents": {
