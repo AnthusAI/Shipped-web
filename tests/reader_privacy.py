@@ -22,6 +22,10 @@ EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*\.)+
 UUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 PERSON_ID = re.compile(r"person[-_ ]?id|\bperson[-_][A-Za-z0-9-]{6,}|\bprs_[A-Za-z0-9]+", re.IGNORECASE)
 
+ANALYTICS_IDENTITY_FIELDS = re.compile(r"user_id|userId|user_properties|client_id|\bcid\b", re.IGNORECASE)
+GTAG_CALL = re.compile(r"gtag\s*\((?:[^()]|\([^()]*\))*\)|papyrusAnalytics\.track\s*\((?:[^()]|\([^()]*\))*\)")
+IDENTITY_QUERY_NAME = re.compile(r"[?&](?:token|t|ss|sitesubject|subject|email|handle|user|user_id|person|person_id|personid)=", re.IGNORECASE)
+
 LIVE_PAGES = ("/", "/new/", "/rising/", "/submit/", "/sign-in/", "/policies/", "/roundup/")
 LIVE_DATA = ("items", "board", "readers", "submissions")
 
@@ -33,13 +37,44 @@ def identity_leaks(text: str, allowed_reader_ids: Iterable[str] = ()) -> list[st
     return leaks
 
 
+ENGINE_ANALYTICS_SCRIPT = re.compile(r"<script>(?:(?!</script>).)*IDENTITY_NAME=(?:(?!</script>).)*</script>", re.DOTALL)
+
+
+def without_engine_analytics_scripts(page: str) -> str:
+    """The page without Papyrus's two fixed analytics scripts (address redaction and the event allowlist).
+
+    Their patterns list the identity words they remove (`person_id`, `user_id`, `ss1_`...), which is not identity in the page.
+    Everything the site itself configures, the gtag config, set and event calls, stays in and is scanned.
+    """
+    return ENGINE_ANALYTICS_SCRIPT.sub("", page)
+
+
+def analytics_leaks(page: str) -> list[str]:
+    """Identity in the Google Analytics configuration and event calls of a page.
+
+    The gtag config, set and event calls in the page carry no `user_id`, `user_properties` or client id, and no identity in
+    any argument (subject, email, person id, UUID, identity query parameter). Pages from Papyrus 5.29.0 also redact the
+    address GA records, so the calls the page makes before any event are the same on every page.
+    """
+    leaks: list[str] = []
+    for call in GTAG_CALL.findall(without_engine_analytics_scripts(page)):
+        if "'js'" in call or call.strip().startswith("gtag(){"):
+            continue
+        for match in ANALYTICS_IDENTITY_FIELDS.finditer(call):
+            leaks.append(f"analytics field {match.group(0)}")
+        for pattern in (SITE_SUBJECT, EMAIL, PERSON_ID, UUID, IDENTITY_QUERY_NAME):
+            leaks += [f"analytics value {match.group(0)}" for match in pattern.finditer(call)]
+    return leaks
+
+
 def scan_files(files: Mapping[str, bytes | str], allowed_reader_ids: Iterable[str] = ()) -> dict[str, list[str]]:
     """The leaks per file name; empty when the output is clean."""
     allowed = list(allowed_reader_ids)
     found: dict[str, list[str]] = {}
     for name, body in files.items():
         text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
-        leaks = identity_leaks(text, allowed)
+        is_page = name.endswith("/") or name.endswith(".html")
+        leaks = identity_leaks(without_engine_analytics_scripts(text) if is_page else text, allowed) + (analytics_leaks(text) if is_page else [])
         if leaks:
             found[name] = leaks
     return found
