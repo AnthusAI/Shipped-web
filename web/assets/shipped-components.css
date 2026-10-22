@@ -11,9 +11,9 @@
 
 .status-stamp{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;line-height:14px;padding:3px 7px 3px 5px;white-space:nowrap;box-sizing:border-box}
 .status-stamp svg{width:13px;height:13px;flex:none}
-.status-stamp-shipped{background:var(--status-shipped);color:var(--status-shipped-on);border:1.5px solid var(--status-shipped)}
-.status-stamp-verified{color:var(--verified);border:3px double var(--verified);padding:2px 6px 2px 4px}
-.status-stamp-pending{color:var(--status-pending);border:1.5px dotted var(--status-pending)}
+.status-stamp-available{background:var(--status-available);color:var(--status-available-on);border:1.5px solid var(--status-available)}
+.status-stamp-verified{color:var(--status-verified);border:3px double var(--status-verified);padding:2px 6px 2px 4px}
+.status-stamp-announced{color:var(--status-announced);border:1.5px dotted var(--status-announced)}
 
 .score-meter{display:inline-flex;gap:2px}
 .meter-segment{width:6px;height:10px;border:1px solid var(--brand);box-sizing:border-box;display:block}

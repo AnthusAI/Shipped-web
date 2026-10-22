@@ -41,8 +41,8 @@ MAXIMUM_SCORE = 5.0
 METER_SEGMENTS = 5
 LOW_SCORE_BELOW = 2.5
 BOARD_ROW_LIMIT = 30
-DEFAULT_VERDICT = "pending"
-RETIRED_VERDICTS = {"vapor": "pending"}
+DEFAULT_VERDICT = "announced"
+RETIRED_VERDICTS = {"shipped": "available", "pending": "announced", "vapor": "announced"}
 
 EVIDENCE_CHECKS = {
     "checked": ("Checked", "check check-checked",
@@ -54,10 +54,12 @@ EVIDENCE_CHECKS = {
 }
 
 STAMP_ICONS = {
-    "shipped": '<path d="M2.5 2.5h11v11h-11z"/><path d="M5 8.2l2 2 4-4.4"/>',
+    "available": '<path d="M2.5 2.5h11v11h-11z"/><path d="M5 8.2l2 2 4-4.4"/>',
     "verified": '<circle cx="8" cy="8" r="5.8"/><path d="M5.4 8.1l1.8 1.8 3.4-3.7"/>',
-    "pending": '<circle cx="8" cy="8" r="5.8"/><path d="M8 4.8V8l2.2 1.4"/>',
+    "announced": '<circle cx="8" cy="8" r="1.6"/><path d="M4.8 11.2a4.5 4.5 0 0 1 0-6.4"/><path d="M11.2 4.8a4.5 4.5 0 0 1 0 6.4"/>',
 }
+STAMP_STROKE_WIDTHS = {"announced": "1.5"}
+DEFAULT_STAMP_STROKE_WIDTH = "1.6"
 FALLBACK_STAMP_ICON = '<circle cx="8" cy="8" r="5.8"/>'
 
 SAFE_URL_SCHEMES = ("http", "https")
@@ -78,8 +80,8 @@ READER_KEY_TEXT = (
     "The editor’s score is shown on its own and is the headline figure. Once readers sign in, their ratings will pull a score toward the readers’ view only as more of them rate, "
     "and a reader mean from fewer than 5 ratings is too few to print."
 )
-STAMP_NOTE_VERBS = {"shipped": "Confirmed by", "verified": "Checked by"}
-STAMP_NOTE_UNNAMED_VERBS = {"shipped": "Confirmed on", "verified": "Checked on"}
+STAMP_NOTE_VERBS = {"available": "Confirmed by", "verified": "Verified by"}
+STAMP_NOTE_UNNAMED_VERBS = {"available": "Confirmed on", "verified": "Verified on"}
 FOOTER_LINKS = (
     ("How ranking works", RANKING_POLICY_PATH),
     ("Policies", "/policies/"),
@@ -315,9 +317,10 @@ def _maker_html(item):
 
 def _stamp_html(verdict, extra_class=""):
     icon = STAMP_ICONS.get(verdict, FALLBACK_STAMP_ICON)
+    stroke_width = STAMP_STROKE_WIDTHS.get(verdict, DEFAULT_STAMP_STROKE_WIDTH)
     return (
         f'<span class="status-stamp status-stamp-{escape(verdict)}{extra_class}">'
-        f'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">{icon}</svg>'
+        f'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="{stroke_width}" aria-hidden="true">{icon}</svg>'
         f'<span class="status-stamp-label">{escape(verdict.capitalize())}</span></span>'
     )
 
@@ -610,8 +613,8 @@ def _topic_board(page, attributes):
     stats = [
         ("Items", len(items)),
         ("Makers", len(makers)),
-        ("Shipped", sum(1 for item in items if item["verdict"] == "shipped")),
-        ("Pending", sum(1 for item in items if item["verdict"] == "pending")),
+        ("Available", sum(1 for item in items if item["verdict"] == "available")),
+        ("Announced", sum(1 for item in items if item["verdict"] == "announced")),
     ]
     stats_html = "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in stats)
     ranked_html = (

@@ -2,7 +2,7 @@
 title: "Fixture: a guard model that shipped"
 date: 2026-10-18
 releasedOn: 2026-10-18
-verdict: shipped
+verdict: available
 maker: Fixture Lab
 tags: [decision-models, guard-model]
 sourceUrl: "https://source.fixture.example/guard-one"

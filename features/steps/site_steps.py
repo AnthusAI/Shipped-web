@@ -57,3 +57,55 @@ def step_redirect(context, source, target):
 @then('the navigation does not link to "{href}"')
 def step_nav_lacks(context, href):
     assert href not in [link["href"] for link in context.projection_settings["nav"]["links"]]
+
+
+STATUS_MARK_SHAPES = {
+    "Available": 'M2.5 2.5h11v11h-11z',
+    "Verified": 'circle cx="8" cy="8" r="5.8"',
+    "Announced": 'circle cx="8" cy="8" r="1.6"',
+}
+
+
+def _stamp_for(page, word):
+    match = re.search(
+        rf'<span class="status-stamp status-stamp-{word.lower()}[^"]*">(<svg.*?</svg>)<span class="status-stamp-label">{word}</span></span>',
+        page,
+        re.S,
+    )
+    assert match, f"no {word} stamp with a mark on the page"
+    return match.group(1)
+
+
+@then('the page shows the status "{word}" as a mark with its word')
+def step_status_mark(context, word):
+    mark = _stamp_for(context.current_page, word)
+    assert STATUS_MARK_SHAPES[word] in mark, f"the {word} mark does not use its own shape"
+
+
+@then("the three status marks use three different shapes")
+def step_marks_differ(context):
+    shapes = {re.sub(r"\s+", "", _stamp_for(context.current_page, word)) for word in STATUS_MARK_SHAPES}
+    assert len(shapes) == 3
+
+
+@then("the rail key lists Available, Verified and Announced in that order")
+def step_rail_key(context):
+    key = context.current_page.split('class="rail-key"')[1].split("</dl>")[0]
+    assert re.findall(r'status-stamp-label">(\w+)<', key) == ["Available", "Verified", "Announced"]
+
+
+@then("the scoring data names the verdicts {verdicts}")
+def step_scoring_verdicts(context, verdicts):
+    wanted = [word.strip().strip('"') for word in verdicts.split(",")]
+    assert context.scoring["verdicts"] == wanted, context.scoring["verdicts"]
+
+
+@then('no page uses "{word}" as a status')
+def step_no_status_word(context, word):
+    needle = f'status-stamp-label">{word}<'
+    offenders = [
+        path.relative_to(context.output_directory).as_posix()
+        for path in context.output_directory.rglob("*.html")
+        if needle in path.read_text(encoding="utf-8") or f"status-stamp-{word.lower()}" in path.read_text(encoding="utf-8")
+    ]
+    assert not offenders, f"{word!r} is still a status on {offenders}"

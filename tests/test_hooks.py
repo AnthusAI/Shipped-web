@@ -60,7 +60,7 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page("open-weights/fixture-full-contract")
         self.assertIn("status-stamp-verified", page)
         self.assertIn(">Verified<", page)
-        self.assertIn("Checked by the fixture editor", page)
+        self.assertIn("Verified by the fixture editor", page)
         self.assertIn("Partly", page)
         self.assertIn("Not checked", page)
         self.assertIn("Editor score", page)
@@ -167,7 +167,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("<title>Decision models that actually shipped", page)
         self.assertNotIn("sample-mark", page)
         stats = re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)
-        self.assertEqual(stats, [("Items", "2"), ("Makers", "2"), ("Shipped", "1"), ("Pending", "1")])
+        self.assertEqual(stats, [("Items", "2"), ("Makers", "2"), ("Available", "1"), ("Announced", "1")])
         self.assertIn("Editor scores (AI-assisted first pass), mean of 2 items", page)
         self.assertIn('<span class="profile-value">3.0</span>', page)
         self.assertEqual(len(re.findall(r'<li class="board-row">', page)), 2)
@@ -193,7 +193,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("9.0", page)
         self.assertNotIn("bogus", page)
         self.assertNotIn("invalid.fixture.example", page)
-        self.assertIn("status-stamp-pending", page)
+        self.assertIn("status-stamp-announced", page)
 
     def test_invalid_values_log_a_warning_and_never_fail_the_build(self):
         self.assertIn("fixture-invalid-values", self.projection_log)
@@ -404,13 +404,25 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("The editor’s score is shown on its own", page)
         self.assertIn("fewer than 5 ratings is too few to print", page)
 
-    def test_rail_defines_shipped_by_the_v1_rule_and_the_rising_window_by_its_length(self):
+    def test_rail_key_defines_the_three_statuses_and_the_rising_window_by_its_length(self):
         for relative_path in (".", "new", "rising"):
-            page = self._page(relative_path)
-            self.assertIn("An editor confirmed it. Once reader sign-in opens, 3 signed-in readers reporting use will count too.", page, relative_path)
-            self.assertNotIn("or 3 signed-in readers reported using it", page, relative_path)
-            self.assertNotIn("Readers have used it.", page, relative_path)
+            key = self._page(relative_path).split('class="rail-key"')[1].split("</dl>")[0]
+            self.assertEqual(re.findall(r'status-stamp-label">(\w+)<', key), ["Available", "Verified", "Announced"], relative_path)
+            self.assertIn("Anyone can use it today.", key, relative_path)
+            self.assertIn("Available, and an editor checked the evidence.", key, relative_path)
+            self.assertIn("Claimed, not yet usable or not yet confirmed.", key, relative_path)
         self.assertIn("Upvotes, last 6 hours", self._page("rising"))
+
+    def test_retired_status_words_stay_out_of_every_page(self):
+        for path in self.output_directory.rglob("index.html"):
+            page = path.read_text(encoding="utf-8")
+            for retired in ("status-stamp-shipped", "status-stamp-pending", "status-stamp-vapor", 'status-stamp-label">Shipped<', 'status-stamp-label">Pending<', 'status-stamp-label">Vapor<'):
+                self.assertNotIn(retired, page, path.as_posix())
+
+    def test_a_retired_verdict_word_in_front_matter_reads_as_its_new_status(self):
+        page = self._page("decisions/fixture-router-two")
+        self.assertIn("status-stamp-announced", page)
+        self.assertIn(">Announced<", page)
 
     def test_sample_item_page_uses_evidence_link_and_item_text_sources_and_shows_the_minimum_n_state(self):
         page = self._page("sample/tern-3")
@@ -453,17 +465,19 @@ class StampNoteTest(unittest.TestCase):
         return self.hooks._checked_note({"verdict": verdict, "by": by, "at": at})
 
     def test_a_stamp_names_who_and_when_in_the_words_of_its_verdict(self):
-        self.assertEqual(self._note("shipped", "A. Editor", "2026-10-21"), "Confirmed by A. Editor, 21 Oct 2026")
-        self.assertEqual(self._note("verified", "A. Editor", "2026-10-21"), "Checked by A. Editor, 21 Oct 2026")
-        self.assertEqual(self._note("shipped", None, "2026-10-21"), "Confirmed on 21 Oct 2026")
+        self.assertEqual(self._note("available", "A. Editor", "2026-10-21"), "Confirmed by A. Editor, 21 Oct 2026")
+        self.assertEqual(self._note("verified", "A. Editor", "2026-10-21"), "Verified by A. Editor, 21 Oct 2026")
+        self.assertEqual(self._note("available", None, "2026-10-21"), "Confirmed on 21 Oct 2026")
 
-    def test_an_old_vapor_verdict_reads_as_pending(self):
+    def test_the_old_verdict_words_read_as_the_new_statuses(self):
         summary = type("Summary", (), {"item_id": "x", "output_path": "x", "slug": "x"})()
-        self.assertEqual(self.hooks._read_verdict(summary, {"verdict": "vapor"}), "pending")
+        for old, new in (("shipped", "available"), ("pending", "announced"), ("vapor", "announced"), ("verified", "verified"), ("available", "available"), ("bogus", "announced")):
+            self.assertEqual(self.hooks._read_verdict(summary, {"verdict": old}), new)
+        self.assertEqual(self.hooks._read_verdict(summary, {}), "announced")
 
     def test_without_the_data_or_for_pending_it_says_nothing(self):
-        self.assertEqual(self._note("shipped"), "")
-        self.assertEqual(self._note("pending", "A. Editor", "2026-10-21"), "")
+        self.assertEqual(self._note("available"), "")
+        self.assertEqual(self._note("announced", "A. Editor", "2026-10-21"), "")
 
 
 class ReaderSteeringConfigurationTest(unittest.TestCase):

@@ -18,9 +18,9 @@
     }
   ],
   "verdicts": [
-    "shipped",
+    "available",
     "verified",
-    "pending"
+    "announced"
   ],
   "topics": {
     "decision-models": {
