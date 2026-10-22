@@ -17,21 +17,10 @@
       "label": "Novel"
     }
   ],
-  "hypeGap": {
-    "plus": [
-      "notable",
-      "novel"
-    ],
-    "minus": [
-      "real",
-      "useful"
-    ]
-  },
   "verdicts": [
     "shipped",
     "verified",
-    "pending",
-    "vapor"
+    "pending"
   ],
   "topics": {
     "decision-models": {

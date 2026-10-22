@@ -236,7 +236,6 @@ th {
   --brand: #4A6B00;
   --status-shipped: #1A1615;
   --status-shipped-on: #F5F1EA;
-  --status-vapor: #1A1615;
   --status-pending: #5E5752;
 }
 
@@ -246,7 +245,6 @@ th {
     --brand: #C6F432;
     --status-shipped: #F1ECE4;
     --status-shipped-on: #141112;
-    --status-vapor: #F1ECE4;
     --status-pending: #A59D96;
   }
 }

@@ -69,8 +69,8 @@ Editorial facts (verdict, editor scores, evidence links) stay **item front matte
 ## 5. Publishing numbers: snapshots plus client components
 
 - **Snapshot task** `reader-snapshot` in the content-actions Lambda reads votes, profiles and published items with IAM and writes public-safe JSON. That means ids, handles, counts, means, n, histograms and timestamps, and never private text.
-  - `/_data/board/front.json`, `new.json`, `rising.json`, `vapor.json`: ranked rows.
-  - `/_data/items/<itemKey>.json`: per-dimension mean, n and histogram, editor mean, upvotes, used-it count, hype gap (blank under n=5), comment count and approved comments.
+  - `/_data/board/front.json`, `new.json`, `rising.json`: ranked rows.
+  - `/_data/items/<itemKey>.json`: per-dimension mean, n and histogram, editor mean, upvotes, used-it count, comment count and approved comments.
   - `/_data/readers/top.json`: karma leaderboard.
   - Every file carries `generatedAt`.
 - **Triggers**: a debounced run after writes (the `reader-actions` Lambda queues one asynchronous invoke at most per minute), plus an EventBridge schedule every 6 hours (4 runs a day) for time decay and Rising. Ryan approved it on 2026-10-21.
@@ -81,7 +81,7 @@ Editorial facts (verdict, editor scores, evidence links) stay **item front matte
 
 ## 6. Item pages
 
-- **Editorial items** are Papyrus `article` Items in the three sections. Front matter: `verdict` (`shipped`, `verified`, `pending`, `vapor`), `scores` (the editor's 1–5 per dimension), `evidence` (a typed link list with a check state), `entities` (until extraction lands), and `maker`. The site's `hooks.py` renders the stamp, the scores, the hype gap and the evidence on the item page and as board cards, statically.
+- **Editorial items** are Papyrus `article` Items in the three sections. Front matter: `verdict` (`shipped`, `verified`, `pending`), `scores` (the editor's 1–5 per dimension), `evidence` (a typed link list with a check state), `entities` (until extraction lands), and `maker`. The site's `hooks.py` renders the stamp, the scores, the scores and the evidence on the item page and as board cards, statically.
 - **Reader submissions** are public at once as Pending rows on New, from snapshot JSON. Each row links to its source. An item page appears when an editor promotes the submission to an Item. Pending items therefore have no static page in v1. They are listed and agent-readable through the JSON. This keeps unreviewed text out of the sitemap.
 
 ## 7. What needs approval or input

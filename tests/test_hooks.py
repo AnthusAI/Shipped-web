@@ -65,7 +65,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Not checked", page)
         self.assertIn("Editor score", page)
         self.assertNotIn("scoring-provenance", page)
-        self.assertIn("hype-gap", page)
+        self.assertNotIn("hype", page.lower())
 
     def test_item_page_renders_source_release_date_score_notes_and_topic_link(self):
         page = self._page("decisions/fixture-guard-one")
@@ -100,8 +100,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertLess(board.index("fixture-full-contract"), board.index("fixture-router-two"))
         self.assertLess(board.index("fixture-router-two"), board.index("fixture-guard-one"))
 
-    def test_vapor_keeps_its_placeholder_board_and_rising_has_none(self):
-        self.assertIn('class="board is-placeholder"', self._page("vapor"))
+    def test_rising_has_no_placeholder_board(self):
         rising = self._page("rising")
         self.assertNotIn("is-placeholder", rising.split('class="shipped-layout"')[1])
         self.assertNotIn("placeholder-tag", rising)
@@ -141,7 +140,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn('<meta name="theme-color" content="#C6F432" media="(prefers-color-scheme: dark)">', page)
 
     def test_no_visible_page_says_desk(self):
-        for relative_path in (".", "new", "vapor", "roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents", "topics/decision-models"):
+        for relative_path in (".", "new", "roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents", "topics/decision-models"):
             page = re.sub(r'<section class="clusters.*?</section>', "", self._page(relative_path), flags=re.S)
             visible = re.sub(r'class="[^"]*"|id="[^"]*"|aria-labelledby="[^"]*"|href="[^"]*"', "", page)
             self.assertNotRegex(visible.lower(), r"\bdesk\b", relative_path)
@@ -171,7 +170,6 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertEqual(stats, [("Items", "2"), ("Makers", "2"), ("Shipped", "1"), ("Pending", "1")])
         self.assertIn("Editor scores (AI-assisted first pass), mean of 2 items", page)
         self.assertIn('<span class="profile-value">3.0</span>', page)
-        self.assertIn("&#9650; +0.5 over", page)
         self.assertEqual(len(re.findall(r'<li class="board-row">', page)), 2)
         self.assertIn("Other Fixture Lab", page)
         self.assertNotIn("fixture-full-contract", page)
@@ -208,7 +206,7 @@ class HooksProjectionTest(unittest.TestCase):
         return [json.loads(html.unescape(raw)) for raw in re.findall(rf'data-island="{name}" data-props="([^"]*)"', page)]
 
     def test_every_page_loads_the_reader_script_and_stylesheet(self):
-        for relative_path in (".", "new", "rising", "vapor", "submit", "sign-in", "policies", "open-weights/fixture-full-contract", "topics/open-tts", "sample/tern-3"):
+        for relative_path in (".", "new", "rising", "submit", "sign-in", "policies", "open-weights/fixture-full-contract", "topics/open-tts", "sample/tern-3"):
             page = self._page(relative_path)
             self.assertIn('<link rel="stylesheet" href="/_plugins/papyrus-reader@1.css">', page, relative_path)
             self.assertIn('<script src="/_plugins/papyrus-reader@1.js" defer></script>', page, relative_path)
@@ -245,6 +243,22 @@ class HooksProjectionTest(unittest.TestCase):
         for item_id, lineage in (("item-one", "item-one"), ("item-one-v2", "item-one"), ("a-v1-b", "a-v1-b"), ("1f3a-v12", "1f3a")):
             self.assertEqual(hooks._subject(type("Summary", (), {"item_id": item_id})()), lineage)
 
+    def test_no_projected_page_mentions_vapor_or_the_hype_gap(self):
+        offenders = [
+            path.relative_to(self.output_directory).as_posix()
+            for path in self.output_directory.rglob("*")
+            if path.is_file() and path.suffix in {".html", ".md", ".xml", ".txt"}
+            and re.search(r"vapor|hype gap|hype-gap", path.read_text(encoding="utf-8"), re.I)
+        ]
+        self.assertEqual(offenders, [])
+        self.assertFalse((self.output_directory / "vapor").exists())
+
+    def test_the_vapor_log_url_redirects_to_new(self):
+        projection = json.loads((STATIC_DIRECTORY / "projection.json").read_text(encoding="utf-8"))
+        self.assertEqual(projection["redirects"]["exact"], {"/vapor/": "/new/"})
+        self.assertNotIn("/vapor/", [link["href"] for link in projection["nav"]["links"]])
+        self.assertFalse((STATIC_DIRECTORY / "pages" / "vapor.md").exists())
+
     def test_page_items_get_no_verdict_or_score_strip(self):
         page = self._page("policies")
         for text in ("Verdict", "status-stamp", "desk-strip", "Pending", "item-reader", "item-comments", "Primary evidence"):
@@ -276,34 +290,19 @@ class HooksProjectionTest(unittest.TestCase):
         for text in ("is-placeholder", "placeholder-tag", "coming later", "Sign in is coming", "preview-notice"):
             self.assertNotIn(text, page)
 
-    def test_vapor_log_shows_the_real_empty_state_at_full_strength_above_the_dimmed_sample_rows(self):
-        page = self._page("vapor")
-        empty = page.index("No item has been stamped Vapor yet.")
-        self.assertNotIn("is-placeholder", page[page.rindex("<section", 0, empty):empty])
-        self.assertLess(empty, page.index('class="board is-placeholder"'))
-        self.assertEqual(page.count("<h1"), 1)
-        self.assertIn("Sample vapor rows", page)
-        self.assertNotIn("No item has been stamped Vapor yet.", self._page("."))
-
-    def test_vapor_log_lists_real_vapor_items_instead_of_the_empty_state(self):
-        hooks = _load_hooks()
-        self.assertEqual(hooks._empty_board({"verdict": "vapor", "heading": "Vapor log", "level": "1"}).count("No item has been stamped Vapor yet."), 1)
-        shipped = self._page("topics/decision-models")
-        self.assertNotIn("No item has been stamped", shipped)
-
     def test_rising_rail_and_page_use_the_ranked_list_island_with_a_real_empty_state(self):
         empty = "Rising starts counting once readers vote."
-        for relative_path, limit in ((".", 5), ("new", 5), ("vapor", 5), ("rising", 5)):
+        for relative_path, limit in ((".", 5), ("new", 5), ("rising", 5)):
             props = self._island_props(self._page(relative_path), "RankedList")
             self.assertIn({"list": "rising", "limit": limit, "empty": empty}, props, relative_path)
         self.assertIn({"list": "rising", "limit": 30, "empty": empty}, self._island_props(self._page("rising"), "RankedList"))
-        for relative_path in (".", "new", "rising", "vapor"):
+        for relative_path in (".", "new", "rising"):
             page = self._page(relative_path)
             self.assertNotIn("Kiln-3B", page, relative_path)
             self.assertNotIn("rail is-placeholder", page, relative_path)
 
     def test_beat_chips_no_longer_point_at_sample_pages(self):
-        for relative_path in (".", "new", "rising", "vapor"):
+        for relative_path in (".", "new", "rising"):
             beats = self._page(relative_path).split('aria-label="Editors’ beats"')[1].split("</nav>")[0]
             self.assertNotIn("/sample/", beats, relative_path)
             self.assertIn('href="/wiki/task-voice-agents/">Voice agents', beats, relative_path)
@@ -367,7 +366,7 @@ class HooksProjectionTest(unittest.TestCase):
             self.assertIn("papyrus-knowledge-cotw", page, path)
             self.assertIn("Edited by AI on 2026-10-21", page, path)
             self.assertNotIn("Training-data manifest", page, path)
-        for path in (".", "new", "rising", "vapor"):
+        for path in (".", "new", "rising"):
             page = self._page(path)
             self.assertIn('class="papyrus-knowledge-count"', page, path)
             self.assertIn("Topic index · 1 topics", page, path)
@@ -406,7 +405,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("fewer than 5 ratings is too few to print", page)
 
     def test_rail_defines_shipped_by_the_v1_rule_and_the_rising_window_by_its_length(self):
-        for relative_path in (".", "new", "rising", "vapor"):
+        for relative_path in (".", "new", "rising"):
             page = self._page(relative_path)
             self.assertIn("An editor confirmed it. Once reader sign-in opens, 3 signed-in readers reporting use will count too.", page, relative_path)
             self.assertNotIn("or 3 signed-in readers reported using it", page, relative_path)
@@ -456,8 +455,11 @@ class StampNoteTest(unittest.TestCase):
     def test_a_stamp_names_who_and_when_in_the_words_of_its_verdict(self):
         self.assertEqual(self._note("shipped", "A. Editor", "2026-10-21"), "Confirmed by A. Editor, 21 Oct 2026")
         self.assertEqual(self._note("verified", "A. Editor", "2026-10-21"), "Checked by A. Editor, 21 Oct 2026")
-        self.assertEqual(self._note("vapor", "A. Editor"), "Stamped by A. Editor")
         self.assertEqual(self._note("shipped", None, "2026-10-21"), "Confirmed on 21 Oct 2026")
+
+    def test_an_old_vapor_verdict_reads_as_pending(self):
+        summary = type("Summary", (), {"item_id": "x", "output_path": "x", "slug": "x"})()
+        self.assertEqual(self.hooks._read_verdict(summary, {"verdict": "vapor"}), "pending")
 
     def test_without_the_data_or_for_pending_it_says_nothing(self):
         self.assertEqual(self._note("shipped"), "")
@@ -469,14 +471,12 @@ class ReaderSteeringConfigurationTest(unittest.TestCase):
         self.configuration = (REPOSITORY_ROOT / "papyrus.config.ts").read_text(encoding="utf-8")
         self.scoring = json.loads((STATIC_DIRECTORY / "scoring.json").read_text(encoding="utf-8"))
 
-    def test_the_plugin_is_listed_with_the_dimensions_and_hype_gap_of_scoring_json(self):
+    def test_the_plugin_is_listed_with_the_dimensions_of_scoring_json(self):
         self.assertIn('name: "reader-steering"', self.configuration)
         keys = [dimension["key"] for dimension in self.scoring["dimensions"]]
         self.assertIn("dimensions: [" + ", ".join(f'"{key}"' for key in keys) + "]", self.configuration)
-        rule = self.scoring["hypeGap"]
-        plus = ", ".join(f'"{key}"' for key in rule["plus"])
-        minus = ", ".join(f'"{key}"' for key in rule["minus"])
-        self.assertIn(f"hypeGap: {{ plus: [{plus}], minus: [{minus}] }}", self.configuration)
+        self.assertNotIn("hypeGap", self.configuration)
+        self.assertNotIn("hypeGap", self.scoring)
 
     def test_the_snapshot_runs_every_six_hours_and_the_retirement_poll_has_its_secret(self):
         self.assertIn("snapshot: { schedule: true, intervalHours: 6 }", self.configuration)
@@ -542,7 +542,7 @@ class PageVocabularyTest(unittest.TestCase):
             self.assertIn("Beats", text)
             self.assertIn("Topics in this beat", text)
             self.assertNotIn("Concepts in this topic", text)
-        for name in ("home.md", "new.md", "rising.md", "vapor.md"):
+        for name in ("home.md", "new.md", "rising.md"):
             self.assertNotIn("All {n} topics", (STATIC_DIRECTORY / "pages" / name).read_text(encoding="utf-8"))
 
 

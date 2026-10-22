@@ -13,8 +13,6 @@
 .status-stamp svg{width:13px;height:13px;flex:none}
 .status-stamp-shipped{background:var(--status-shipped);color:var(--status-shipped-on);border:1.5px solid var(--status-shipped)}
 .status-stamp-verified{color:var(--verified);border:3px double var(--verified);padding:2px 6px 2px 4px}
-.status-stamp-vapor{color:var(--status-vapor);border:1.5px dashed var(--status-vapor)}
-.status-stamp-vapor .status-stamp-label{text-decoration:line-through;text-decoration-thickness:1.5px}
 .status-stamp-pending{color:var(--status-pending);border:1.5px dotted var(--status-pending)}
 
 .score-meter{display:inline-flex;gap:2px}
@@ -26,9 +24,6 @@
 .score-dimension.is-low .meter-segment{border-color:var(--muted)}
 .score-dimension.is-low .meter-segment.is-on{background:var(--muted)}
 
-.hype-gap{font-family:var(--font-mono);font-size:12px;font-weight:600;white-space:nowrap}
-.hype-gap-over{color:var(--brand-text)}
-.hype-gap-under{color:var(--ink)}
 
 .entity-chip{display:inline-flex;align-items:baseline;gap:6px;font-family:var(--font-mono);font-size:12px;line-height:18px;padding:1px 8px;border:1px solid var(--rule);background:var(--paper-raised);color:var(--ink);white-space:nowrap;text-decoration:none}
 .entity-chip i{font-style:normal;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -134,8 +129,6 @@ main:has(>.shipped-page){max-width:none}
 .markus-site-wordmark{font-size:104px;line-height:.82;letter-spacing:-.035em;display:flex;align-items:center;gap:22px;margin:0 0 22px}
 .markus-site-wordmark a{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
 .brand-word{font-weight:700}
-.brand-stamp{display:inline-flex;align-items:center;gap:5px;border:3px double var(--brand-on);transform:rotate(-6deg);font-family:var(--font-mono);font-stretch:100%;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px 4px 6px;line-height:14px}
-.brand-stamp svg{width:13px;height:13px}
 .markus-site-tagline{max-width:430px;font-family:var(--font-title);font-style:italic;font-size:23px;text-transform:none;letter-spacing:0;font-weight:500}
 .markus-site-nav{margin:0;border-top:1.5px solid var(--brand-on);font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;gap:0 36px;padding:14px 0 12px}
 

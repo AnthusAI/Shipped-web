@@ -57,7 +57,7 @@ export default defineSite({
           {
             id: "weekly",
             name: "The Shipped roundup",
-            description: "One email a week with what shipped, what turned out to be vapor, and the board's movers.",
+            description: "One email a week with what shipped and the board's movers.",
             kind: "roundup",
             schedule: { draft: "cron(0 13 ? * FRI *)", timezone: "America/New_York" },
             issueType: "newsletter_issue",
@@ -93,7 +93,6 @@ export default defineSite({
         name: "reader-steering",
         computeRoleArn: "arn:aws:iam::712236451410:role/amplify-app-shell-shipped-AmplifyComputeRoleD988057-XMW5ARboawnW",
         dimensions: ["real", "useful", "notable", "novel"],
-        hypeGap: { plus: ["notable", "novel"], minus: ["real", "useful"] },
         snapshot: { schedule: true, intervalHours: 6 },
         ranking: { combination: "shrinkage", shrinkageK: 20, readerShareCap: 0.4, newAccountWeight: 1 / 3, risingMinimumAccountHours: 24 },
         retirementPoll: true,

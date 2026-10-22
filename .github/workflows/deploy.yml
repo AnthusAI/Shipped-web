@@ -36,6 +36,8 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements-publication.txt
       - run: python -m unittest discover -s tests
+      - run: pip install behave
+      - run: behave features
 
   deploy:
     needs: ci

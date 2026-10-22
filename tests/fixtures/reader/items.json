@@ -9,7 +9,7 @@
           "editor": { "mean": 4.0, "n": 1, "hist": [0, 0, 0, 1, 0] }
         }
       },
-      "editor": 4.0, "reader": 4.2, "hypeGap": { "reader": -1.0, "editor": 2.5 }
+      "editor": 4.0, "reader": 4.2
     }
   }
 }
