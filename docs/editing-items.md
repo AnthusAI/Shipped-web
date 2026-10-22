@@ -9,7 +9,9 @@ verdictAt: 2026-10-20      # optional
 scores: {real: 4.5, useful: 4, notable: 3.5, novel: 3}   # editor's 1-5 per dimension; any subset
 evidence:
   - {kind: weights, url: https://example.org/weights, check: checked}   # check: checked, partly or unchecked
-maker: Some Lab            # optional
+maker: Some Lab            # optional, shown exactly as stored
+makerHandle: some-lab      # optional Hub handle; alone it is shown verbatim in mono
+scoring: {by: agent, label: "Editor's first pass (AI-assisted)", at: 2026-10-21}   # by: agent or human; see docs/placeholders.md
 entities: [{kind: task, name: code completion}]          # optional, hand-entered until extraction lands
 ```
 

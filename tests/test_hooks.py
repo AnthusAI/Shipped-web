@@ -54,6 +54,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Partly", page)
         self.assertIn("Not checked", page)
         self.assertIn("Editor score", page)
+        self.assertNotIn("scoring-provenance", page)
         self.assertIn("hype-gap", page)
 
     def test_item_page_renders_source_release_date_score_notes_and_topic_link(self):
@@ -76,6 +77,11 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Ratings open with reader sign-in", page)
         self.assertIn('href="/topics/decision-models/">Decision models', page)
         self.assertIn('href="/topics/open-tts/">Open TTS', page)
+        self.assertNotIn("Sample", page)
+        self.assertIn("placeholder-tag", page)
+        self.assertIn("Dimmed sections with a dashed outline are placeholders", page)
+        self.assertIn('<a href="/topics/decision-models/">Decision models</a>', page)
+        self.assertIn("Scores on seeded items are an AI-assisted first pass", page)
 
     def test_new_page_has_only_the_real_board_newest_first(self):
         page = self._page("new")
@@ -84,10 +90,41 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertLess(board.index("fixture-full-contract"), board.index("fixture-router-two"))
         self.assertLess(board.index("fixture-router-two"), board.index("fixture-guard-one"))
 
-    def test_vapor_and_rising_keep_their_sample_boards(self):
-        self.assertIn("sample-mark", self._page("vapor"))
-        self.assertNotIn("desk-board", self._page("vapor"))
-        self.assertIn("sample-mark", self._page("rising"))
+    def test_vapor_and_rising_keep_their_placeholder_boards(self):
+        self.assertIn("placeholder-tag", self._page("vapor"))
+        self.assertIn('class="board is-placeholder"', self._page("vapor"))
+        self.assertIn('class="board is-placeholder"', self._page("rising"))
+        self.assertNotIn("sample-mark", self._page("rising"))
+
+    def test_placeholder_pages_have_no_sample_marks(self):
+        for relative_path in ("roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents"):
+            page = self._page(relative_path)
+            self.assertNotIn("sample-mark", page)
+            self.assertNotIn(">Sample<", page)
+            self.assertIn("placeholder-tag", page)
+            self.assertIn("is-placeholder", page)
+
+    def test_agent_scored_item_page_shows_the_label_and_the_notice(self):
+        page = self._page("decisions/fixture-guard-one")
+        self.assertIn("Editor&#x27;s first pass (AI-assisted)", page)
+        self.assertIn("Scored by an AI research pass from the linked sources; a human editor will re-score it.", page)
+
+    def test_item_page_without_scoring_says_editor_score(self):
+        page = self._page("decisions/fixture-router-two")
+        self.assertIn('<p class="kicker">Editor score</p>', page)
+        self.assertNotIn("scoring-provenance", page)
+        self.assertNotIn("AI first pass", page)
+
+    def test_board_rows_tag_only_agent_scored_items(self):
+        page = self._page("topics/decision-models")
+        self.assertEqual(page.count('<span class="ai-first-pass-tag">AI first pass</span>'), 1)
+        self.assertEqual(self._page("topics/open-tts").count("ai-first-pass-tag"), 0)
+
+    def test_maker_handle_is_shown_verbatim(self):
+        with_both = self._page("decisions/fixture-router-two")
+        self.assertIn('Other Fixture Lab (<span class="maker-handle">other-fixture-lab</span>)', with_both)
+        handle_only = self._page("shipped/fixture-invalid-values")
+        self.assertIn('<span class="kicker maker-display"><span class="maker-handle">handle-only-lab</span></span>', handle_only)
 
     def test_decision_models_topic_page_counts_and_profile(self):
         page = self._page("topics/decision-models")
@@ -95,7 +132,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("sample-mark", page)
         stats = re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)
         self.assertEqual(stats, [("Items", "2"), ("Makers", "2"), ("Shipped", "1"), ("Pending", "1")])
-        self.assertIn("Editor scores, mean of 2 items", page)
+        self.assertIn("Editor scores (AI-assisted first pass), mean of 2 items", page)
         self.assertIn('<span class="profile-value">3.0</span>', page)
         self.assertIn("&#9650; +0.5 over", page)
         self.assertEqual(len(re.findall(r'<li class="board-row">', page)), 2)
@@ -105,6 +142,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_open_tts_topic_page_lists_only_its_own_tag(self):
         page = self._page("topics/open-tts")
         self.assertEqual(re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)[:2], [("Items", "1"), ("Makers", "1")])
+        self.assertIn("Editor scores, mean of 1 items", page)
         self.assertIn("fixture-full-contract", page)
         self.assertNotIn("fixture-guard-one", page)
 

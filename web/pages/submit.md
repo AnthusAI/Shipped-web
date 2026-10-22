@@ -5,15 +5,15 @@
 <div class="form-layout">
 <div class="form-main">
 <p class="preview-notice" role="note"><span class="cintillo">Preview</span><span>Preview: submitting is not open yet. This form shows the design; nothing you type here is sent.</span></p>
-<span class="cintillo">Submit · signed-in view</span> <span class="sample-mark" title="Fictional sample data that previews the design">Sample</span>
+<span class="cintillo">Submit · signed-in view</span>
 <h1 class="form-title">Submit something that shipped</h1>
 <p class="form-dek">Link to the thing itself, not the announcement about the thing. If it has a waitlist, it goes in as a claim and probably comes out stamped Vapor.</p>
-<fieldset disabled class="form-fields">
-<legend class="kicker">Submission form (preview, not working)</legend>
+<fieldset disabled class="form-fields is-placeholder">
+<legend class="kicker">Submission form (preview, not working)</legend><span class="placeholder-tag">Placeholder</span>
 <section class="form-section" aria-labelledby="link-h">
 <div class="step-line"><span class="cintillo">01</span><h2 id="link-h">The link</h2></div>
 <div class="field"><label for="url">Primary URL</label><input id="url" class="field-input field-input-mono" type="url" value="https://hub.example/kiln-ai/kiln-3b" aria-describedby="url-hint"><span id="url-hint" class="field-hint">The weights, the product page you can sign up and use today, the changelog entry or the public record of the decision.</span></div>
-<div class="duplicate-warning" role="status"><svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="5.8"/><path d="M8 5v3.4"/><path d="M8 10.6v.2"/></svg><div><strong>Possible duplicate.</strong> “Kiln-3B: a small open model for structured extraction, MIT licence” was submitted 5h ago from the same domain. <a href="/">Add your evidence there</a> instead, or carry on if this is a different release. <span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div></div>
+<div class="duplicate-warning" role="status"><svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="5.8"/><path d="M8 5v3.4"/><path d="M8 10.6v.2"/></svg><div><strong>Possible duplicate.</strong> “Kiln-3B: a small open model for structured extraction, MIT licence” was submitted 5h ago from the same domain. <a href="/">Add your evidence there</a> instead, or carry on if this is a different release. <span class="placeholder-tag">Placeholder</span></div></div>
 <div class="field"><label for="title">Title</label><input id="title" class="field-input" type="text" value="Kiln-3B: a small open model for structured extraction, MIT licence" aria-describedby="title-hint"><span id="title-hint" class="field-hint">Say what shipped and who shipped it. No adjectives the maker would use. 90 characters max · <span class="counter">62 / 90</span></span></div>
 </section>
 <fieldset class="form-section">
@@ -26,7 +26,7 @@
 </fieldset>
 <section class="form-section" aria-labelledby="tags-h">
 <div class="step-line"><span class="cintillo">03</span><h2 id="tags-h">Topics and entities</h2></div>
-<p class="field-hint" style="margin:0">We read the link and pulled these out for the knowledge graph. Confirm, fix or remove them. Solid outline with “confirmed” is a known entity; dashed with “proposed” would be a new one. <span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></p>
+<p class="field-hint" style="margin:0">We read the link and pulled these out for the knowledge graph. Confirm, fix or remove them. Solid outline with “confirmed” is a known entity; dashed with “proposed” would be a new one.</p>
 <div class="tag-table">
 <div class="tag-row"><span class="kicker">Beat</span><span class="tag-chips"><span class="entity-chip entity-chip-confirmed"><i>confirmed</i>Document AI</span></span><button type="button" class="button button-quiet mini-button">Change</button></div>
 <div class="tag-row"><span class="kicker">Maker</span><span class="tag-chips"><span class="entity-chip entity-chip-confirmed"><i>confirmed</i>Kiln AI</span></span><button type="button" class="button button-quiet mini-button">Fix</button></div>
@@ -61,8 +61,8 @@
 </fieldset>
 </div>
 <aside class="form-side">
-<section class="rail" aria-labelledby="account-h">
-<h2 id="account-h" class="rail-h">Your account</h2> <span class="sample-mark" title="Fictional sample data that previews the design">Sample</span>
+<section class="rail is-placeholder" aria-labelledby="account-h">
+<h2 id="account-h" class="rail-h">Your account</h2> <span class="placeholder-tag">Placeholder</span>
 <div class="account-panel"><span class="account-figure">14 submissions</span><span>Karma: shown only once it is a defined number. For now: submission count and account age (9 months).</span><span class="field-hint">Signed in as a sample reader, “ryan-sample”.</span></div>
 </section>
 <section class="rail" aria-labelledby="counts-h">
