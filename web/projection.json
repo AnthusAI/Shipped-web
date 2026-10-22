@@ -27,7 +27,7 @@
       "roundup": {
         "base": "roundup",
         "label": "Roundup",
-        "description": "Every weekly issue of the Shipped roundup: what shipped, what turned out to be vapor, and the board's movers.",
+        "description": "Every weekly issue of the Shipped roundup: what shipped and the board's movers.",
         "feed": false,
         "listEmpty": true
       },
@@ -60,10 +60,6 @@
         "href": "/rising/"
       },
       {
-        "label": "Vapor log",
-        "href": "/vapor/"
-      },
-      {
         "label": "Roundup",
         "href": "/roundup/"
       },
@@ -76,7 +72,7 @@
         "href": "/sign-in/"
       }
     ],
-    "brandHtml": "<span class=\"brand-word\">Shipped</span><span class=\"brand-stamp\"><svg viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"5\"/><path d=\"M3 13L13 3\"/></svg><span>No vapor</span></span>"
+    "brandHtml": "<span class=\"brand-word\">Shipped</span>"
   },
   "listings": {
     "types": [
@@ -137,13 +133,6 @@
       "title": "Rising",
       "description": "Items gaining the most upvotes in the last 6 hours.",
       "source": "pages/rising.md"
-    },
-    {
-      "id": "vapor",
-      "path": "vapor",
-      "title": "Vapor log",
-      "description": "Items announced but not something you can use.",
-      "source": "pages/vapor.md"
     },
     {
       "id": "submit",
@@ -227,5 +216,10 @@
   },
   "wiki": {
     "suggestForm": "suggest-edit"
+  },
+  "redirects": {
+    "exact": {
+      "/vapor/": "/new/"
+    }
   }
 }

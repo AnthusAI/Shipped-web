@@ -1,7 +1,7 @@
 """Shipped named hooks for the standard Papyrus front end (projection.json names this module).
 
 Editors set the verdict, the four editor scores, the evidence and the entities in an item's front matter.
-The dimensions, the hype gap formula and the verdicts are data in scoring.json; this code only iterates them.
+The dimensions and the verdicts are data in scoring.json; this code only iterates them.
 """
 
 from __future__ import annotations
@@ -42,7 +42,7 @@ METER_SEGMENTS = 5
 LOW_SCORE_BELOW = 2.5
 BOARD_ROW_LIMIT = 30
 DEFAULT_VERDICT = "pending"
-MINUS_SIGN = "−"
+RETIRED_VERDICTS = {"vapor": "pending"}
 
 EVIDENCE_CHECKS = {
     "checked": ("Checked", "check check-checked",
@@ -57,7 +57,6 @@ STAMP_ICONS = {
     "shipped": '<path d="M2.5 2.5h11v11h-11z"/><path d="M5 8.2l2 2 4-4.4"/>',
     "verified": '<circle cx="8" cy="8" r="5.8"/><path d="M5.4 8.1l1.8 1.8 3.4-3.7"/>',
     "pending": '<circle cx="8" cy="8" r="5.8"/><path d="M8 4.8V8l2.2 1.4"/>',
-    "vapor": '<circle cx="8" cy="8" r="5"/><path d="M3 13L13 3"/>',
 }
 FALLBACK_STAMP_ICON = '<circle cx="8" cy="8" r="5.8"/>'
 
@@ -79,8 +78,8 @@ READER_KEY_TEXT = (
     "The editor’s score is shown on its own and is the headline figure. Once readers sign in, their ratings will pull a score toward the readers’ view only as more of them rate, "
     "and a reader mean from fewer than 5 ratings is too few to print."
 )
-STAMP_NOTE_VERBS = {"shipped": "Confirmed by", "verified": "Checked by", "vapor": "Stamped by"}
-STAMP_NOTE_UNNAMED_VERBS = {"shipped": "Confirmed on", "verified": "Checked on", "vapor": "Stamped on"}
+STAMP_NOTE_VERBS = {"shipped": "Confirmed by", "verified": "Checked by"}
+STAMP_NOTE_UNNAMED_VERBS = {"shipped": "Confirmed on", "verified": "Checked on"}
 FOOTER_LINKS = (
     ("How ranking works", RANKING_POLICY_PATH),
     ("Policies", "/policies/"),
@@ -232,6 +231,7 @@ def _read_verdict(summary, front):
     raw = front.get("verdict")
     if raw is None:
         return DEFAULT_VERDICT
+    raw = RETIRED_VERDICTS.get(raw, raw)
     if raw in _scoring()["verdicts"]:
         return raw
     _warn(summary, f"unknown verdict {raw!r}; shown as {DEFAULT_VERDICT}")
@@ -311,28 +311,6 @@ def _maker_html(item):
     if item["maker"]:
         return escape(item["maker"])
     return handle_html
-
-
-def _hype_gap(scores):
-    rule = _scoring()["hypeGap"]
-    keys = rule["plus"] + rule["minus"]
-    if not keys or any(key not in scores for key in keys):
-        return None
-    plus = sum(scores[key] for key in rule["plus"]) / len(rule["plus"])
-    minus = sum(scores[key] for key in rule["minus"]) / len(rule["minus"])
-    return plus - minus
-
-
-def _hype_gap_html(gap, large=False):
-    if gap is None:
-        return ""
-    rounded = round(gap, 1)
-    size = " hype-gap-xl" if large else ""
-    if rounded > 0:
-        return f'<span class="hype-gap hype-gap-over{size}">&#9650; +{rounded:.1f} over</span>'
-    if rounded < 0:
-        return f'<span class="hype-gap hype-gap-under{size}">&#9660; {MINUS_SIGN}{abs(rounded):.1f} under</span>'
-    return f'<span class="hype-gap{size}">&#9644; 0.0 level</span>'
 
 
 def _stamp_html(verdict, extra_class=""):
@@ -440,7 +418,6 @@ def item_decorator(html, summary, site=None):
     if summary.type in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE):
         return html
     item = _read_item(summary)
-    gap = _hype_gap(item["scores"])
     note = _checked_note(item)
     note_html = f'<div class="item-stamp-note">{note}</div>' if note else ""
     maker_html = f'<span class="kicker maker-display">{_maker_html(item)}</span>' if _maker_key(item) else ""
@@ -448,7 +425,6 @@ def item_decorator(html, summary, site=None):
     chips_html = f'<div class="desk-entities">{chips}</div>' if chips else ""
     scores_html = ""
     if item["scores"]:
-        gap_html = f'<div class="hype-row"><span class="hype-label">Hype gap</span>{_hype_gap_html(gap, True)}</div>' if gap is not None else ""
         notes_class = " has-notes" if item["score_notes"] else ""
         agent_scored = _is_agent_scored(item)
         scores_label = (item["scoring"]["label"] or DEFAULT_AGENT_SCORES_LABEL) if agent_scored else DEFAULT_SCORES_LABEL
@@ -458,7 +434,7 @@ def item_decorator(html, summary, site=None):
         )
         scores_html = (
             f'<div class="desk-scores{notes_class}"><p class="kicker">{escape(scores_label)}</p>{provenance_html}'
-            f'<div class="desk-score-grid">{_dimensions_html(item["scores"], item["score_notes"])}</div>{gap_html}</div>'
+            f'<div class="desk-score-grid">{_dimensions_html(item["scores"], item["score_notes"])}</div></div>'
         )
     evidence_html = ""
     if item["evidence"]:
@@ -496,7 +472,6 @@ def _source_domain(item):
 
 def _board_row_html(position, summary, entry, section_label, site=None):
     item = _read_item(summary)
-    gap_html = _hype_gap_html(_hype_gap(item["scores"]))
     meta = [f"<b>{escape(_source_domain(item))}</b>"] if _source_domain(item) else []
     meta.append(f"<span>&sect; {escape(section_label)}</span>")
     if _maker_key(item):
@@ -512,7 +487,6 @@ def _board_row_html(position, summary, entry, section_label, site=None):
         f'<div class="board-main"><a class="board-title" href="{escape(entry.url, quote=True)}">{escape(entry.title)}</a>'
         f'<div class="board-meta">{"".join(meta)}</div>'
         + (f'<div class="board-entities">{chips}</div>' if chips else "")
-        + (f'<div class="board-gap"><span class="kicker">Hype gap</span> {gap_html}</div>' if gap_html else "")
         + _board_reader_html(summary)
         + "</div>"
         f'<div class="board-status">{_stamp_html(item["verdict"])}</div>'
@@ -556,22 +530,10 @@ def _more_links_html(page):
     return f'<p class="board-more"><span class="kicker">More</span>{links}</p>'
 
 
-def _empty_board(attributes):
-    verdict = attributes["verdict"]
-    heading = attributes.get("heading", "Latest")
-    tag = "h1" if attributes.get("level") == "1" else "h2"
-    return (
-        '<section class="board desk-board desk-board-empty" aria-labelledby="desk-board-h">'
-        f'<div class="board-heading"><{tag} id="desk-board-h">{escape(heading)}</{tag}></div>'
-        f'<p class="board-empty">No item has been stamped {escape(verdict.capitalize())} yet.</p></section>'
-    )
-
-
 def _desk_board(page, attributes):
-    wanted_verdict = attributes.get("verdict")
-    pairs = _board_pairs(page, lambda summary: not wanted_verdict or _read_item(summary)["verdict"] == wanted_verdict)
+    pairs = _board_pairs(page, lambda summary: True)
     if not pairs:
-        return _empty_board(attributes) if wanted_verdict else ""
+        return ""
     limit = int(attributes.get("limit", BOARD_ROW_LIMIT))
     heading = attributes.get("heading", "Latest")
     tag = "h1" if attributes.get("level") == "1" else "h2"
@@ -609,16 +571,11 @@ def _topic_profile_html(items):
         for values in [[item["scores"][dimension["key"]] for item in scored if dimension["key"] in item["scores"]]]
         if values
     )
-    mean_gap = _mean([gap for gap in (_hype_gap(item["scores"]) for item in scored) if gap is not None])
-    gap_html = (
-        f'<div class="hype-box"><div><div class="hype-label">Mean hype gap</div></div>{_hype_gap_html(mean_gap, True)}</div>'
-        if mean_gap is not None else ""
-    )
     scores_label = "Editor scores (AI-assisted first pass)" if any(_is_agent_scored(item) for item in scored) else "Editor scores"
     return (
         '<section aria-labelledby="profile-h" class="topic-profile"><div class="section-heading">'
         '<span class="cintillo">Scores</span><h2 id="profile-h">How the beat scores</h2></div>'
-        f'<p class="graph-note">{scores_label}, mean of {len(scored)} items</p>{rows}{gap_html}</section>'
+        f'<p class="graph-note">{scores_label}, mean of {len(scored)} items</p>{rows}</section>'
     )
 
 

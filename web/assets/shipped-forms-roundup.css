@@ -65,10 +65,10 @@ textarea.field-input{height:auto;padding:10px 12px;line-height:1.5}
 .item-card-meta{font-family:var(--font-mono);font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:4px}
 .item-card-meta b{color:var(--brand-text);font-weight:600}
 .pull-quote{margin:44px -40px;padding:28px 40px;background:var(--brand-fill);color:var(--brand-on);font-family:var(--font-title);font-style:italic;font-size:32px;line-height:1.25;letter-spacing:-.01em;font-weight:500}
-.vapor-line{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;margin:0 0 20px}
+.claim-line{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;margin:0 0 20px}
 .status-stamp-xl{font-size:20px;line-height:24px;letter-spacing:.16em;padding:8px 16px 8px 12px;gap:10px;border-width:2.5px;transform:rotate(-4deg)}
 .status-stamp-xl svg{width:24px;height:24px}
-.vapor-facts{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+.claim-facts{font-family:var(--font-mono);font-size:13px;color:var(--muted)}
 .topic-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px;font-family:var(--font-ui)}
 .topic-chip{display:inline-flex;align-items:baseline;gap:6px;font-family:var(--font-mono);font-size:12px;line-height:18px;padding:3px 9px;border:1px solid var(--rule);background:var(--paper-raised);color:var(--ink);white-space:nowrap;text-decoration:none!important}
 .topic-chip i{font-style:normal;font-weight:600;color:var(--ink)}

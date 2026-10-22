@@ -22,7 +22,7 @@ EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*\.)+
 UUID = re.compile(r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
 PERSON_ID = re.compile(r"person[-_ ]?id|\bperson[-_][A-Za-z0-9-]{6,}|\bprs_[A-Za-z0-9]+", re.IGNORECASE)
 
-LIVE_PAGES = ("/", "/new/", "/rising/", "/vapor/", "/submit/", "/sign-in/", "/policies/", "/roundup/")
+LIVE_PAGES = ("/", "/new/", "/rising/", "/submit/", "/sign-in/", "/policies/", "/roundup/")
 LIVE_DATA = ("items", "board", "readers", "submissions")
 
 

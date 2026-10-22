@@ -14,4 +14,4 @@ Item front matter may carry `scoring: {by: agent, label: "Editor's first pass (A
 
 ## Reader steering is live
 
-Reader sign-in, votes, "I used it", ratings, comments and submissions are real (Papyrus 5.22.0 `reader-steering` plugin; `web/hooks.py` mounts the islands and `head_extra` loads `/_plugins/papyrus-reader@1.js`). The Submit and Sign in pages are real. Still placeholders: the Rising board and rail (waiting for a ranked-list island; a real line above each says so) and the sample vapor rows under the real Vapor log. Delete the sample vapor rows block from `web/pages/vapor.md` when the first real item is stamped Vapor. The sample item and topic pages stay as dimmed design references.
+Reader sign-in, votes, "I used it", ratings, comments and submissions are real (Papyrus 5.22.0 `reader-steering` plugin; `web/hooks.py` mounts the islands and `head_extra` loads the reader script). The Submit and Sign in pages are real. Still placeholders: the Rising board and rail (waiting for a ranked-list island; a real line above each says so) The sample item and topic pages stay as dimmed design references.

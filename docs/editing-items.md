@@ -1,9 +1,9 @@
 # Editing items
 
-Editors set the verdict, the editor scores, the evidence and the entities of an item in its front matter (the item's `metadata` in the Papyrus CMS). `web/hooks.py` renders them statically on the item page and on the "Latest" board of Front and New. The dimensions, the hype gap formula and the verdicts are data in `web/scoring.json`.
+Editors set the verdict, the editor scores, the evidence and the entities of an item in its front matter (the item's `metadata` in the Papyrus CMS). `web/hooks.py` renders them statically on the item page and on the "Latest" board of Front and New. The dimensions and the verdicts are data in `web/scoring.json`.
 
 ```yaml
-verdict: verified          # shipped, verified, pending or vapor; missing means pending
+verdict: verified          # shipped, verified or pending; missing means pending (an old `vapor` reads as pending)
 verdictBy: an editor       # optional
 verdictAt: 2026-10-20      # optional
 scores: {real: 4.5, useful: 4, notable: 3.5, novel: 3}   # editor's 1-5 per dimension; any subset
@@ -15,7 +15,7 @@ scoring: {by: agent, label: "Editor's first pass (AI-assisted)", at: 2026-10-21}
 entities: [{kind: task, name: code completion}]          # optional, hand-entered until extraction lands
 ```
 
-The hype gap is shown only when every dimension named in `hypeGap` has a score: the mean of the `plus` dimensions minus the mean of the `minus` dimensions. The board's source domain is the domain of the first valid evidence link.
+The board's source domain is the domain of the first valid evidence link.
 
 Invalid values (a score outside 1 to 5, an unknown dimension, verdict or check, an evidence link that is not http or https) are left out of the page, and a warning with the item key is logged. They never fail the build.
 
