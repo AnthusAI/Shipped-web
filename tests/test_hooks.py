@@ -128,10 +128,9 @@ class HooksProjectionTest(unittest.TestCase):
     def test_footer_is_the_wordmark_links_and_the_plain_line(self):
         page = self._page(".")
         footer = page.split("<footer")[1].split("</footer>")[0]
-        for href in ('href="/policies/#ranking">How ranking works', 'href="/policies/">Policies', 'href="/roundup/">Roundups', 'href="/feed.xml">RSS', 'href="/submit/">Submit'):
+        for href in ('href="/map/">How the map works', 'href="/policies/#steering">How steering works', 'href="/policies/">Policies', 'href="/roundup/">All issues', 'href="/feed.xml">RSS'):
             self.assertIn(href, footer)
-        self.assertIn("AI that shipped.", footer)
-        self.assertNotIn("Anthus", page)
+        self.assertIn("Published by Anthus AI Solutions.", footer)
         self.assertNotIn("ranked by the", page)
 
     def test_theme_color_is_the_brand_fill_in_light_and_dark(self):
@@ -164,7 +163,7 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_decision_models_topic_page_counts_and_profile(self):
         page = self._page("topics/decision-models")
-        self.assertIn("<title>Decision models that actually shipped", page)
+        self.assertIn("<title>Decision models in the wild", page)
         self.assertNotIn("sample-mark", page)
         stats = re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)
         self.assertEqual(stats, [("Items", "2"), ("Makers", "2"), ("Available", "1"), ("Announced", "1")])
@@ -455,6 +454,20 @@ def _load_hooks():
     spec.loader.exec_module(module)
     return module
 
+    def test_masthead_carries_the_tagline_and_the_new_navigation(self):
+        page = self._page(".")
+        header = page.split("<header")[1].split("</header>")[0]
+        self.assertIn("In the wild, and mapped as it moves.", header)
+        for label in ("Front", "Map", "Proposals", "New", "Wiki", "The Weekly", "Submit"):
+            self.assertIn(f">{label}</a>", header)
+        for label in ("Rising", "Vapor"):
+            self.assertNotIn(f">{label}</a>", header)
+
+    def test_every_page_carries_the_default_social_card(self):
+        page = self._page(".")
+        self.assertIn('<meta property="og:image" content="https://shipped.anth.us/assets/social/shipped-default.png">', page)
+        self.assertIn('<meta name="twitter:image" content="https://shipped.anth.us/assets/social/shipped-default.png">', page)
+
 
 class StampNoteTest(unittest.TestCase):
     @classmethod
@@ -562,3 +575,4 @@ class PageVocabularyTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

@@ -125,12 +125,23 @@ main:has(>.shipped-page){max-width:none}
 .cluster-count,.cluster-terms{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .cluster-name{font-family:var(--font-title);font-size:22px;line-height:1.2;font-weight:600}
 
-.markus-site-masthead{padding:30px 32px 0;display:block}
-.markus-site-wordmark{font-size:104px;line-height:.82;letter-spacing:-.035em;display:flex;align-items:center;gap:22px;margin:0 0 22px}
-.markus-site-wordmark a{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
-.brand-word{font-weight:700}
-.markus-site-tagline{max-width:430px;font-family:var(--font-title);font-style:italic;font-size:23px;text-transform:none;letter-spacing:0;font-weight:500}
-.markus-site-nav{margin:0;border-top:1.5px solid var(--brand-on);font-family:var(--font-mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase;gap:0 36px;padding:14px 0 12px}
+.markus-site-masthead{padding:22px 32px 0;display:grid;grid-template-columns:1fr auto;align-items:end;gap:0 24px}
+.markus-site-wordmark{font-size:64px;line-height:.9;margin:0 0 16px;display:block}
+.markus-site-wordmark a{display:inline-block}
+.brand-word{font-family:var(--font-ui);font-stretch:125%;font-weight:900;text-transform:uppercase;letter-spacing:.01em}
+.markus-site-tagline{margin:0 0 16px;max-width:430px;text-align:right;font-family:var(--font-ui);font-style:italic;font-size:22px;text-transform:none;letter-spacing:0;font-weight:500}
+.markus-site-nav{grid-column:1/-1;margin:0;border-top:1.5px solid var(--brand-on);font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;gap:0 30px;padding:12px 0;align-items:center}
+.markus-site-nav a[href="/submit/"]{margin-left:auto}
+.markus-site-nav a[aria-current="page"]{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:3px}
+.markus-site-nav .nav-reader{display:inline-flex}
+.shipped-footer-wordmark .brand-word{font-size:1.5rem}
+@media (max-width:640px){
+  .markus-site-masthead{padding:14px 16px 0;display:block}
+  .markus-site-wordmark{font-size:38px;margin:0 0 6px}
+  .markus-site-tagline{text-align:left;font-size:16px;margin:0 0 12px;max-width:none}
+  .markus-site-nav{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;gap:0 16px;font-size:11px;padding:10px 0}
+  .markus-site-nav a[href="/submit/"]{margin-left:0}
+}
 
 @media (max-width:640px){
   .shipped-page{padding:0 16px 40px}

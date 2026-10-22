@@ -2,16 +2,16 @@
   "theme": null,
   "site": {
     "name": "Shipped",
-    "tagline": "The AI that actually shipped",
-    "description": "Announcements and real-world deployments of AI, checked against their sources and scored: open-weights releases, decision models in the wild, and what is actually in use.",
+    "tagline": "In the wild, and mapped as it moves.",
+    "description": "A living map of AI that is out in the world: signals from releases and deployments, the map of concepts and makers they connect, and stories that explain what moved.",
     "productionUrl": "https://shipped.anth.us"
   },
   "urls": {
     "style": "directory",
     "sections": {
       "shipped": {
-        "label": "Shipped",
-        "description": "Announcements and deployments of AI that is real, useful and in use.",
+        "label": "In use",
+        "description": "Products and features you can use today.",
         "listEmpty": true
       },
       "open-weights": {
@@ -26,8 +26,8 @@
       },
       "roundup": {
         "base": "roundup",
-        "label": "Roundup",
-        "description": "Every weekly issue of the Shipped roundup: what shipped and the board's movers.",
+        "label": "The Weekly",
+        "description": "Every issue of The Weekly: what moved on the map, concepts born that week, and what is new in the wild.",
         "feed": false,
         "listEmpty": true
       },
@@ -48,19 +48,23 @@
         "href": "/"
       },
       {
-        "label": "Decision models",
-        "href": "/topics/decision-models/"
+        "label": "Map",
+        "href": "/map/"
+      },
+      {
+        "label": "Proposals",
+        "href": "/proposals/"
       },
       {
         "label": "New",
         "href": "/new/"
       },
       {
-        "label": "Rising",
-        "href": "/rising/"
+        "label": "Wiki",
+        "href": "/wiki/"
       },
       {
-        "label": "Roundup",
+        "label": "The Weekly",
         "href": "/roundup/"
       },
       {
@@ -116,15 +120,15 @@
     {
       "id": "home",
       "path": "",
-      "title": "Shipped: AI that actually shipped",
-      "description": "Announcements and real-world deployments of AI, checked against their sources and scored: open-weights releases, decision models in the wild, and what is actually in use.",
+      "title": "Shipped: in the wild, and mapped as it moves",
+      "description": "A living map of AI that is out in the world: signals from releases and deployments, the map of concepts and makers they connect, and stories that explain what moved.",
       "source": "pages/home.md"
     },
     {
       "id": "new",
       "path": "new",
       "title": "New",
-      "description": "The newest items on the board.",
+      "description": "The newest signals on the map.",
       "source": "pages/new.md"
     },
     {
@@ -144,8 +148,8 @@
     {
       "id": "sample-roundup",
       "path": "sample/roundup",
-      "title": "Weekly roundup (placeholder issue)",
-      "description": "A placeholder issue that previews the Shipped roundup design.",
+      "title": "The Weekly (placeholder issue)",
+      "description": "A placeholder issue that previews The Weekly design.",
       "source": "pages/roundup.md"
     },
     {
@@ -172,20 +176,20 @@
     {
       "id": "topic-decision-models",
       "path": "topics/decision-models",
-      "title": "Decision models that actually shipped",
-      "description": "Decision models that actually shipped: guard and moderation classifiers, judge and reward models, routers. Scored by editors, with sources and release dates.",
+      "title": "Decision models in the wild",
+      "description": "Decision models in the wild: guard and moderation classifiers, judge and reward models, routers. Scored by editors, with sources and release dates.",
       "source": "pages/topic-decision-models.md"
     },
     {
       "id": "topic-open-tts",
       "path": "topics/open-tts",
-      "title": "Open-weights TTS that actually shipped",
+      "title": "Open-weights TTS in the wild",
       "description": "Open-weights text-to-speech and voice-cloning models from the last year, with the licence of each stated, scored by editors with sources.",
       "source": "pages/topic-open-tts.md"
     }
   ],
   "footer": {
-    "text": "AI that shipped.",
+    "text": "Published by Anthus AI Solutions.",
     "columns": []
   },
   "hooks": "hooks.py",
@@ -194,6 +198,8 @@
     "llmsFullMaxBytes": 2000000
   },
   "seo": {
+    "defaultImage": "https://shipped.anth.us/assets/social/shipped-default.png",
+    "defaultImageAlt": "Shipped: in the wild, and mapped as it moves.",
     "jsonLdTypes": {
       "wiki_page": "WebPage"
     }
