@@ -4,7 +4,12 @@
   "repository": "https://github.com/AnthusAI/Shipped-web",
   "brand": "shipped",
   "frontend": "markus-static",
-  "papyrusVersion": "5.15.1",
+  "papyrusVersion": "5.19.0",
+  "aws": {
+    "profile": "papyrus-production",
+    "accountId": "712236451410",
+    "region": "us-east-1"
+  },
   "cms": {
     "staging": false,
     "cognitoDomainPrefix": "papyrus-shipped-cms",
@@ -15,8 +20,10 @@
       "PAPYRUS_ENABLE_SLACK": "false",
       "PAPYRUS_ENABLE_INBOUND_EMAIL": "false",
       "PAPYRUS_ENABLE_STORAGE_BACKUPS": "false",
-      "PAPYRUS_OAUTH_REDIRECT_URLS": "http://localhost:3001/,https://shipped.anth.us/"
-    }
+      "PAPYRUS_OAUTH_REDIRECT_URLS": "http://localhost:3001/,https://shipped.anth.us/,https://main.dkycd9pntgo6d.amplifyapp.com/"
+    },
+    "siteOrigin": "https://shipped.anth.us",
+    "prospectusAccountsApiStageArn": "arn:aws:execute-api:us-east-1:712236451410:bnh9mctvo9/api"
   },
   "github": {
     "owner": "AnthusAI",
