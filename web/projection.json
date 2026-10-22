@@ -100,7 +100,9 @@
   "chrome": {
     "ga_measurement_id": "G-31SC26SDGX",
     "consent_mode": {
-      "privacy_policy_url": "/policies/#privacy"
+      "privacy_policy_url": "/policies/#privacy",
+      "analytics_only": true,
+      "banner_message": "We use cookies to measure how this site is used. We do not use them for advertising. You can accept all, reject all, and change your choice at any time."
     },
     "stylesheets": [
       "css/site-theme.css",
