@@ -1,10 +1,10 @@
 {
   "id": "ship-09ea2cdb-f414-40fd-8aad-41569c2ca795",
-  "title": "Weekly knowledge history and a scheduled knowledge run",
-  "description": "Needs Papyrus:\n- Archive the knowledge snapshot every week, including cluster identity (new, continued, merged, split), starting now: cluster history cannot be backfilled. Trend counts can be backfilled from item dates.\n- Move the manual workstation run (BERTopic plus GLiNER2) to a scheduled job in AWS, with the stale-checkout guard.\n\nThe River, \"The map this week\" and \"Concepts born this week\" depend on this.\n\nAcceptance: two consecutive weekly archives exist, and the River shows both weeks from real data.",
+  "title": "Unattended cloud knowledge run with weekly history",
+  "description": "Decided by the user on 2026-10-22: the weekly knowledge pipeline must run unattended in the cloud, with no dependency on anyone's local computer. If nobody looks at it, it must keep running.\n\nNeeds Papyrus: run the whole weekly knowledge pipeline as scheduled cloud jobs, in containers (GPU where needed):\n- corpus sync;\n- topic model (BERTopic) with stable cluster identity;\n- entity extraction (GLiNER2);\n- AI review;\n- publish-run;\n- snapshot;\n- wiki sync;\n- projection.\n\nEvery stage is idempotent, uses the stale-input guard (#565), retries on failure, and alarms on failure or a missed week. A failed week leaves the last good snapshot live and never deletes pages. The run's state lives in the cloud (S3 or DynamoDB), not on a workstation.\n\nArchive each week's snapshot, including cluster identity (new, continued, merged, split), starting now: cluster history cannot be backfilled. Until the cloud run is live, the workstation run continues and is archived.\n\nData-driven panels (trends, clusters, the map, the periodic table) update automatically every week. Content that carries copy or an image still waits for editor approval in Proposals, without blocking the data pipeline.\n\nThe River, \"The map this week\" and \"Concepts born this week\" depend on this.\n\nAcceptance:\n- Two consecutive weekly runs complete in the cloud with nobody touching them.\n- A deliberately failed stage alarms and leaves the site unchanged.\n- The River shows both weeks from real data.",
   "type": "story",
   "status": "open",
-  "priority": 1,
+  "priority": 0,
   "assignee": null,
   "creator": null,
   "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T15:29:00.046739Z",
-  "updated_at": "2026-10-22T15:29:00.046762Z",
+  "updated_at": "2026-10-22T15:42:24.954962Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
