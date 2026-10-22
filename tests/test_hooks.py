@@ -88,7 +88,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn('href="/topics/decision-models/">Decision models', page)
         self.assertIn('href="/topics/open-tts/">Open TTS', page)
         self.assertNotIn("Sample", page)
-        self.assertIn("placeholder-tag", page)
+        self.assertNotIn("placeholder-tag", page)
         self.assertIn("Dimmed sections with a dashed outline are placeholders", page)
         self.assertIn('<a href="/topics/decision-models/">Decision models</a>', page)
         self.assertIn("Scores on seeded items are an AI-assisted first pass", page)
@@ -100,11 +100,12 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertLess(board.index("fixture-full-contract"), board.index("fixture-router-two"))
         self.assertLess(board.index("fixture-router-two"), board.index("fixture-guard-one"))
 
-    def test_vapor_and_rising_keep_their_placeholder_boards(self):
-        self.assertIn("placeholder-tag", self._page("vapor"))
+    def test_vapor_keeps_its_placeholder_board_and_rising_has_none(self):
         self.assertIn('class="board is-placeholder"', self._page("vapor"))
-        self.assertIn('class="board is-placeholder"', self._page("rising"))
-        self.assertNotIn("sample-mark", self._page("rising"))
+        rising = self._page("rising")
+        self.assertNotIn("is-placeholder", rising.split('class="shipped-layout"')[1])
+        self.assertNotIn("placeholder-tag", rising)
+        self.assertNotIn("sample-mark", rising)
 
     def test_placeholder_pages_have_no_sample_marks(self):
         for relative_path in ("sample/roundup", "sample/tern-3", "sample/voice-agents"):
@@ -254,8 +255,11 @@ class HooksProjectionTest(unittest.TestCase):
     def test_submit_page_mounts_the_submit_island_and_says_what_is_true_now(self):
         page = self._page("submit")
         self.assertEqual(self._island_props(page, "Submit"), [{}])
-        for text in ("public as soon as you send it", "Editors review submissions after the fact", "sign in"):
+        for text in ("public as soon as you send it", "Editors will review submissions after the fact", "sign in"):
             self.assertIn(text, page)
+        body = page.split("</header>")[1]
+        self.assertLess(body.index("Submitting opens with reader sign-in, soon."), body.index("<h1"))
+        self.assertIn('content="Submitting opens with reader sign-in, soon.', page)
         for text in ("is-placeholder", "placeholder-tag", "<fieldset disabled", "not open yet", "Preview", "preview-notice"):
             self.assertNotIn(text, page)
 
@@ -263,8 +267,12 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page("sign-in")
         body = page.split("</header>")[1]
         self.assertEqual(self._island_props(body, "ReaderSignIn"), [{}])
-        self.assertIn("never published", page)
+        self.assertIn("will never be published", page)
         self.assertIn("handle", page)
+        self.assertLess(body.index("Reader sign-in opens soon."), body.index("<h1"))
+        self.assertIn('<meta name="description" content="Reader sign-in for Shipped opens soon.">', page)
+        self.assertIn("What signing in will give you", page)
+        self.assertNotIn("What signing in gives you", page)
         for text in ("is-placeholder", "placeholder-tag", "coming later", "Sign in is coming", "preview-notice"):
             self.assertNotIn(text, page)
 
@@ -283,15 +291,16 @@ class HooksProjectionTest(unittest.TestCase):
         shipped = self._page("topics/decision-models")
         self.assertNotIn("No item has been stamped", shipped)
 
-    def test_rising_keeps_its_placeholder_with_one_real_line_above_it(self):
-        line = "Rising starts counting once readers vote. Updated every 6 hours."
-        rising = self._page("rising")
-        self.assertIn(line, rising)
-        self.assertLess(rising.index(line), rising.index('class="board is-placeholder"'))
-        self.assertNotIn("is-placeholder", rising[rising.rindex("<p", 0, rising.index(line)):rising.index(line)])
-        home = self._page(".")
-        self.assertEqual(home.count(line), 1)
-        self.assertLess(home.index(line), home.index('class="rail is-placeholder" aria-labelledby="rising-h"'))
+    def test_rising_rail_and_page_use_the_ranked_list_island_with_a_real_empty_state(self):
+        empty = "Rising starts counting once readers vote."
+        for relative_path, limit in ((".", 5), ("new", 5), ("vapor", 5), ("rising", 5)):
+            props = self._island_props(self._page(relative_path), "RankedList")
+            self.assertIn({"list": "rising", "limit": limit, "empty": empty}, props, relative_path)
+        self.assertIn({"list": "rising", "limit": 30, "empty": empty}, self._island_props(self._page("rising"), "RankedList"))
+        for relative_path in (".", "new", "rising", "vapor"):
+            page = self._page(relative_path)
+            self.assertNotIn("Kiln-3B", page, relative_path)
+            self.assertNotIn("rail is-placeholder", page, relative_path)
 
     def test_beat_chips_no_longer_point_at_sample_pages(self):
         for relative_path in (".", "new", "rising", "vapor"):
@@ -386,7 +395,7 @@ class HooksProjectionTest(unittest.TestCase):
         for relative_path in (".", "new"):
             page = self._page(relative_path)
             self.assertIn("Newest first. Scores are the editor’s", page, relative_path)
-            self.assertIn("Upvotes and ratings from readers are counted apart", page, relative_path)
+            self.assertIn("upvotes and ratings from readers will be counted apart", page, relative_path)
             self.assertIn('href="/policies/#ranking">How ranking works', page, relative_path)
 
     def test_item_page_separates_upvotes_ratings_and_the_editor_score_and_states_the_floor(self):
@@ -394,14 +403,15 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn('class="reader-key"', page)
         self.assertIn("Upvotes count the readers who want this seen", page)
         self.assertIn("The editor’s score is shown on its own", page)
-        self.assertIn("5 or more readers have rated", page)
+        self.assertIn("fewer than 5 ratings is too few to print", page)
 
     def test_rail_defines_shipped_by_the_v1_rule_and_the_rising_window_by_its_length(self):
         for relative_path in (".", "new", "rising", "vapor"):
             page = self._page(relative_path)
-            self.assertIn("An editor confirmed it, or 3 signed-in readers reported using it.", page, relative_path)
+            self.assertIn("An editor confirmed it. Once reader sign-in opens, 3 signed-in readers reporting use will count too.", page, relative_path)
+            self.assertNotIn("or 3 signed-in readers reported using it", page, relative_path)
             self.assertNotIn("Readers have used it.", page, relative_path)
-        self.assertIn("Votes / hr, 6-hour window", self._page("rising"))
+        self.assertIn("Upvotes, last 6 hours", self._page("rising"))
 
     def test_sample_item_page_uses_evidence_link_and_item_text_sources_and_shows_the_minimum_n_state(self):
         page = self._page("sample/tern-3")
@@ -413,11 +423,6 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("n=3, too few", page)
         self.assertIn("188 rated it", page)
 
-    def test_sample_rising_board_shows_a_dash_not_a_zero_when_there_are_no_comments(self):
-        page = self._page("rising")
-        self.assertIn("board-talk-none", page)
-        self.assertNotIn(">0</span></a>", page)
-
     def test_sample_roundup_has_table_rows_with_status_words_and_a_scores_as_of_line(self):
         page = self._page("sample/roundup")
         self.assertNotIn("item-card", page)
@@ -427,7 +432,7 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_sign_in_page_defines_karma(self):
         page = self._page("sign-in")
-        self.assertIn("Karma is the number beside your handle", page)
+        self.assertIn("Karma will be the number beside your handle", page)
         self.assertIn("plus 2 for each reader", page)
 
 

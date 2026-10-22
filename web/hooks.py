@@ -72,12 +72,12 @@ SCORING_POLICY_PATH = "/policies/#scores"
 RANKING_POLICY_PATH = "/policies/#ranking"
 BOARD_HELP_TEXT = (
     "Newest first. Scores are the editor’s, and the editor’s score is the headline figure. "
-    "Upvotes and ratings from readers are counted apart, on each item."
+    "Once readers sign in, upvotes and ratings from readers will be counted apart, on each item."
 )
 READER_KEY_TEXT = (
     "Upvotes count the readers who want this seen. Ratings are 1 to 5 scores on the four dimensions; the rating count is the number of readers who rated it. "
-    "The editor’s score is shown on its own and is the headline figure. Reader ratings join the ranking only once 5 or more readers have rated, "
-    "and a reader mean from fewer than 5 ratings is too few to count."
+    "The editor’s score is shown on its own and is the headline figure. Once readers sign in, their ratings will pull a score toward the readers’ view only as more of them rate, "
+    "and a reader mean from fewer than 5 ratings is too few to print."
 )
 STAMP_NOTE_VERBS = {"shipped": "Confirmed by", "verified": "Checked by", "vapor": "Stamped by"}
 STAMP_NOTE_UNNAMED_VERBS = {"shipped": "Confirmed on", "verified": "Checked on", "vapor": "Stamped on"}

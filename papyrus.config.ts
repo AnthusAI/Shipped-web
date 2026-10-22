@@ -95,6 +95,7 @@ export default defineSite({
         dimensions: ["real", "useful", "notable", "novel"],
         hypeGap: { plus: ["notable", "novel"], minus: ["real", "useful"] },
         snapshot: { schedule: true, intervalHours: 6 },
+        ranking: { combination: "shrinkage", shrinkageK: 20, readerShareCap: 0.4, newAccountWeight: 1 / 3, risingMinimumAccountHours: 24 },
         retirementPoll: true,
         reservedConcurrency: 10,
         moderation: { mode: "human" },
