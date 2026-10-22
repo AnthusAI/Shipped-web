@@ -39,9 +39,26 @@ jobs:
       - run: pip install behave
       - run: behave features
 
-  deploy:
+  current-main:
     needs: ci
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      is-main-head: ${{ steps.compare.outputs.is-main-head }}
+    steps:
+      - id: compare
+        run: |
+          main_head="$(git ls-remote "https://github.com/${{ github.repository }}" refs/heads/main | cut -f1)"
+          if [ "$main_head" = "${{ github.sha }}" ]; then
+            echo "is-main-head=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is-main-head=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping deploy: ${{ github.sha }} is no longer the head of main ($main_head)."
+          fi
+
+  deploy:
+    needs: [ci, current-main]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.current-main.outputs.is-main-head == 'true'
     permissions:
       id-token: write
       contents: read
