@@ -21,6 +21,7 @@ NEWSLETTER_LISTS_PATH = Path(__file__).with_name("newsletter-lists.json")
 
 ROUNDUP_ARCHIVE_PATH = "/roundup/"
 ROUNDUP_SECTION = "roundup"
+WIKI_ITEM_TYPE = "wiki_page"
 NEWSLETTER_SCRIPT_PATH = "/_plugins/papyrus-newsletter@1.js"
 NEWSLETTER_CONSENT = "Email me the lists I ticked. I can unsubscribe in one click."
 NEWSLETTER_HEADING = "Get the roundup by email"
@@ -357,6 +358,8 @@ def _checked_note(item):
 
 
 def item_decorator(html, summary):
+    if summary.type == WIKI_ITEM_TYPE:
+        return html
     item = _read_item(summary)
     gap = _hype_gap(item["scores"])
     note = _checked_note(item)
@@ -448,7 +451,7 @@ def _board_pairs(page, keep):
     pairs = [
         (summary, entries_by_id[summary.item_id], section_labels[summary.section])
         for summary in page.summaries
-        if summary.section in section_labels and summary.section != ROUNDUP_SECTION and summary.item_id in entries_by_id and keep(summary)
+        if summary.section in section_labels and summary.section != ROUNDUP_SECTION and summary.type != WIKI_ITEM_TYPE and summary.item_id in entries_by_id and keep(summary)
     ]
     pairs.sort(key=lambda triple: (_sort_date(triple[0]), triple[0].slug), reverse=True)
     return pairs

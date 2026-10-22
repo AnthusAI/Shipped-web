@@ -30,6 +30,13 @@
         "description": "Every weekly issue of the Shipped roundup: what shipped, what turned out to be vapor, and the board's movers.",
         "feed": false,
         "listEmpty": true
+      },
+      "wiki": {
+        "label": "Wiki",
+        "description": "What Shipped has accepted about the makers, models, platforms and tasks in its coverage, with the trend and the coverage behind each.",
+        "feed": false,
+        "sort": "order",
+        "listEmpty": true
       }
     }
   },
@@ -73,7 +80,8 @@
   "listings": {
     "types": [
       "article",
-      "newsletter_issue"
+      "newsletter_issue",
+      "wiki_page"
     ],
     "homeCount": 12
   },
@@ -95,7 +103,8 @@
       "assets/shipped-forms-roundup.css",
       "assets/shipped-item-topic.css",
       "assets/shipped-desk.css",
-      "assets/shipped-newsletter.css"
+      "assets/shipped-newsletter.css",
+      "assets/shipped-wiki.css"
     ]
   },
   "fonts": {
@@ -188,5 +197,33 @@
     "text": "AI that shipped.",
     "columns": []
   },
-  "hooks": "hooks.py"
+  "hooks": "hooks.py",
+  "seo": {
+    "jsonLdTypes": {
+      "wiki_page": "WebPage"
+    }
+  },
+  "forms": {
+    "suggest-edit": {
+      "title": "Suggest an edit",
+      "endpoint": "https://2bjhiug5jrsiwpwvuwwnfwmyhe0ulzhe.lambda-url.us-east-1.on.aws/",
+      "submitLabel": "Send suggestion",
+      "fields": [
+        {
+          "name": "message",
+          "label": "What should change?",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "email",
+          "label": "Your email (optional)",
+          "type": "email"
+        }
+      ]
+    }
+  },
+  "wiki": {
+    "suggestForm": "suggest-edit"
+  }
 }
