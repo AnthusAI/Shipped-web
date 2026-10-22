@@ -1,6 +1,6 @@
 ::band{size="bare"}
 
-::include{kind="block" name="knowledge-trending-strip" limit=5}
+::include{kind="block" name="knowledge-trending-strip" limit=5 empty="Nothing is trending yet."}
 
 ::raw
 <div class="shipped-page">

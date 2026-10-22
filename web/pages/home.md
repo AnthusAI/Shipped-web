@@ -1,6 +1,6 @@
 ::band{size="bare"}
 
-::include{kind="block" name="knowledge-trending-strip" limit=5}
+::include{kind="block" name="knowledge-trending-strip" limit=5 empty="Nothing is trending yet."}
 
 ::raw
 <div class="shipped-page">
@@ -23,7 +23,7 @@
 <section class="clusters" aria-labelledby="clusters-h"><div class="section-heading"><span class="cintillo">Clusters</span><h2 id="clusters-h">Emerging clusters this month</h2><span class="section-heading-note">Clusters found by the topic model, named by AI</span></div>
 ::endraw
 
-::include{kind="block" name="knowledge-clusters" limit=4 terms=5}
+::include{kind="block" name="knowledge-clusters" limit=4 terms=5 empty="No new clusters yet. They appear when the topic model finds a group of items that belong together."}
 
 ::raw
 </section>
@@ -32,13 +32,13 @@
 <section class="rail" aria-labelledby="trending-h"><div class="rail-heading"><h2 id="trending-h" class="rail-h">Trending topics</h2><span class="kicker">8 wks</span></div>
 ::endraw
 
-::include{kind="block" name="knowledge-trending-list" limit=6}
+::include{kind="block" name="knowledge-trending-list" limit=6 definition=false empty="Nothing is trending yet. Topics need a month of coverage to show a trend."}
 
 ::raw
-<p class="rail-note">Change compares the items in the last 4 weeks with the 4 before. No percent when those 4 weeks hold fewer than 5 items or the topic has under 8 weeks of history. Under 4 weeks it is new.</p></section><section class="rail rail-tinted" aria-labelledby="concept-h"><div class="kicker rail-kicker" id="concept-h">From the wiki · concept of the week</div>
+</section><section class="rail rail-tinted" aria-labelledby="concept-h"><div class="kicker rail-kicker" id="concept-h">From the wiki · concept of the week</div>
 ::endraw
 
-::include{kind="block" name="knowledge-concept-of-the-week"}
+::include{kind="block" name="knowledge-concept-of-the-week" empty="No concept of the week yet."}
 
 ::raw
 </section><section class="rail rising-status" aria-label="Rising status"><p class="rising-line rail-note">Rising starts counting once readers vote. Updated every 6 hours. <span class="reader-freshness" data-island="Freshness" data-props="{}"></span></p></section><section class="rail is-placeholder" aria-labelledby="rising-h"><div class="rail-heading"><h2 id="rising-h" class="rail-h">Rising</h2><span class="kicker">Votes / hr, 6-hour window</span><span class="placeholder-tag">Placeholder</span></div><ol class="rail-list"><li class="rail-item rail-item-velocity"><a class="rail-item-title" href="/">Kiln-3B: a small open model for structured extraction, MIT licence</a><span class="velocity"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l4-4 2.5 2.5L13 6"/><path d="M9.5 6H13v3.5"/></svg>▲ +46/h</span><span class="board-meta rail-item-source">hub.example · Document AI</span></li><li class="rail-item rail-item-velocity"><a class="rail-item-title" href="/">Port of Calder publishes its container-inspection risk model and false-positive rate</a><span class="velocity"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l4-4 2.5 2.5L13 6"/><path d="M9.5 6H13v3.5"/></svg>▲ +31/h</span><span class="board-meta rail-item-source">portofcalder.example · Decision models</span></li><li class="rail-item rail-item-velocity"><a class="rail-item-title" href="/">Quillwork’s contract redlining leaves beta in its Word add-in</a><span class="velocity"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l4-4 2.5 2.5L13 6"/><path d="M9.5 6H13v3.5"/></svg>▲ +22/h</span><span class="board-meta rail-item-source">quillwork.example · Document AI</span></li><li class="rail-item rail-item-velocity"><a class="rail-item-title" href="/">Wren TTS weights are out, under a non-commercial licence</a><span class="velocity"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l4-4 2.5 2.5L13 6"/><path d="M9.5 6H13v3.5"/></svg>▲ +19/h</span><span class="board-meta rail-item-source">code.example · Speech</span></li><li class="rail-item rail-item-velocity"><a class="rail-item-title" href="/">Fieldnote ships offline meeting summaries on recent Pixel phones</a><span class="velocity"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 11l4-4 2.5 2.5L13 6"/><path d="M9.5 6H13v3.5"/></svg>▲ +14/h</span><span class="board-meta rail-item-source">fieldnote.example · Speech</span></li></ol></section><section class="rail" aria-labelledby="key-h"><h2 id="key-h" class="rail-h">How to read a row</h2><dl class="rail-key"><dt><span class="status-stamp status-stamp-shipped"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 2.5h11v11h-11z"/><path d="M5 8.2l2 2 4-4.4"/></svg><span class="status-stamp-label">Shipped</span></span></dt><dd>Publicly available. An editor confirmed it, or 3 signed-in readers reported using it.</dd><dt><span class="status-stamp status-stamp-verified"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="5.8"/><path d="M5.4 8.1l1.8 1.8 3.4-3.7"/></svg><span class="status-stamp-label">Verified</span></span></dt><dd>Shipped, and an editor checked the evidence.</dd><dt><span class="status-stamp status-stamp-pending"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="5.8"/><path d="M8 4.8V8l2.2 1.4"/></svg><span class="status-stamp-label">Pending</span></span></dt><dd>Claimed. Nobody has confirmed it yet.</dd><dt><span class="status-stamp status-stamp-vapor"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="M3 13L13 3"/></svg><span class="status-stamp-label">Vapor</span></span></dt><dd>Announced, demoed or waitlisted. Not something you can use.</dd></dl><p class="rail-note">Scores on seeded items are an AI-assisted first pass from the linked sources; human editors re-score them. The headline figure is the editor’s score. Upvotes (readers who want it seen) and ratings (readers who scored it) are counted apart on each item, and ratings join the ranking only once 5 or more readers have rated. <a href="/policies/#ranking">How ranking works →</a> <a href="/policies/#scores">How we score →</a></p></section>
