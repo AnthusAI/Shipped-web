@@ -1354,10 +1354,7 @@ def _map_groups_definition_html():
     return f'<dl class="map-group-definitions">{rows}</dl>'
 
 
-def _periodic_table(page, attributes):
-    table = _map_view()["table"]
-    groups = table["groups"]
-    group_keys = {group["key"] for group in groups}
+def _map_table_models(page, group_keys):
     entries_by_id = {entry.item_id: entry for entry in page.entries if entry.url}
     models = [
         model
@@ -1366,14 +1363,22 @@ def _periodic_table(page, attributes):
         for model in [_map_read_model(summary, entries_by_id[summary.item_id], group_keys)]
         if model
     ]
+    _map_assign_symbols(models)
+    _map_resolve_built_on(models)
+    return models
+
+
+def _periodic_table(page, attributes):
+    table = _map_view()["table"]
+    groups = table["groups"]
+    group_keys = {group["key"] for group in groups}
+    models = _map_table_models(page, group_keys)
     edited_on = _map_edited_on(page, models)
     if not models:
         return (
             f'<p class="map-empty">{escape(table["emptyTable"])}</p>{_map_groups_definition_html()}'
             f'{_map_legend_html()}{_map_why_html(edited_on)}'
         )
-    _map_assign_symbols(models)
-    _map_resolve_built_on(models)
     group_labels = {group["key"]: group["label"] for group in groups}
     group_shorts = {group["key"]: group["short"] for group in groups}
     on_table = [model for model in models if not model["hosted"]]
@@ -1718,12 +1723,90 @@ def _front_newsletter_html():
     )
 
 
+FRONT_TABLE_NEW_WINDOW_DAYS = 7
+FRONT_TABLE_UNSTATED_ROW_LABEL = "Not stated"
+
+
+def _front_table_reference_date(attributes):
+    stamp = _text(attributes.get("today"))
+    return date.fromisoformat(stamp) if stamp else date.today()
+
+
+def _front_table_is_new(model, reference_date):
+    try:
+        released = date.fromisoformat(str(model["sort_date"])[:10])
+    except ValueError:
+        return False
+    return 0 <= (reference_date - released).days < FRONT_TABLE_NEW_WINDOW_DAYS
+
+
+def _front_table_symbol_html(model, is_new, group_label):
+    label = f"{model['name']}, symbol {model['symbol']}, {group_label}" + (", new this week" if is_new else "")
+    new_class = " front-table-symbol-new" if is_new else ""
+    return (
+        f'<a class="front-table-symbol{new_class}" href="{escape(model["url"], quote=True)}" '
+        f'title="{escape(label, quote=True)}" aria-label="{escape(label, quote=True)}">{escape(model["symbol"])}</a>'
+    )
+
+
+def _front_table_cell_html(models, new_flags, group_label, colspan=1):
+    ordered = sorted(models, key=lambda model: (model["sort_date"], model["name"]), reverse=True)
+    symbols = "".join(_front_table_symbol_html(model, new_flags[model["slug"]], group_label) for model in ordered)
+    span = f' colspan="{colspan}"' if colspan > 1 else ""
+    return f'<td class="front-table-cell"{span}>{symbols}</td>'
+
+
+def _front_table_markup(models, reference_date):
+    table = _map_view()["table"]
+    groups = table["groups"]
+    new_flags = {model["slug"]: _front_table_is_new(model, reference_date) for model in models}
+    on_table = [model for model in models if not model["hosted"]]
+    hosted = [model for model in models if model["hosted"]]
+    head_cells = "".join(f'<th scope="col" class="front-table-group">{escape(group["short"])}</th>' for group in groups)
+    body_rows = []
+    for band in table["bands"] + [table["unstatedBand"]]:
+        label = FRONT_TABLE_UNSTATED_ROW_LABEL if band["key"] == table["unstatedBand"]["key"] else band["label"]
+        cells = "".join(
+            _front_table_cell_html([m for m in on_table if m["group"] == group["key"] and _map_band_key(m) == band["key"]], new_flags, group["label"])
+            for group in groups
+        )
+        body_rows.append(f'<tr><th scope="row" class="front-table-band">{escape(label)}</th>{cells}</tr>')
+    hosted_label = table["hostedRow"]["label"]
+    hosted_cell = _front_table_cell_html(hosted, new_flags, hosted_label, colspan=len(groups))
+    body_rows.append(f'<tr><th scope="row" class="front-table-band">{escape(hosted_label)}</th>{hosted_cell}</tr>')
+    new_count = sum(new_flags.values())
+    return (
+        f'<p class="front-table-count"><b>{len(models)}</b> {"model" if len(models) == 1 else "models"} on the table &middot; <b>{new_count}</b> new this week</p>'
+        '<table class="front-table"><caption class="front-table-caption">Models we track: columns are task groups, rows are total parameter bands. '
+        'Models released in the last 7 days have a heavy border and a dot.</caption>'
+        f'<thead><tr><td></td>{head_cells}</tr></thead><tbody>{"".join(body_rows)}</tbody></table>'
+        '<ul class="front-table-legend"><li><span class="front-table-symbol front-table-symbol-new front-table-key" aria-hidden="true">Ab</span>'
+        'Heavy border and dot: new this week</li>'
+        '<li><span class="front-table-symbol front-table-key" aria-hidden="true">Ab</span>Released earlier</li></ul>'
+    )
+
+
+def _front_table_html(page, attributes):
+    models = _map_table_models(page, {group["key"] for group in _map_view()["table"]["groups"]})
+    body = (
+        _front_table_markup(models, _front_table_reference_date(attributes))
+        if models else f'<p class="front-side-note">{escape(_map_view()["table"]["emptyTable"])}</p>'
+    )
+    return (
+        '<section class="front-table-entry" aria-labelledby="front-table-h">'
+        '<div class="front-side-heading"><h2 id="front-table-h">The table this week</h2><a class="front-link" href="/map/">Open the map &rarr;</a></div>'
+        f'{body}</section>'
+    )
+
+
 def _front_block(page, attributes):
     part = attributes.get("part")
     if part == "signals":
         return _front_signal_count_html(page)
     if part == "newsletter":
         return _front_newsletter_html()
+    if part == "table":
+        return _front_table_html(page, attributes)
     raise ValueError(f"unknown front part {part!r}")
 
 

@@ -398,14 +398,14 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_front_page_follows_the_design_in_order_with_real_and_placeholder_parts(self):
         page = self._page(".")
-        order = ["front-stats", "front-invite", "front-lead-h", "front-table-h", "front-map-h", "front-stories-h",
+        order = ["front-stats", "front-invite", "front-lead-h", "front-map-h", "front-table-h", "front-stories-h",
                  "front-rising-h", "front-proposals-h", "front-underrated-h", "desk-board-h", "front-weekly-heading"]
         positions = [page.index(f'id="{name}"') if f'id="{name}"' in page else page.index(name) for name in order]
         self.assertEqual(positions, sorted(positions))
         self.assertIn("<b>4</b> signals", page)
         self.assertIn("1 entities on the map", page)
         self.assertNotIn("weeks of map history", page)
-        self.assertEqual(page.count('class="placeholder-tag"'), 5)
+        self.assertEqual(page.count('class="placeholder-tag"'), 4)
         self.assertIn("Draft · not yet approved", page)
         self.assertIn("Approved by <b>[editor]</b>", page)
         self.assertIn("Fixture theme", page.split('id="front-map-h"')[1].split("</aside>")[0])
@@ -620,7 +620,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Suggest an edit", page)
         for removed in ("Edit wiki", "Discuss", "contributors"):
             self.assertNotIn(removed, page)
-        self.assertEqual(page.count('class="placeholder-tag"'), 3)
+        self.assertEqual(page.count('class="placeholder-tag"'), 2)
 
     def test_concept_stats_come_from_the_knowledge_snapshot_and_items(self):
         page = self._page("topics/decision-models")

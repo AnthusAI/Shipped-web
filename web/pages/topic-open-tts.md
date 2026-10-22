@@ -25,8 +25,8 @@
 </div>
 </header>
 
-<div class="concept-invite is-placeholder"><span class="placeholder-tag">Placeholder</span>
-<span>This map is steered by its readers. Sign in to vote on drafts.</span>
+<div class="concept-invite">
+<span>This map is steered by its readers. Sign in to vote, rate and say what you've used.</span>
 <a class="concept-button concept-button-small" href="/sign-in/">Sign in</a>
 <a class="concept-link" href="/policies/#ranking">How steering works</a>
 </div>

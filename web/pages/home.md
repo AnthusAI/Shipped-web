@@ -13,8 +13,8 @@
 ::raw
 </p>
 <div class="front-invite">
-<span class="front-invite-out">This map is steered by its readers. <span class="is-placeholder is-placeholder-inline" title="Placeholder">Sign in to vote on drafts.</span></span>
-<span class="front-invite-in">You are signed in. Voting on drafts opens with the Proposals queue.</span>
+<span class="front-invite-out">This map is steered by its readers. Sign in to vote, rate and say what you've used.</span>
+<span class="front-invite-in">You are signed in. Vote, rate and say what you've used on any signal.</span>
 <div class="front-invite-action" data-island="ReaderSignIn" data-props="{}"><a class="front-quiet-button" href="/sign-in/">Sign in</a></div>
 </div>
 </div>
@@ -36,12 +36,6 @@
 </article>
 
 <aside class="front-side" aria-label="This week on the map">
-<section class="front-table-entry is-placeholder" aria-labelledby="front-table-h">
-<span class="placeholder-tag">Placeholder</span>
-<div class="front-side-heading"><h2 id="front-table-h">The table this week</h2><a class="front-link" href="/map/">Open the map</a></div>
-<p class="front-side-note">A periodic table of the concepts on the map. This week’s movers are marked.</p>
-<ul class="front-table-legend"><li><span class="front-legend-mark front-legend-new" aria-hidden="true"></span>New: [n] entities</li><li><span class="front-legend-mark front-legend-moved" aria-hidden="true"></span>Moved: [n] entities</li></ul>
-</section>
 <section class="front-map" aria-labelledby="front-map-h">
 <div class="front-side-heading"><h2 id="front-map-h">The map this week</h2><a class="front-link" href="/map/">Open the map</a></div>
 <p class="front-side-kicker kicker">Week 1 · first build · Edited by AI</p>
@@ -53,6 +47,14 @@
 <p class="front-side-note">Everything is new in week 1. From next week this panel shows what continued, what was born, and what merged or split.</p>
 </section>
 </aside>
+</div>
+
+<div class="front-row front-row-wide">
+::endraw
+
+::include{kind="block" name="front" part="table"}
+
+::raw
 </div>
 
 <div class="front-row">
