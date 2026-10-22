@@ -10,9 +10,17 @@
   "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "e0b22dec-263b-47e9-bcef-9440b06315a2",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Still open, no decision. Live board.json publishes both scores separately and exposes the default blend as a parameter (editorWeight 0.5, 48-hour half-life); no real votes exist to compare yet. Papyrus counterpart PPY-0b2cbb / PPY-1bf366 open.",
+      "created_at": "2026-10-22T10:47:20.175007Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T00:58:15.967944Z",
-  "updated_at": "2026-10-22T00:58:15.967987Z",
+  "updated_at": "2026-10-22T10:47:20.175029Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

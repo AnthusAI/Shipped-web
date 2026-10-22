@@ -3,7 +3,7 @@
   "title": "Comments as steering signals",
   "description": "PPY-739cb4. Comment text steers the Cyclotrons.",
   "type": "story",
-  "status": "open",
+  "status": "blocked",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -17,10 +17,17 @@
       "text": "Reconciliation 2026-10-22. In progress: being built now in Papyrus (comments epic PPY-739cb4); not yet on develop.",
       "created_at": "2026-10-22T04:03:02.637702Z",
       "comment_type": "default"
+    },
+    {
+      "id": "4d440415-4ed9-46a9-8350-5a2c95f6e1a6",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Blocked on Ryan. Papyrus side is released: comments as a steering signal (PR #533) in 5.21.0, docs at https://p.apyr.us/comments-as-steering.md. Shipped item pages render the Comments and Rating islands (checked /open-weights/fish-audio-drama-3/). Posting needs sign-in (ship-63b07d). Close after a real comment appears.",
+      "created_at": "2026-10-22T10:47:19.748620Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T00:58:14.592073Z",
-  "updated_at": "2026-10-22T04:03:02.637728Z",
+  "updated_at": "2026-10-22T10:47:19.748657Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

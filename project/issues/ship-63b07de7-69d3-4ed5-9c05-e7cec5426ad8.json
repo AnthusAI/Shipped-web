@@ -17,10 +17,17 @@
       "text": "Reconciliation 2026-10-22. Blocked on Ryan: Google client redirect URIs for papyrus-shipped-cms.",
       "created_at": "2026-10-22T04:03:02.664479Z",
       "comment_type": "default"
+    },
+    {
+      "id": "18a7933e-d148-4654-b132-1404a03fdfde",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Still blocked on Ryan. Not retested end to end here (a Google login would need the account); the sign-in start returns 303 to https://papyrus-shipped-cms.auth.us-east-1.amazoncognito.com/oauth2/authorize with identity_provider=Google, so the app side is ready. Needed: add the Cognito origin and the .../oauth2/idpresponse redirect to Google client 916164220927-8d3m2nvo...",
+      "created_at": "2026-10-22T10:47:13.653694Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T00:58:11.935183Z",
-  "updated_at": "2026-10-22T04:03:02.664501Z",
+  "updated_at": "2026-10-22T10:47:13.653739Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

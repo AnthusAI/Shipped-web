@@ -3,7 +3,7 @@
   "title": "Collaborative voting pilot",
   "description": "Pilot reader and collaborative voting on items as input to the ranking. The core capability is future Papyrus work: link the Papyrus initiative here once it is filed (Papyrus board, PPY-).",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -22,10 +22,17 @@
         "model": "Sonnet 5.5",
         "name": "papyrus-anthus"
       }
+    },
+    {
+      "id": "b3ebe6d3-5cb9-4270-acb2-00306f63f90a",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Pilot is running in read mode: reader steering enabled and snapshots published. Papyrus counterparts: PPY-77bb3b in progress, votes (PPY-56b0a7) and karma (PPY-231533) closed, moderation (PPY-af98c7) and comments (PPY-739cb4) closed in Papyrus. The first real votes wait on sign-in (ship-63b07d, Ryan).",
+      "created_at": "2026-10-22T10:47:17.127480Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T11:42:25.120429Z",
-  "updated_at": "2026-10-22T00:58:16.415216Z",
+  "updated_at": "2026-10-22T10:47:17.127507Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
