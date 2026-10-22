@@ -3,7 +3,7 @@
   "title": "Score combination exploration (editor and reader)",
   "description": "PPY-0b2cbb. The snapshot stores both scores separately.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 3,
   "assignee": null,
   "creator": null,
@@ -24,11 +24,18 @@
       "text": "Score combination exploration done; awaiting Ryan's decision (left open). No production change. Recommendation: Bayesian shrinkage per dimension, k=20, reader share capped at 0.4, ratings from profiles under 24h at weight 1/3, drop readerMinimum. Simulated on the 70 real Shipped items (editor composite sd 0.28): vs current blend the 5th-rating rank jump falls from 7.3 to 1.2; socks to put a mid-table item in the top 5 rise from 13 to 28 (96 at 1/3 weight); cost: slower to follow genuine reader disagreement (gap closure 0.36 vs 0.44 at 30 raters). Wilson on upvotes for Front rejected (ignores editors, split-half Spearman 0.17, overhyped item ranks 1 of 70). Rising and the 3-report Shipped stamp fall to 3 sock accounts whatever the formula; count only profiles older than 24h. Write-up and sim: Papyrus docs/score-combination.md (PR https://github.com/AnthusAI/Papyrus/pull/561); Shipped summary PR https://github.com/AnthusAI/Shipped-web/pull/42.",
       "created_at": "2026-10-22T11:26:41.194373Z",
       "comment_type": "default"
+    },
+    {
+      "id": "5909eb43-fd07-45fd-b8ca-95a2c7b98044",
+      "author": "home",
+      "text": "Done: the exploration write-up merged in Shipped-web PR #42 (docs: summarise the score combination exploration). Ranking v1 uses editor composite × time decay; reader scores are stored separately so the formula can change later.",
+      "created_at": "2026-10-22T11:56:59.669494Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T00:58:15.967944Z",
-  "updated_at": "2026-10-22T11:26:41.194390Z",
-  "closed_at": null,
+  "updated_at": "2026-10-22T11:56:59.679378Z",
+  "closed_at": "2026-10-22T11:56:59.679351Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",

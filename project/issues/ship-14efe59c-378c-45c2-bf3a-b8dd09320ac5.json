@@ -31,10 +31,17 @@
       "text": "Owned by the knowledge lead, left alone: 1 (cold-start states: rail note describes them; the strip still shows '+50%' chips on young topics, lead to check against the 8-week rule), 2 (change % definition is in the rail note; lead to confirm counts beside percents), 6 (entity vocabulary; static Rising/Vapor samples still carry 'signal' chips), 8 (wiki: Suggest an edit, Updated date and data JSON link are live; no 'reviewed by an editor' vs draft stamp seen), 9 (insights), 13 (home still reads 'All 282 topics', mixing kinds). Item 15 ticked: live concept of the week reads 'Edited by AI on 2026-10-22', no 'Edited by 9'.",
       "created_at": "2026-10-22T11:54:17.731113Z",
       "comment_type": "default"
+    },
+    {
+      "id": "3fd2b858-0e5b-4d3d-90b1-141ca00c5ad0",
+      "author": "home",
+      "text": "2026-10-22 11:58Z: 11 of 17 done (PR #44, #45). The remaining 6 (1, 2, 6, 8, 9, 13) were reassigned to the Shipped lead after the knowledge-base lead finished.",
+      "created_at": "2026-10-22T11:57:01.005150Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T12:51:16.448010Z",
-  "updated_at": "2026-10-22T11:54:17.731139Z",
+  "updated_at": "2026-10-22T11:57:01.005193Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

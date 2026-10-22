@@ -24,10 +24,17 @@
       "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Snapshot task, debounce and islands are released (Papyrus 5.20.0, #516, #520) and enabled on Shipped. Reader steering is enabled: Shipped-web PR #39 merged 10:16Z, deploy run 39761870423 completed success. Live: home renders ReaderSignIn, 30 Vote and 30 UsedIt islands and the Freshness label; the papyrus-reader v1 script and stylesheet load; /_data/reader/items.json, board.json (parameters editorWeight 0.5, halfLifeHours 48, readerMinimum 5, risingWindowHours 6) and readers.json return 200 with generatedAt 2026-10-22T10:36:04Z and no entries yet; /api/auth/prospectus/sign-in answers 303 to the Cognito Google authorize URL. A live scan of the home page, sign-in page, llms.txt, the reader JSON and the knowledge index found no Person ID, siteSubject or email pattern. The 6-hour schedule itself could not be confirmed (AWS SSO session expired in this session); next generatedAt will show it. Not closed until a run after 16:36Z shows the schedule firing.",
       "created_at": "2026-10-22T10:47:15.394194Z",
       "comment_type": "default"
+    },
+    {
+      "id": "96336537-7cf6-408d-9f01-8cd2f7b1d679",
+      "author": "home",
+      "text": "2026-10-22: the reader snapshot JSON is live (/_data/reader/*.json 200) and the 6-hourly EventBridge rule ReaderSnapshotSchedule is ENABLED (checked). Remaining: the generic ranked-list island so Rising and Front read board.json; Rising is still dimmed.",
+      "created_at": "2026-10-22T11:57:01.450767Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T00:58:15.059791Z",
-  "updated_at": "2026-10-22T10:47:15.394217Z",
+  "updated_at": "2026-10-22T11:57:01.450804Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
