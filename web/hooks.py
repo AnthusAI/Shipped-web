@@ -2394,10 +2394,16 @@ def _weekly_archive_intro_html():
     )
 
 
+def _reader_settings_script():
+    vote_subjects = json.dumps(_scoring()["voteSubjects"])
+    return f'<script>window.papyrusReader = Object.assign(window.papyrusReader || {{}}, {{ voteSubjects: {vote_subjects} }});</script>\n'
+
+
 def head_extra(page):
     return (
         f'<link rel="stylesheet" href="{READER_STYLESHEET_PATH}">\n'
-        f'<script src="{READER_SCRIPT_PATH}" defer></script>\n'
+        + _reader_settings_script()
+        + f'<script src="{READER_SCRIPT_PATH}" defer></script>\n'
         f'<script src="{PROPOSALS_SCRIPT_PATH}" defer></script>'
     )
 

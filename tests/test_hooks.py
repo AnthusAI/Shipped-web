@@ -725,6 +725,11 @@ class ReaderSteeringConfigurationTest(unittest.TestCase):
         self.assertNotIn("hypeGap", self.configuration)
         self.assertNotIn("hypeGap", self.scoring)
 
+    def test_the_vote_subjects_of_scoring_json_match_the_plugin_subject_types(self):
+        types = self.scoring["voteSubjects"]
+        self.assertIn("subjects: { types: [" + ", ".join(f'"{name}"' for name in types) + "] }", self.configuration)
+        self.assertIn("proposal", types)
+
     def test_the_snapshot_runs_every_six_hours_and_the_retirement_poll_has_its_secret(self):
         self.assertIn("snapshot: { schedule: true, intervalHours: 6 }", self.configuration)
         self.assertIn("retirementPoll: true", self.configuration)

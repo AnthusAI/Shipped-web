@@ -51,5 +51,11 @@
       "label": "Open TTS",
       "path": "/topics/open-tts/"
     }
-  }
+  },
+  "voteSubjects": [
+    "item",
+    "submission",
+    "story",
+    "proposal"
+  ]
 }
