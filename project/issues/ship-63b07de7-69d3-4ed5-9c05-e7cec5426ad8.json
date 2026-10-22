@@ -10,9 +10,17 @@
   "parent": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "e79013f3-ac1b-4b4f-aaad-14e17b4f4948",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. Blocked on Ryan: Google client redirect URIs for papyrus-shipped-cms.",
+      "created_at": "2026-10-22T04:03:02.664479Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T00:58:11.935183Z",
-  "updated_at": "2026-10-22T00:58:46.946956Z",
+  "updated_at": "2026-10-22T04:03:02.664501Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

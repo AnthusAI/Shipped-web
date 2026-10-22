@@ -10,9 +10,17 @@
   "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "9af999b2-e7a0-4ff7-b410-ac86aece4ca1",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. In progress: being built now in Papyrus (submissions story PPY-5b8cdc); not yet on develop.",
+      "created_at": "2026-10-22T04:03:02.618054Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T00:58:14.129879Z",
-  "updated_at": "2026-10-22T00:58:14.129917Z",
+  "updated_at": "2026-10-22T04:03:02.618077Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

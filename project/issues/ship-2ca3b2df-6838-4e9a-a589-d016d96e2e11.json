@@ -10,9 +10,17 @@
   "parent": "ship-3e4e38a4-6255-4c0d-afa7-b799eafcf5a4",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "1ae31503-aa95-4b55-8759-04bae1dbd498",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. Left in progress; the coordinator closes it after a live check.",
+      "created_at": "2026-10-22T04:03:02.682568Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T00:58:09.292636Z",
-  "updated_at": "2026-10-22T00:58:58.817425Z",
+  "updated_at": "2026-10-22T04:03:02.682594Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
