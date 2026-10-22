@@ -16,6 +16,7 @@
 <li>Comment on items and submissions.</li>
 <li><a href="/submit/">Submit a link</a> to something that shipped.</li>
 </ul>
+<p class="rail-note">Karma is the number beside your handle. It is the upvotes other readers give your submissions, plus 2 for each reader who reports using something you submitted. Your own votes do not count. <a href="/policies/#karma">How karma works →</a></p>
 </section>
 <section class="signin-account" aria-labelledby="signin-privacy-h">
 <h2 id="signin-privacy-h" class="rail-h">Privacy</h2>

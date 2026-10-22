@@ -103,3 +103,7 @@ textarea.field-input{height:auto;padding:10px 12px;line-height:1.5}
   .item-card{grid-template-columns:minmax(0,1fr)}
   .roundup-pager a{max-width:100%}
 }
+.roundup-table-items th:nth-child(1),.roundup-table-items td:nth-child(1),.roundup-table-items th:nth-child(2),.roundup-table-items td:nth-child(2){text-align:left}
+.roundup-table-items td:nth-child(2){font-family:var(--font-ui);font-size:15px;font-weight:600}
+.roundup-table-items td:nth-child(2) a{text-decoration:none}
+.roundup-table-items td:nth-child(1){white-space:nowrap}

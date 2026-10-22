@@ -128,7 +128,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_footer_is_the_wordmark_links_and_the_plain_line(self):
         page = self._page(".")
         footer = page.split("<footer")[1].split("</footer>")[0]
-        for href in ('href="/policies/#scores">How ranking works', 'href="/policies/">Policies', 'href="/roundup/">Roundups', 'href="/feed.xml">RSS', 'href="/submit/">Submit'):
+        for href in ('href="/policies/#ranking">How ranking works', 'href="/policies/">Policies', 'href="/roundup/">Roundups', 'href="/feed.xml">RSS', 'href="/submit/">Submit'):
             self.assertIn(href, footer)
         self.assertIn("AI that shipped.", footer)
         self.assertNotIn("Anthus", page)
@@ -382,6 +382,54 @@ class HooksProjectionTest(unittest.TestCase):
         projection = json.loads((STATIC_DIRECTORY / "projection.json").read_text(encoding="utf-8"))
         self.assertEqual(projection["urls"]["sections"]["wiki"]["pageSize"], 50)
 
+    def test_boards_say_what_the_figures_are_and_link_how_ranking_works(self):
+        for relative_path in (".", "new"):
+            page = self._page(relative_path)
+            self.assertIn("Newest first. Scores are the editor’s", page, relative_path)
+            self.assertIn("Upvotes and ratings from readers are counted apart", page, relative_path)
+            self.assertIn('href="/policies/#ranking">How ranking works', page, relative_path)
+
+    def test_item_page_separates_upvotes_ratings_and_the_editor_score_and_states_the_floor(self):
+        page = self._page("open-weights/fixture-full-contract")
+        self.assertIn('class="reader-key"', page)
+        self.assertIn("Upvotes count the readers who want this seen", page)
+        self.assertIn("The editor’s score is shown on its own", page)
+        self.assertIn("5 or more readers have rated", page)
+
+    def test_rail_defines_shipped_by_the_v1_rule_and_the_rising_window_by_its_length(self):
+        for relative_path in (".", "new", "rising", "vapor"):
+            page = self._page(relative_path)
+            self.assertIn("An editor confirmed it, or 3 signed-in readers reported using it.", page, relative_path)
+            self.assertNotIn("Readers have used it.", page, relative_path)
+        self.assertIn("Votes / hr, 6-hour window", self._page("rising"))
+
+    def test_sample_item_page_uses_evidence_link_and_item_text_sources_and_shows_the_minimum_n_state(self):
+        page = self._page("sample/tern-3")
+        self.assertNotIn("cmts", page)
+        self.assertNotIn("corrections by readers", page)
+        self.assertNotIn("41 comments &middot; confirmed", page)
+        self.assertIn("evidence link", page)
+        self.assertIn("item text", page)
+        self.assertIn("n=3, too few", page)
+        self.assertIn("188 rated it", page)
+
+    def test_sample_rising_board_shows_a_dash_not_a_zero_when_there_are_no_comments(self):
+        page = self._page("rising")
+        self.assertIn("board-talk-none", page)
+        self.assertNotIn(">0</span></a>", page)
+
+    def test_sample_roundup_has_table_rows_with_status_words_and_a_scores_as_of_line(self):
+        page = self._page("sample/roundup")
+        self.assertNotIn("item-card", page)
+        self.assertIn("roundup-table-items", page)
+        self.assertIn("Scores as of Fri 23 Oct 2026, frozen", page)
+        self.assertIn(">Status<", page)
+
+    def test_sign_in_page_defines_karma(self):
+        page = self._page("sign-in")
+        self.assertIn("Karma is the number beside your handle", page)
+        self.assertIn("plus 2 for each reader", page)
+
 
 def _load_hooks():
     import importlib.util
@@ -390,6 +438,25 @@ def _load_hooks():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+class StampNoteTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.hooks = _load_hooks()
+
+    def _note(self, verdict, by=None, at=None):
+        return self.hooks._checked_note({"verdict": verdict, "by": by, "at": at})
+
+    def test_a_stamp_names_who_and_when_in_the_words_of_its_verdict(self):
+        self.assertEqual(self._note("shipped", "A. Editor", "2026-10-21"), "Confirmed by A. Editor, 21 Oct 2026")
+        self.assertEqual(self._note("verified", "A. Editor", "2026-10-21"), "Checked by A. Editor, 21 Oct 2026")
+        self.assertEqual(self._note("vapor", "A. Editor"), "Stamped by A. Editor")
+        self.assertEqual(self._note("shipped", None, "2026-10-21"), "Confirmed on 21 Oct 2026")
+
+    def test_without_the_data_or_for_pending_it_says_nothing(self):
+        self.assertEqual(self._note("shipped"), "")
+        self.assertEqual(self._note("pending", "A. Editor", "2026-10-21"), "")
 
 
 class ReaderSteeringConfigurationTest(unittest.TestCase):

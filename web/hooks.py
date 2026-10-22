@@ -69,8 +69,20 @@ DEFAULT_AGENT_SCORES_LABEL = "Editor's first pass (AI-assisted)"
 AGENT_SCORING_NOTICE = "Scored by an AI research pass from the linked sources; a human editor will re-score it."
 AGENT_TAG_TEXT = "AI first pass"
 SCORING_POLICY_PATH = "/policies/#scores"
+RANKING_POLICY_PATH = "/policies/#ranking"
+BOARD_HELP_TEXT = (
+    "Newest first. Scores are the editor’s, and the editor’s score is the headline figure. "
+    "Upvotes and ratings from readers are counted apart, on each item."
+)
+READER_KEY_TEXT = (
+    "Upvotes count the readers who want this seen. Ratings are 1 to 5 scores on the four dimensions; the rating count is the number of readers who rated it. "
+    "The editor’s score is shown on its own and is the headline figure. Reader ratings join the ranking only once 5 or more readers have rated, "
+    "and a reader mean from fewer than 5 ratings is too few to count."
+)
+STAMP_NOTE_VERBS = {"shipped": "Confirmed by", "verified": "Checked by", "vapor": "Stamped by"}
+STAMP_NOTE_UNNAMED_VERBS = {"shipped": "Confirmed on", "verified": "Checked on", "vapor": "Stamped on"}
 FOOTER_LINKS = (
-    ("How ranking works", SCORING_POLICY_PATH),
+    ("How ranking works", RANKING_POLICY_PATH),
     ("Policies", "/policies/"),
     ("Roundups", "/roundup/"),
     ("RSS", "/feed.xml"),
@@ -106,6 +118,13 @@ def _freshness_html():
     return _island("Freshness", tag="span", css_class="reader-freshness")
 
 
+def _board_note_html():
+    return (
+        f'<p class="board-note desk-board-note">{_freshness_html()} '
+        f'<span class="board-help">{escape(BOARD_HELP_TEXT)} <a href="{RANKING_POLICY_PATH}">How ranking works &rarr;</a></span></p>'
+    )
+
+
 def _board_reader_html(summary):
     subject = _subject(summary)
     return (
@@ -120,6 +139,7 @@ def _item_reader_html(summary):
     return (
         '<section class="item-reader" aria-labelledby="item-reader-h">'
         '<div class="section-heading"><h2 id="item-reader-h">Readers</h2></div>'
+        f'<p class="reader-key">{escape(READER_KEY_TEXT)} <a href="{RANKING_POLICY_PATH}">How ranking works &rarr;</a></p>'
         f'<div class="item-reader-actions">{_island("Vote", {"subject": subject})}{_island("UsedIt", {"subject": subject})}</div>'
         f'{_island("Rating", {"subject": subject, "dimensions": dimensions})}</section>'
     )
@@ -406,12 +426,14 @@ def _entity_chips_html(entities, site=None):
 
 
 def _checked_note(item):
-    parts = []
+    """Who stamped the verdict and when, from verdictBy and verdictAt; empty when the item has neither or the verdict is not a stamp."""
+    verdict = item["verdict"]
+    if verdict not in STAMP_NOTE_VERBS:
+        return ""
+    when = escape(_full_date_label(item["at"])) if item["at"] else ""
     if item["by"]:
-        parts.append(f'Checked by {escape(item["by"])}')
-    if item["at"]:
-        parts.append(escape(item["at"]))
-    return ", ".join(parts)
+        return f'{STAMP_NOTE_VERBS[verdict]} {escape(item["by"])}' + (f", {when}" if when else "")
+    return f"{STAMP_NOTE_UNNAMED_VERBS[verdict]} {when}" if when else ""
 
 
 def item_decorator(html, summary, site=None):
@@ -557,7 +579,7 @@ def _desk_board(page, attributes):
     return (
         '<section class="board desk-board" aria-labelledby="desk-board-h">'
         f'<div class="board-heading"><{tag} id="desk-board-h">{escape(heading)}</{tag}></div>'
-        f'<p class="board-note desk-board-note">{_freshness_html()}</p>'
+        f"{_board_note_html()}"
         f"{_board_list_html(pairs[:limit], page.site)}{more_html}</section>"
     )
 
@@ -638,7 +660,7 @@ def _topic_board(page, attributes):
     ranked_html = (
         '<section aria-labelledby="items-h" class="topic-block board desk-board"><div class="section-heading">'
         '<span class="cintillo">Newest first</span><h2 id="items-h">Items in this topic</h2></div>'
-        f'<p class="board-note desk-board-note">{_freshness_html()}</p>{_board_list_html(pairs, page.site)}</section>'
+        f'{_board_note_html()}{_board_list_html(pairs, page.site)}</section>'
         if pairs else ""
     )
     return (
