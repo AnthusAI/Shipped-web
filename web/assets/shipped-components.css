@@ -167,3 +167,26 @@ main:has(>.shipped-page){max-width:none}
   .markus-site-nav{gap:0 18px}
   .section-heading-note{margin-left:0}
 }
+.rail .papyrus-knowledge-trending-list{margin-top:10px;--papyrus-knowledge-line:var(--brand);--papyrus-knowledge-rule:var(--rule);--papyrus-knowledge-muted:var(--muted)}
+.rail .papyrus-knowledge-kindfilter ul{gap:4px 6px;margin-bottom:6px}
+.rail .papyrus-knowledge-kindfilter a{font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:0;color:var(--ink);min-height:24px}
+.rail .papyrus-knowledge-kindfilter a:target,.rail .papyrus-knowledge-kindfilter a:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.rail .papyrus-knowledge-trending-list ol{border-top:0}
+.rail .papyrus-knowledge-trending-list ol>li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"rank chip trend" ". count count";gap:2px 10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--rule)}
+.rail .papyrus-knowledge-trending-list ol>li::before{grid-area:rank;font-family:var(--font-mono);font-size:12px;min-width:1.2em}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-chip{grid-area:chip;border:0;padding:0;border-radius:0;flex-wrap:wrap;gap:0 8px;font-size:16px;color:var(--ink)}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-chip-name{font-weight:700;line-height:1.25}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-chip-kind{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.12em}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-trend{grid-area:trend;font-family:var(--font-mono);font-size:12px;color:var(--ink)}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-sparkline{width:56px;height:16px}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-count-text,.rail .papyrus-knowledge-trending-list .papyrus-knowledge-recent{grid-row:2;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-count-text{grid-column:2}
+.rail .papyrus-knowledge-trending-list .papyrus-knowledge-recent{grid-column:2/-1;justify-self:end}
+.clusters .papyrus-knowledge-clusters{grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:0 32px;--papyrus-knowledge-line:var(--brand);--papyrus-knowledge-muted:var(--muted)}
+.clusters .papyrus-knowledge-cluster{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 12px;padding:18px 0;border:0;border-bottom:1px solid var(--rule);border-radius:0}
+.clusters .papyrus-knowledge-cluster-name{order:2;flex:0 0 100%;font-family:var(--font-title);font-size:22px;line-height:1.2;font-weight:600}
+.clusters .papyrus-knowledge-cluster-label{order:1;font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.12em;color:var(--brand-text)}
+.clusters .papyrus-knowledge-count-text{order:1;margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.clusters .papyrus-knowledge-terms{order:3;flex:0 0 100%;font-family:var(--font-mono);font-size:12px;color:var(--muted);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.clusters .papyrus-knowledge-sparkline{order:4;width:80px;height:26px}
+.clusters .papyrus-knowledge-attribution{order:5;margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
