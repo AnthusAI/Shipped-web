@@ -10,9 +10,17 @@
   "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "0920714d-d631-44dc-867a-86dd19a77d99",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. In progress: built on Papyrus develop (#512, #516, #520, #521); release and enabling on Shipped pending.",
+      "created_at": "2026-10-22T04:03:02.568376Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T00:58:13.248740Z",
-  "updated_at": "2026-10-22T00:58:37.950909Z",
+  "updated_at": "2026-10-22T04:03:02.568400Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

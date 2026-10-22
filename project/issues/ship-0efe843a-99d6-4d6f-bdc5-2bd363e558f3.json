@@ -10,9 +10,17 @@
   "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "b40e7235-a508-4a94-a938-34c4e6999172",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. In progress: snapshot task, 6-hourly schedule, debounce and islands are merged in Papyrus (#516, #520); release and enable on Shipped pending.",
+      "created_at": "2026-10-22T04:03:02.586568Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T00:58:15.059791Z",
-  "updated_at": "2026-10-22T00:58:15.059831Z",
+  "updated_at": "2026-10-22T04:03:02.586594Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
