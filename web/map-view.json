@@ -1,0 +1,36 @@
+{
+  "table": {
+    "groups": [
+      {"key": "decide", "label": "Decide", "short": "Decide", "definition": "Models whose job is a judgement, not prose"},
+      {"key": "route", "label": "Route", "short": "Route", "definition": "Models that send a request to the right model or tool"},
+      {"key": "guard", "label": "Guard & judge", "short": "Guard", "definition": "Safety classifiers and judges"},
+      {"key": "speak", "label": "Speak", "short": "Speak", "definition": "Speech and text-to-speech"},
+      {"key": "language", "label": "Language", "short": "Lang", "definition": "General language models"},
+      {"key": "code", "label": "Code", "short": "Code", "definition": "Coding models"},
+      {"key": "see", "label": "See", "short": "See", "definition": "Vision-language models"}
+    ],
+    "bands": [
+      {"key": "xs", "label": "<1B", "note": "on-device", "from": 0},
+      {"key": "s", "label": "1–10B", "note": "one GPU", "from": 1},
+      {"key": "m", "label": "10–50B", "note": "workstation", "from": 10},
+      {"key": "l", "label": "50–300B", "note": "server", "from": 50},
+      {"key": "xl", "label": "300B+", "note": "cluster", "from": 300}
+    ],
+    "unstatedBand": {"key": "unknown", "label": "Size not stated", "note": "in the signal"},
+    "hostedRow": {"kicker": "Off the table", "label": "Hosted", "note": "no weights, size not public"},
+    "crowdedCellLimit": 4,
+    "openLicenceMarkers": ["apache", "mit", "bsd", "isc", "mpl", "cc-by-4", "cc-by-sa", "cc0", "unlicense", "openrail"],
+    "restrictedLicenceMarkers": ["-nc", "non-commercial", "noncommercial", "non commercial", "research"],
+    "emptyCell": "Nothing we track yet",
+    "emptyTable": "The table fills in as signals are tagged with their model details."
+  },
+  "relations": {
+    "madeby": {"label": "made by", "width": 1.5, "dash": "", "arrow": false},
+    "builton": {"label": "built on", "width": 3.5, "dash": "", "arrow": true},
+    "measuredby": {"label": "measured by", "width": 2.6, "dash": "0.1 6", "arrow": false},
+    "replaces": {"label": "replaces", "width": 2, "dash": "8 5", "arrow": false},
+    "successorof": {"label": "successor of", "width": 2, "dash": "14 4 2 4", "arrow": false},
+    "mentionedwith": {"label": "mentioned with", "width": 1.5, "dash": "3 3", "arrow": false}
+  },
+  "defaultRelation": {"width": 1.5, "dash": "3 3", "arrow": false}
+}
