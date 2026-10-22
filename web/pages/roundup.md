@@ -34,6 +34,7 @@
 <p>Halyard-2, a vision model with a benchmark table and a “weights coming soon” banner, joins it in the <a href="/vapor/">vapor log</a>. We will happily change the stamp the day the download link works.</p>
 <h2><span class="section-number">04</span>What the graph noticed</h2>
 <p>The topic model flagged a new cluster this week: public audit logs for government triage, seven items across three jurisdictions, none of which cite each other. Meanwhile voice agents nearly doubled in mentions over eight weeks while the number that shipped rose by a third. Most of the gap is outbound sales callers.</p>
+<div class="roundup-aside">
 <p class="kicker" style="margin:0 0 8px">Trending topics, change in mentions</p>
 <div class="topic-chips"><a class="topic-chip" href="/">Voice agents<i>▲ +0.8</i></a><a class="topic-chip" href="/">Autonomous SRE<i>▲ +2.1</i></a><a class="topic-chip" href="/">Training-data manifests<i>▼ −0.4</i></a><a class="topic-chip" href="/">Override rates<i>▼ −0.3</i></a><a class="topic-chip" href="/">On-device speech<i>▼ −0.6</i></a></div>
 <h2><span class="section-number">05</span>The board at a glance</h2>
@@ -47,6 +48,7 @@
 <tr><td>Formwell on-device STT</td><td>4.5</td><td>4.0</td><td>2.9</td><td>2.6</td></tr>
 </tbody></table></div>
 <p class="board-note" style="margin-top:0">Scores as of Fri 23 Oct. Scores on seeded items are an AI-assisted first pass from the linked sources; human editors re-score them, and reader ratings arrive with sign-in.</p>
+</div>
 <p>As ever: if you used something this week that worked, submit it with the evidence. If you used something that did not, say so in the thread. Both are useful.</p>
 </div>
 <div class="roundup-column roundup-pager">
