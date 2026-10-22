@@ -24,10 +24,17 @@
       "text": "PR 1 of the knowledge-base series: https://github.com/AnthusAI/Shipped-web/pull/29 merged 2026-10-22T07:08Z, deploy run 39738427906 succeeded. Papyrus 5.21.0 in all four pins; Trending strip is now the knowledge-trending-strip block on Front, New, Rising, Vapor log. Live: all four show typed decisions, Apache-2.0 +50%, Hugging Face +50%, routing, CC-BY-NC-4.0 (same order as index.json trending); no Placeholder tag; index.md keeps the include source. Screenshot /private/tmp/kb-work/shipped-shots/pr1-home.png",
       "created_at": "2026-10-22T07:21:53.981480Z",
       "comment_type": "default"
+    },
+    {
+      "id": "aae02ba1-4963-413c-a383-868839208555",
+      "author": "home",
+      "text": "PR 2: Trending topics rail (knowledge-trending-list limit=6, hype-gap pills dropped, honest change note) on Front/New/Rising and Emerging clusters (knowledge-clusters limit=4, heading note 'Clusters found by the topic model, named by AI') on Front. Concept of the week, beats count and Rising rail stay placeholders. Live evidence is in the PR description.",
+      "created_at": "2026-10-22T07:24:04.866192Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T22:29:22.118490Z",
-  "updated_at": "2026-10-22T07:21:53.981501Z",
+  "updated_at": "2026-10-22T07:24:04.866211Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
