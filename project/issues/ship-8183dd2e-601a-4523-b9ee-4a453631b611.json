@@ -3,7 +3,7 @@
   "title": "Placeholder treatment: dimmed about 60% plus a label, full design always visible",
   "description": "Ryan: show the full design; never remove placeholder sections. Mocked sections, rows and numbers render at about 60% opacity with a non-colour 'Placeholder' cue. Real content is full opacity; never dim a real item.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:06.728999Z",
-  "updated_at": "2026-10-22T00:58:06.729032Z",
+  "updated_at": "2026-10-22T00:58:57.537923Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

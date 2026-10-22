@@ -3,7 +3,7 @@
   "title": "Markus-source twins and bare /x.md on Shipped (adopt Papyrus release)",
   "description": "Adopt the Papyrus release carrying PR #502 / PPY-b2e95d (Markus directives kept, bare /x.md rewrite, authored pages in llms). Pin, redeploy, verify.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:09.292636Z",
-  "updated_at": "2026-10-22T00:58:09.292667Z",
+  "updated_at": "2026-10-22T00:58:58.817425Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

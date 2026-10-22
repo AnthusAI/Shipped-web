@@ -3,7 +3,7 @@
   "title": "Real content: seeding and editorial quality",
   "description": "Real items reach the board by manual research first, then through standard Papyrus monitoring. Order: decision models (SEO on 'decision models'), open TTS from the last year, later open LLMs. Every item has a primary source, a release date, evidence check states and score rationales. Nothing is marked Verified unless checked.",
   "type": "epic",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:01.915250Z",
-  "updated_at": "2026-10-22T00:58:01.915299Z",
+  "updated_at": "2026-10-22T00:58:56.256857Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

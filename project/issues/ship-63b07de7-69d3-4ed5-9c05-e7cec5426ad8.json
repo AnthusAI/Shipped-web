@@ -3,7 +3,7 @@
   "title": "Google client redirect URIs for papyrus-shipped-cms",
   "description": "Ryan adds origin https://papyrus-shipped-cms.auth.us-east-1.amazoncognito.com and redirect .../oauth2/idpresponse to Google client 916164220927-8d3m2nvo...",
   "type": "task",
-  "status": "open",
+  "status": "blocked",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:11.935183Z",
-  "updated_at": "2026-10-22T00:58:11.935211Z",
+  "updated_at": "2026-10-22T00:58:46.946956Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

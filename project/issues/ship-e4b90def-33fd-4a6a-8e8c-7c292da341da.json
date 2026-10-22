@@ -3,7 +3,7 @@
   "title": "cms.siteOrigin + prospectusAccountsApiStageArn via app-shell change set",
   "description": "Papyrus cms.siteOrigin (generic, for edge-fronted sites). Set siteOrigin and prospectusAccountsApiStageArn in infra/site.json, then deploy the app shell with a reviewed change set. Verify that sign-in returns 303 with redirect_uri on https://shipped.anth.us.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:10.592388Z",
-  "updated_at": "2026-10-22T00:58:10.592420Z",
+  "updated_at": "2026-10-22T00:58:55.830843Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

@@ -3,7 +3,7 @@
   "title": "Agent-readable Shipped (Markus twins, llms, negotiation)",
   "description": "Every page serves its Markus source to agents: .md twins, Accept: text/markdown, llms.txt and llms-full.txt, page actions with Open in ChatGPT/Claude/Perplexity. The core work is in Papyrus PPY-b2e95d (Markus twins, not stripped Markdown) and PR #502 (bare /x.md, authored pages in llms).",
   "type": "epic",
-  "status": "open",
+  "status": "in_progress",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:02.346481Z",
-  "updated_at": "2026-10-22T00:58:02.346513Z",
+  "updated_at": "2026-10-22T00:58:56.690347Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

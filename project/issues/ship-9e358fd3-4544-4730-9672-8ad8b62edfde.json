@@ -3,7 +3,7 @@
   "title": "Pairwise siteSubject from Prospectus",
   "description": "Waiting on the Prospectus session: person.siteSubject (ss1_...), no Person ID for reader sites, retired-subjects feed. ReaderProfile keys on siteSubject through one accessor.",
   "type": "story",
-  "status": "open",
+  "status": "blocked",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:11.046687Z",
-  "updated_at": "2026-10-22T00:58:11.046725Z",
+  "updated_at": "2026-10-22T00:58:46.081491Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

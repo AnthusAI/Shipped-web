@@ -3,7 +3,7 @@
   "title": "Score provenance: label AI-assisted first-pass scores",
   "description": "Scores were set by the research agent. Label them 'Editor's first pass (AI-assisted)', store who scored each item, and allow a human re-score to replace it.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:05.409686Z",
-  "updated_at": "2026-10-22T00:58:05.409723Z",
+  "updated_at": "2026-10-22T00:58:58.390382Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

@@ -3,7 +3,7 @@
   "title": "Votes, ratings and karma",
   "description": "Papyrus reader-steering plugin (PPY-73a82d). Built and tested ahead of sign-in; production writes open when siteSubject is live.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:13.248740Z",
-  "updated_at": "2026-10-22T00:58:13.248772Z",
+  "updated_at": "2026-10-22T00:58:37.950909Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

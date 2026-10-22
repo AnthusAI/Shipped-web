@@ -3,7 +3,7 @@
   "title": "Reader identity and sign-in",
   "description": "Public readers sign in with Prospectus (Ryan, 2026-10-21) as a public-reader site. The global Person ID never reaches Shipped: Prospectus issues a per-site siteSubject (pairwise). Reader writes in production stay off until siteSubject is live. Papyrus epic PPY-1546fc.",
   "type": "epic",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:02.777641Z",
-  "updated_at": "2026-10-22T00:58:02.777679Z",
+  "updated_at": "2026-10-22T00:58:57.111833Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

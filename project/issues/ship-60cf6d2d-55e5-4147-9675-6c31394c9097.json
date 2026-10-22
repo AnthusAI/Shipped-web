@@ -3,7 +3,7 @@
   "title": "Maker handles shown as written; real maker resolved where stated",
   "description": "Ryan flagged 'Decision Models' (the Hugging Face org decisionmodels) reading like the category. Show handles verbatim, resolve the person or company from the model card or org where stated, and audit all items.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -12,7 +12,7 @@
   "dependencies": [],
   "comments": [],
   "created_at": "2026-10-22T00:58:04.956907Z",
-  "updated_at": "2026-10-22T00:58:04.956945Z",
+  "updated_at": "2026-10-22T00:58:57.962737Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

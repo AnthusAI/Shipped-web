@@ -1,7 +1,7 @@
 {
   "id": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
   "title": "Launch Shipped",
-  "description": "Stand up Shipped (shipped.anth.us), a Papyrus publication of community-ranked AI that actually shipped: announcements and real-world deployments, including open-weights releases and decision models used in the wild. Placeholder site first; design by Ryan in Claude Design. Infrastructure follows the Distinctive Mark pattern (CMS Amplify app, S3 projection, one CloudFront edge, Google sign-in).",
+  "description": "Launch Shipped (shipped.anth.us): a community-ranked feed of AI that actually shipped. It pilots Papyrus collaborative steering (PPY-77bb3b) and the public knowledge base (PPY-428252).\nStatus 2026-10-21:\n- Design scaffold is live with every page.\n- 51 real items (30 decision models, 21 open TTS) are published with topic pages.\n- Agent-readable pages are live.\n- Prospectus registration is done.\n- Reader sign-in is waiting on Papyrus cms.siteOrigin, Prospectus siteSubject and Ryan's Google redirect URIs.\n- Votes, ratings and karma are being built.\nDelivery rule: deploy incrementally, keep the full design visible, and dim placeholders (~60% plus a label) until they are real.",
   "type": "initiative",
   "status": "in_progress",
   "priority": 2,
@@ -20,7 +20,7 @@
     }
   ],
   "created_at": "2026-10-21T11:42:18.979878Z",
-  "updated_at": "2026-10-22T00:58:19.067734Z",
+  "updated_at": "2026-10-22T00:58:47.369515Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
