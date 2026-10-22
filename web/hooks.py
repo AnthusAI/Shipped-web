@@ -1017,6 +1017,7 @@ MAP_UNSTATED_LICENCE_WORDS = ("", "not stated", "unstated", "none", "unknown")
 MAP_LICENCE_PHRASES = {
     "open": "open licence",
     "restricted": "non-commercial or research licence",
+    "custom": "custom licence",
     "unstated": "licence not stated",
 }
 MAP_CENTRE_LIMIT = 5
@@ -1051,7 +1052,8 @@ MAP_WHY_TABLE_NOTE = (
 MAP_TILE_LEGEND = (
     ("open", "Thick solid border", "open licence stated (Apache-2.0, MIT)"),
     ("restricted", "Dashed border", "non-commercial or research-only licence"),
-    ("unstated", "Thin border", "licence not stated, or custom terms"),
+    ("custom", "Double border", "custom licence terms (named on the signal page)"),
+    ("unstated", "Thin border", "licence not stated"),
 )
 MAP_STATUS_LEGEND = (
     ("available", "Available"),
@@ -1117,7 +1119,7 @@ def _map_licence_style(licence):
         return "restricted"
     if any(text.startswith(marker) for marker in table["openLicenceMarkers"]):
         return "open"
-    return "unstated"
+    return "custom"
 
 
 def _map_read_model(summary, entry, group_keys):
@@ -1233,11 +1235,19 @@ def _map_status_mark_html(verdict):
     )
 
 
+def _map_licence_phrase(licence, licence_style):
+    if licence_style == "custom":
+        return f"custom licence: {licence}"
+    if licence:
+        return f"{licence} licence"
+    return MAP_LICENCE_PHRASES[licence_style]
+
+
 def _map_tile_label(model, group_label):
     licence_style = _map_licence_style(model["licence"])
     parts = [
         model["name"], f"symbol {model['symbol']}", group_label, _map_mass_text(model),
-        f"{model['licence']} licence" if model["licence"] else MAP_LICENCE_PHRASES[licence_style],
+        _map_licence_phrase(model["licence"], licence_style),
         model["verdict"].capitalize(),
     ]
     if model["built_on"]:
