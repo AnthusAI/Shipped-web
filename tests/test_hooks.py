@@ -110,7 +110,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("sample-mark", rising)
 
     def test_placeholder_pages_have_no_sample_marks(self):
-        for relative_path in ("sample/roundup", "sample/tern-3", "sample/voice-agents"):
+        for relative_path in ("sample/roundup", "sample/story", "sample/tern-3", "sample/voice-agents"):
             page = self._page(relative_path)
             self.assertNotIn("sample-mark", page)
             self.assertNotIn(">Sample<", page)
@@ -266,12 +266,16 @@ class HooksProjectionTest(unittest.TestCase):
     def test_submit_page_mounts_the_submit_island_and_says_what_is_true_now(self):
         page = self._page("submit")
         self.assertEqual(self._island_props(page, "Submit"), [{}])
-        for text in ("public as soon as you send it", "Editors will review submissions after the fact", "sign in"):
+        for text in ("public as soon as you send it", "Editors review submissions after the fact", "sign in"):
             self.assertIn(text, page)
-        body = page.split("</header>")[1]
-        self.assertLess(body.index("Submitting opens with reader sign-in, soon."), body.index("<h1"))
-        self.assertIn('content="Submitting opens with reader sign-in, soon.', page)
-        for text in ("is-placeholder", "placeholder-tag", "<fieldset disabled", "not open yet", "Preview", "preview-notice"):
+        self.assertIn("Add something in the wild", page)
+        self.assertIn("New signals start as Announced", page)
+        self.assertIn("Not a release?</b> Propose a concept or a correction to the map.", page)
+        self.assertIn('href="/proposals/"', page)
+        on_the_map = page.split('class="on-the-map is-placeholder"')[1].split("</section>")[0]
+        self.assertEqual(on_the_map.count("placeholder-tag"), 1)
+        self.assertLess(page.index('data-island="Submit"'), page.index("on-the-map"))
+        for text in ("<fieldset disabled", "not open yet", "preview-notice", "soon."):
             self.assertNotIn(text, page)
 
     def test_sign_in_page_explains_privacy_and_mounts_reader_sign_in(self):
@@ -450,12 +454,38 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("n=3, too few", page)
         self.assertIn("188 rated it", page)
 
-    def test_sample_roundup_has_table_rows_with_status_words_and_a_scores_as_of_line(self):
+    def test_sample_roundup_is_the_weekly_with_every_part_as_a_placeholder(self):
         page = self._page("sample/roundup")
-        self.assertNotIn("item-card", page)
-        self.assertIn("roundup-table-items", page)
-        self.assertIn("Scores as of Fri 23 Oct 2026, frozen", page)
-        self.assertIn(">Status<", page)
+        self.assertIn("In the wild, and mapped as it moves.", page)
+        self.assertIn("Drafted by AI", page)
+        self.assertIn("Approved by <b>[editor]</b>", page)
+        for heading in ("What moved on the map", "Concepts born this week", "The community’s top proposal", "Underrated this week", "Also out this week"):
+            self.assertIn(heading, page)
+        self.assertEqual(page.count("placeholder-tag"), 6)
+        for old in ("Weekly roundup", ">Real<", ">Notable<", ">Novel<"):
+            self.assertNotIn(old, page)
+
+    def test_roundup_archive_has_the_weekly_strap_and_links_the_sample_issue(self):
+        page = self._page("roundup")
+        self.assertIn("<h1>The Weekly</h1>", page)
+        self.assertIn("In the wild, and mapped as it moves.", page)
+        self.assertIn('href="/sample/roundup/"', page)
+
+    def test_sample_story_is_a_placeholder_with_citations_lineage_and_a_draft_box(self):
+        page = self._page("sample/story")
+        self.assertIn("Decision models are starting to have family trees", page)
+        self.assertIn("Figure: Shipped map · Edited by AI", page)
+        self.assertIn("Draft · not yet approved", page)
+        self.assertIn("Signals cited", page)
+        self.assertIn("Was this story right?", page)
+        self.assertIn("This is wrong", page)
+        self.assertIn("Sample lineage · not yet verified", page)
+        for number in range(1, 6):
+            self.assertIn(f'href="#src-{number}"', page)
+            self.assertIn(f'id="src-{number}"', page)
+        self.assertIn("<b>[n]</b> readers steered it", page)
+        self.assertIn("Approved by <b>[editor]</b>", page)
+        self.assertNotIn("sample-mark", page)
 
     def test_sign_in_page_defines_karma(self):
         page = self._page("sign-in")
