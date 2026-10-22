@@ -27,8 +27,8 @@ Feature: Items carry one of three neutral statuses
     When I open the page "/"
     Then the three status marks use three different shapes
 
-  Scenario: The row key on the front page explains the three statuses
-    When I open the page "/"
+  Scenario: The row key on the New page explains the three statuses
+    When I open the page "/new/"
     Then the rail key lists Available, Verified and Announced in that order
     And the page contains "Anyone can use it today."
     And the page contains "Claimed, not yet usable or not yet confirmed."

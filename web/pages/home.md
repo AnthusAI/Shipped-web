@@ -3,11 +3,15 @@
 ::raw
 <div class="shipped-page front">
 <div class="front-bar">
+<p class="front-stats">
 ::endraw
 
-::include{kind="block" name="front" part="stats"}
+::include{kind="block" name="front" part="signals"}
+
+::include{kind="block" name="knowledge-topic-count" count=entities label="{n} entities on the map"}
 
 ::raw
+</p>
 <div class="front-invite">
 <span class="front-invite-out">This map is steered by its readers. <span class="is-placeholder is-placeholder-inline" title="Placeholder">Sign in to vote on drafts.</span></span>
 <span class="front-invite-in">You are signed in. Voting on drafts opens with the Proposals queue.</span>
@@ -101,6 +105,7 @@
 ::include{kind="block" name="desk-board" depends="*" heading="Latest signals" more="true"}
 
 ::raw
+<p class="front-footnote">Scores on seeded items are an AI-assisted first pass from the linked sources; human editors re-score them. <a href="/policies/#ranking">How ranking works →</a> <a href="/policies/#scores">How we score →</a></p>
 </div>
 
 ::endraw

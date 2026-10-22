@@ -121,3 +121,6 @@
   .front-proposal{gap:12px}
   .front-latest{padding-top:40px}
 }
+.front-stats .papyrus-knowledge-count{font-family:var(--font-mono);font-size:13px;color:var(--ink);text-transform:none;letter-spacing:0;margin:0;padding:0;border:0}
+.front-footnote{margin:18px 0 0;max-width:70ch;font-family:var(--font-mono);font-size:12px;line-height:1.5;color:var(--muted)}
+.front-footnote a{color:var(--ink)}

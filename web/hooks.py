@@ -676,35 +676,10 @@ FRONT_NEWSLETTER_DEK = "In the wild, and mapped as it moves. One email on Friday
 FRONT_NEWSLETTER_FORM_ID = "front-page"
 
 
-def _front_stat_html(number, singular, plural):
-    label = singular if number == 1 else plural
-    return f'<span class="front-stat"><b>{number}</b> {escape(label)}</span>'
-
-
-def _front_map_figures(page):
-    knowledge = page.site.knowledge
-    index = knowledge.index() or {}
-    clusters = knowledge.clusters() or {}
-    entities = index.get("entities") or []
-    named_clusters = [cluster for cluster in clusters.get("clusters") or [] if cluster.get("name")]
-    weeks = max((int(entity.get("weeksOfHistory") or 0) for entity in entities), default=0)
-    return {
-        "entities": int(index.get("entityCount") or 0),
-        "clusters": len(named_clusters),
-        "weeks": weeks,
-    }
-
-
-def _front_stats_html(page):
-    figures = _front_map_figures(page)
-    stats = [_front_stat_html(len(_board_pairs(page, lambda summary: True)), "signal", "signals")]
-    if figures["entities"]:
-        stats.append(_front_stat_html(figures["entities"], "entity on the map", "entities on the map"))
-    if figures["clusters"]:
-        stats.append(_front_stat_html(figures["clusters"], "cluster", "clusters"))
-    if figures["weeks"]:
-        stats.append(_front_stat_html(figures["weeks"], "week of map history", "weeks of map history"))
-    return f'<p class="front-stats">{"".join(stats)}</p>'
+def _front_signal_count_html(page):
+    count = len(_board_pairs(page, lambda summary: True))
+    label = "signal" if count == 1 else "signals"
+    return f'<span class="front-stat"><b>{count}</b> {label}</span>'
 
 
 def _front_newsletter_html():
@@ -726,8 +701,8 @@ def _front_newsletter_html():
 
 def _front_block(page, attributes):
     part = attributes.get("part")
-    if part == "stats":
-        return _front_stats_html(page)
+    if part == "signals":
+        return _front_signal_count_html(page)
     if part == "newsletter":
         return _front_newsletter_html()
     raise ValueError(f"unknown front part {part!r}")
