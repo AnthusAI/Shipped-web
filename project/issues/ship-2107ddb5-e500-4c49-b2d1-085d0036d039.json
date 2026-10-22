@@ -9,15 +9,18 @@
   "creator": null,
   "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
   "labels": [],
-  "dependencies": [
+  "dependencies": [],
+  "comments": [
     {
-      "target": "ship-ddbf4600-e033-4cbc-8d56-937c15cc2679",
-      "type": "blocked-by"
+      "id": "5e38be7b-c338-4da4-8d27-84abe1d8a5fd",
+      "author": "home",
+      "text": "Unblocked 2026-10-22 by the user: round 3 doesn't change this page, so build it from the round-2 design (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r). Start after Phase 1 (ship-573e70) lands, since both touch web/hooks.py and the shared CSS.",
+      "created_at": "2026-10-22T16:24:13.275314Z",
+      "comment_type": "default"
     }
   ],
-  "comments": [],
   "created_at": "2026-10-22T15:28:59.713398Z",
-  "updated_at": "2026-10-22T15:28:59.890859Z",
+  "updated_at": "2026-10-22T16:24:13.275349Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
