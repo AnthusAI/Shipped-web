@@ -53,7 +53,7 @@
 
 body {
   margin: 0;
-  background: var(--papyrus-bg);
+  background: var(--brand-fill);
   color: var(--papyrus-ink);
   font-family: var(--font-ui);
   font-stretch: 100%;
@@ -70,6 +70,9 @@ main {
   max-width: 72rem;
   margin: 0 auto;
   padding: 2rem 1rem;
+  background: var(--papyrus-bg);
+  box-shadow: 0 0 0 100vmax var(--papyrus-bg);
+  clip-path: inset(0 -100vmax);
 }
 
 h1, h2, h3, .markus-card-title, .markus-site-wordmark {
@@ -138,6 +141,36 @@ time, .markus-time, .markus-byline, code, pre, .markus-tags, .markus-pager, .mar
 .markus-site-footer p {
   max-width: 72rem;
   margin: 0 auto;
+}
+
+.shipped-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 2rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.shipped-footer-wordmark {
+  font-family: var(--font-title);
+  font-stretch: var(--title-stretch);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.shipped-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shipped-footer .markus-footer-text {
+  margin: 0 0 0 auto;
 }
 
 .markus-card {

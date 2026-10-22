@@ -1,6 +1,6 @@
 # Shipped
 
-The AI that actually shipped, ranked by the community.
+The AI that actually shipped, checked against their sources and scored.
 
 Announcements and real-world deployments, including open-weights releases and decision models used in the wild, scored on dimensions such as real, useful, notable and novel. This is a placeholder site: the design comes later.
 

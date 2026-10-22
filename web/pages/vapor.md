@@ -10,7 +10,7 @@
 <nav class="view-tabs" aria-label="Views"><a href="/">Front</a><a href="/new/">New</a><a href="/rising/">Rising</a><a href="/vapor/" aria-current="page">Vapor log</a></nav>
 ::endraw
 
-::include{kind="block" name="desk-board" depends="*" verdict="vapor" heading="Vapor log from the desk"}
+::include{kind="block" name="desk-board" depends="*" verdict="vapor" heading="Vapor log"}
 
 ::raw
 <section class="board is-placeholder" aria-labelledby="board-h">

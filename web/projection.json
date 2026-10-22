@@ -3,7 +3,7 @@
   "site": {
     "name": "Shipped",
     "tagline": "The AI that actually shipped",
-    "description": "Announcements and real-world deployments of AI, ranked by the community: open-weights releases, decision models in the wild, and what is actually in use.",
+    "description": "Announcements and real-world deployments of AI, checked against their sources and scored: open-weights releases, decision models in the wild, and what is actually in use.",
     "productionUrl": "https://shipped.anth.us"
   },
   "urls": {
@@ -90,14 +90,15 @@
     "stylesheet": "https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
   },
   "icons": {
-    "themeColor": "#C6F432"
+    "themeColor": "#C6F432",
+    "themeColorDark": "#C6F432"
   },
   "pages": [
     {
       "id": "home",
       "path": "",
       "title": "Shipped: AI that actually shipped",
-      "description": "Announcements and real-world deployments of AI, ranked by the community: open-weights releases, decision models in the wild, and what is actually in use.",
+      "description": "Announcements and real-world deployments of AI, checked against their sources and scored: open-weights releases, decision models in the wild, and what is actually in use.",
       "source": "pages/home.md"
     },
     {
@@ -172,30 +173,8 @@
     }
   ],
   "footer": {
-    "text": "Shipped, from Anthus AI Solutions. AI that actually shipped, ranked by the people who checked.",
-    "columns": [
-      {
-        "title": "Shipped",
-        "links": [
-          {
-            "label": "Front",
-            "href": "/"
-          },
-          {
-            "label": "Vapor log",
-            "href": "/vapor/"
-          },
-          {
-            "label": "Submit",
-            "href": "/submit/"
-          },
-          {
-            "label": "Policies",
-            "href": "/policies/"
-          }
-        ]
-      }
-    ]
+    "text": "AI that shipped.",
+    "columns": []
   },
   "hooks": "hooks.py"
 }
