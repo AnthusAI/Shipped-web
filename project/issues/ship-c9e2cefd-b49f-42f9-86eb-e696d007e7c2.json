@@ -38,10 +38,17 @@
       "text": "PR feat/public-wiki: wiki section, listing type, suggest-edit form on the site's own public form endpoint, wiki stamp/footer/knowledge-block styling (web/assets/shipped-wiki.css); wiki items excluded from the Latest board and from item verdict decoration. Wiki not in nav yet.",
       "created_at": "2026-10-22T07:50:07.311099Z",
       "comment_type": "default"
+    },
+    {
+      "id": "b5adb200-e039-42ad-a232-59e6a04bbf98",
+      "author": "home",
+      "text": "knowledge-base PR 3: pin PR https://github.com/AnthusAI/Shipped-web/pull/35 merged 2026-10-22T09:28Z (Papyrus 5.22.0 in all four pins; Amplify job 32 succeeded, backend stacks updated 09:36Z; test suggest-an-edit on /wiki/platform-hugging-face/ arrived as a private form_submission message and was marked handled; page unchanged). Widgets PR https://github.com/AnthusAI/Shipped-web/pull/36 merged 2026-10-22T09:46Z, deploy run 39757982560 succeeded. Live: concept-of-the-week rail on Front/New/Rising (Hugging Face, Edited by AI on 2026-10-22), 'All 282 topics' on Front/New/Rising/Vapor (equals index.json entityCount), clusters terms=5 on Front, wiki pageSize 50, entity chips link to wiki pages on items and board rows, knowledge-beat trend/entities/clusters on the two topic pages; md twins keep include sources. Screenshots /private/tmp/kb-work/shipped-shots/pr3-*.png",
+      "created_at": "2026-10-22T10:00:17.894967Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T22:29:22.118490Z",
-  "updated_at": "2026-10-22T07:50:07.311123Z",
+  "updated_at": "2026-10-22T10:00:17.894993Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
