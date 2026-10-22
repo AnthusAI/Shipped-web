@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "cf5db1b4-b8d2-42d2-a0e5-acdc7743fc68",
+  "issue_id": "ship-0be231e0-9851-4a08-965b-0f8a2953eb8c",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:29:00.030Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Promote an insight to a concept node, with lineage",
+    "description": "Needs Papyrus: an approved story's proposed concept becomes a knowledge entity whose lineage records \"born DATE from the story X, which drew on clusters A and B\". Later stories and the map can then cite it.\n\nAcceptance: the first story-born concept appears on the map and its wiki page with its lineage line.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

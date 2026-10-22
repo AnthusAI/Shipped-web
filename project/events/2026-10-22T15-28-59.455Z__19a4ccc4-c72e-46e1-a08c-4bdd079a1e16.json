@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "19a4ccc4-c72e-46e1-a08c-4bdd079a1e16",
+  "issue_id": "ship-1eb27bd0-d998-459a-b556-87d6704a4653",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.455Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Rename the Shipped section to In use",
+    "description": "\"Shipped\" is now only the publication's name. The section becomes \"In use\": products and features you can use today.\n\nChanges:\n- Update the label and description in `web/projection.json` (`urls.sections.shipped`) and the CMS section record.\n- Rename the newsletter list \"Alerts: Shipped\" to \"Alerts: In use\" in the newsletter plugin settings.\n- Update Submit's section choices.\n\nThe URL key `shipped` stays for now. Moving it to `/in-use/` needs redirects for every item and is a separate decision.\n\nAcceptance:\n- No page uses \"Shipped\" as a section name.\n- Existing item URLs still answer 200.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-573e7042-a7bf-443f-8c96-7c724e3c349c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "bea622fd-8a07-431b-9199-f073c33ff252",
+  "issue_id": "ship-9890b597-28d2-4d63-9f0d-0509248d87c1",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.996Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Editor tier: override, vote exclusion and Needs a look",
+    "description": "Needs Papyrus:\n- Editors can approve, decline, pin or hold, and override a community result with a required public reason. Readers see both results.\n- Editors can exclude a batch of votes (for example from accounts under 24 hours old), mark an account as spam or limited, and undo either. The public count notes how many votes were excluded and why.\n- A \"Needs a look\" filter catches vote spikes, many new accounts, and community-AI disagreement.\n\nAcceptance: an editor override and a vote exclusion both show publicly with their reasons, and both can be undone.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

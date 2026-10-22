@@ -1,0 +1,25 @@
+{
+  "id": "ship-e840f9de-8bf6-465a-99f4-674efe469183",
+  "title": "Retire vapor: remove the Vapor log, the No vapor stamp and the hype gap",
+  "description": "Remove the vapor framing from the public site.\n\nChanges:\n- Delete `web/pages/vapor.md` and its page entry, the Vapor log nav link, and the \"No vapor\" stamp in `nav.brandHtml` (`web/projection.json`).\n- Redirect `/vapor/` to `/new/`.\n- Remove `_hype_gap` and `_hype_gap_html` from `web/hooks.py`, along with their CSS and tests.\n- Remove `hypeGap` from the reader-steering plugin in `papyrus.config.ts` and from `web/scoring.json`. Without it, Papyrus publishes no hype gap (see Papyrus `docs/reader-steering.md`).\n- Remove vapor sample rows from `web/pages/rising.md` and the sample pages.\n\nAcceptance:\n- No live page contains \"vapor\" or \"hype gap\", checked by curl over the sitemap.\n- `/vapor/` redirects to `/new/`.\n- `tests/test_hooks.py` passes.",
+  "type": "story",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-573e7042-a7bf-443f-8c96-7c724e3c349c",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-22T15:28:59.404182Z",
+  "updated_at": "2026-10-22T15:28:59.404212Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "shipped-product-owner"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

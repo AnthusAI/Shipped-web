@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "ada87d41-66f9-4933-8251-088cbe471030",
+  "issue_id": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.387Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Reposition 3: engine-backed stories, proposals and steering",
+    "description": "Turn the Reposition 2 placeholders into live features as Papyrus delivers them:\n- public, labelled AI drafts and the Proposals queue;\n- voting on any subject, with downvotes;\n- editor override and vote exclusion;\n- AI trend stories, and promoting an insight to a concept;\n- the Graph and River views from weekly history;\n- AI-drafted sections of The Weekly;\n- a scheduled knowledge run.\n\nEvery reader write also depends on the Google OAuth fix (ship-63b07d).",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

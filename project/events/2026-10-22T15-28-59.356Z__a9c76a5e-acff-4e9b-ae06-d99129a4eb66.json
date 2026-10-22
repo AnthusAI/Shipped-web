@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "a9c76a5e-acff-4e9b-ae06-d99129a4eb66",
+  "issue_id": "ship-573e7042-a7bf-443f-8c96-7c724e3c349c",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.356Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Reposition 1: vocabulary, statuses, dimensions and tagline",
+    "description": "Decided with the product owner on 2026-10-22: Shipped moves from a board of verdicts to a living map in three layers (signals, the map, AI-written stories), steered by signed-in readers, with editors able to override them. Phase 1 ships everything that needs no new Papyrus feature.\n\nDo it before reader sign-in opens (ship-63b07d), while no reader ratings exist, so no reader data needs migrating.\n\nDesign: https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r (round 2 delivered; round 3 pending).",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

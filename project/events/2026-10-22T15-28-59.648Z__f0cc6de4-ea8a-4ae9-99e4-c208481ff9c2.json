@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "f0cc6de4-ea8a-4ae9-99e4-c208481ff9c2",
+  "issue_id": "ship-417d1881-04a2-4c87-9a77-29f1f7a685e8",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.648Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Map page: Graph and River views",
+    "description": "Build the Graph view: a concept graph centred on a selectable node, with relation line styles and the side panel.\n\nBuild the River view: clusters over weeks with the time scrubber.\n\nWith 1 week of history, show the honest cold-start state (\"nothing to replay yet\"). The 26-week sample stays a tagged placeholder until the weekly history exists (Reposition 3).\n\nAcceptance: the graph reads real relations from the knowledge snapshot, and the river shows real weeks only.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

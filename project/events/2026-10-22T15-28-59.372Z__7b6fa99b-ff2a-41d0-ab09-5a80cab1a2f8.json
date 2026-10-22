@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "7b6fa99b-ff2a-41d0-ab09-5a80cab1a2f8",
+  "issue_id": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.372Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Reposition 2: new page layouts from the round-3 design",
+    "description": "Rebuild the public pages to the round-3 Claude Design canvas (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r):\n- Front;\n- Map, with the periodic table as its first view, then Graph and River;\n- concept, section landing and signal pages;\n- Submit and The Weekly;\n- mobile versions.\n\nParts that need Papyrus features not yet built ship as dimmed placeholders. Starts when round 3 is delivered.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}
