@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "f141d623-5e20-4dce-aa72-062d8eb9e56a",
+  "issue_id": "ship-0d459f59-ebbf-4b04-8327-4003b896e6b7",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T01:00:47.191Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Use the full width on very wide viewports (Studio Display and larger)",
+    "description": "Ryan (2026-10-21): the responsive design should fill the available viewport width and make better use of screen space on very wide displays, such as a 27-inch 5K Studio Display or larger external monitors. Today the layout stops at a fixed max width (1312px in the design), which leaves wide empty margins.\nIdeas to evaluate against the design:\n- wide breakpoints (e.g. ≥1600, ≥2200, ≥2800px) that add columns rather than stretching text;\n- the board gaining side rails (Rising, Vapor log, trending topics) beside the main list;\n- item pages showing evidence, scores and related items in a side column;\n- type and spacing scaling with clamp();\n- reading measure capped around 68–75ch for prose, so line length stays readable.\nCheck at 1440, 1920, 2560 (Studio Display at default scaling), 3008 and 5120 CSS px, in light and dark; mobile and tablet must not regress. Placeholder treatment applies to any new rail that isn’t real yet.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-6ff2d71d-3c8c-415e-9d4d-a561b7faf36c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

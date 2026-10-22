@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "bb4d3fb6-6df4-42ab-9b49-ffe0b36b0ee5",
+  "issue_id": "ship-60cf6d2d-55e5-4147-9675-6c31394c9097",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:04.956Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Maker handles shown as written; real maker resolved where stated",
+    "description": "Ryan flagged 'Decision Models' (the Hugging Face org decisionmodels) reading like the category. Show handles verbatim, resolve the person or company from the model card or org where stated, and audit all items.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-579bbb15-33e2-456f-88de-4f2968aab20c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

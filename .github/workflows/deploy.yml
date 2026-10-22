@@ -31,6 +31,11 @@ jobs:
       - run: echo '{}' > amplify_outputs.json
       - run: npx papyrus-app sync
       - run: npx tsc --noEmit
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-publication.txt
+      - run: python -m unittest discover -s tests
 
   deploy:
     needs: ci

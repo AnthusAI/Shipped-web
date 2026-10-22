@@ -3,7 +3,7 @@
   "site": {
     "name": "Shipped",
     "tagline": "The AI that actually shipped",
-    "description": "Announcements and real-world deployments of AI, ranked by the community: open-weights releases, decision models in the wild, and what is actually in use.",
+    "description": "Announcements and real-world deployments of AI, checked against their sources and scored: open-weights releases, decision models in the wild, and what is actually in use.",
     "productionUrl": "https://shipped.anth.us"
   },
   "urls": {
@@ -22,6 +22,21 @@
       "decisions": {
         "label": "Decisions in the wild",
         "description": "Decision models used in real deployments.",
+        "listEmpty": true
+      },
+      "roundup": {
+        "base": "roundup",
+        "label": "Roundup",
+        "description": "Every weekly issue of the Shipped roundup: what shipped, what turned out to be vapor, and the board's movers.",
+        "feed": false,
+        "listEmpty": true
+      },
+      "wiki": {
+        "label": "Wiki",
+        "description": "What Shipped has accepted about the makers, models, platforms and tasks in its coverage, with the trend and the coverage behind each.",
+        "feed": false,
+        "sort": "order",
+        "pageSize": 50,
         "listEmpty": true
       }
     }
@@ -64,6 +79,11 @@
     "brandHtml": "<span class=\"brand-word\">Shipped</span><span class=\"brand-stamp\"><svg viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><circle cx=\"8\" cy=\"8\" r=\"5\"/><path d=\"M3 13L13 3\"/></svg><span>No vapor</span></span>"
   },
   "listings": {
+    "types": [
+      "article",
+      "newsletter_issue",
+      "wiki_page"
+    ],
     "homeCount": 12
   },
   "feeds": {
@@ -83,21 +103,25 @@
       "assets/shipped-components.css",
       "assets/shipped-forms-roundup.css",
       "assets/shipped-item-topic.css",
-      "assets/shipped-desk.css"
+      "assets/shipped-desk.css",
+      "assets/shipped-newsletter.css",
+      "assets/shipped-wiki.css",
+      "assets/shipped-reader.css"
     ]
   },
   "fonts": {
     "stylesheet": "https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
   },
   "icons": {
-    "themeColor": "#C6F432"
+    "themeColor": "#C6F432",
+    "themeColorDark": "#C6F432"
   },
   "pages": [
     {
       "id": "home",
       "path": "",
       "title": "Shipped: AI that actually shipped",
-      "description": "Announcements and real-world deployments of AI, ranked by the community: open-weights releases, decision models in the wild, and what is actually in use.",
+      "description": "Announcements and real-world deployments of AI, checked against their sources and scored: open-weights releases, decision models in the wild, and what is actually in use.",
       "source": "pages/home.md"
     },
     {
@@ -111,49 +135,49 @@
       "id": "rising",
       "path": "rising",
       "title": "Rising",
-      "description": "Sample items gaining votes fastest in the last 6 hours.",
+      "description": "Placeholder items gaining votes fastest in the last 6 hours.",
       "source": "pages/rising.md"
     },
     {
       "id": "vapor",
       "path": "vapor",
       "title": "Vapor log",
-      "description": "Sample items announced but not something you can use.",
+      "description": "Items announced but not something you can use.",
       "source": "pages/vapor.md"
     },
     {
       "id": "submit",
       "path": "submit",
       "title": "Submit",
-      "description": "Preview of the submission form. Submitting is not open yet.",
+      "description": "Submit a link to something that shipped. Submissions are public at once and editors review them after the fact.",
       "source": "pages/submit.md"
     },
     {
-      "id": "roundup",
-      "path": "roundup",
-      "title": "Weekly roundup",
-      "description": "A fictional sample weekly roundup that shows the design.",
+      "id": "sample-roundup",
+      "path": "sample/roundup",
+      "title": "Weekly roundup (placeholder issue)",
+      "description": "A placeholder issue that previews the Shipped roundup design.",
       "source": "pages/roundup.md"
     },
     {
       "id": "sign-in",
       "path": "sign-in",
       "title": "Sign in",
-      "description": "Reader accounts with Google sign-in are coming. This is a preview.",
+      "description": "Sign in to vote, rate, comment and submit links. Only your handle is ever shown.",
       "source": "pages/sign-in.md"
     },
     {
       "id": "sample-tern-3",
       "path": "sample/tern-3",
-      "title": "Tern-3: a 14B open-weights coding model (sample item)",
-      "description": "A fictional sample item page that previews the Shipped item design.",
+      "title": "Tern-3: a 14B open-weights coding model (placeholder item)",
+      "description": "A placeholder item page that previews the Shipped item design.",
       "source": "pages/item-tern-3.md"
     },
     {
       "id": "sample-voice-agents",
       "path": "sample/voice-agents",
-      "title": "Voice agents (sample topic)",
-      "description": "A fictional sample topic page that previews the Shipped topic design.",
+      "title": "Voice agents (placeholder topic)",
+      "description": "A placeholder topic page that previews the Shipped topic design.",
       "source": "pages/topic-voice-agents.md"
     },
     {
@@ -172,26 +196,36 @@
     }
   ],
   "footer": {
-    "text": "Shipped, from Anthus AI Solutions. AI that actually shipped, ranked by the people who checked.",
-    "columns": [
-      {
-        "title": "Shipped",
-        "links": [
-          {
-            "label": "Front",
-            "href": "/"
-          },
-          {
-            "label": "Vapor log",
-            "href": "/vapor/"
-          },
-          {
-            "label": "Submit",
-            "href": "/submit/"
-          }
-        ]
-      }
-    ]
+    "text": "AI that shipped.",
+    "columns": []
   },
-  "hooks": "hooks.py"
+  "hooks": "hooks.py",
+  "seo": {
+    "jsonLdTypes": {
+      "wiki_page": "WebPage"
+    }
+  },
+  "forms": {
+    "suggest-edit": {
+      "title": "Suggest an edit",
+      "endpoint": "https://2bjhiug5jrsiwpwvuwwnfwmyhe0ulzhe.lambda-url.us-east-1.on.aws/",
+      "submitLabel": "Send suggestion",
+      "fields": [
+        {
+          "name": "message",
+          "label": "What should change?",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "email",
+          "label": "Your email (optional)",
+          "type": "email"
+        }
+      ]
+    }
+  },
+  "wiki": {
+    "suggestForm": "suggest-edit"
+  }
 }

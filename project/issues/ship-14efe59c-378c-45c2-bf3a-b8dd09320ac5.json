@@ -7,12 +7,20 @@
   "priority": 2,
   "assignee": null,
   "creator": null,
-  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "parent": "ship-6ff2d71d-3c8c-415e-9d4d-a561b7faf36c",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "c7a25388-fd38-464a-98f1-270673329eb9",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Left open: no evidence that the 17-item checklist went to the designer or came back ticked. Seen live and consistent with it: item 5 (data freshness: 'Updated every 6 hours' plus the Freshness label), item 8 (wiki: 'Suggest an edit' form instead of edit controls, 'Edited by AI' stamp). The rest are unverified.",
+      "created_at": "2026-10-22T10:47:12.233555Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-21T12:51:16.448010Z",
-  "updated_at": "2026-10-21T12:51:16.448030Z",
+  "updated_at": "2026-10-22T10:47:12.233581Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

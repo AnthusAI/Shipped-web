@@ -2,7 +2,7 @@
 title: "Fixture: a complete item with every field"
 date: 2026-10-20
 verdict: verified
-verdictBy: the fixture desk
+verdictBy: the fixture editor
 verdictAt: 2026-10-20
 maker: Fixture Lab
 tags: [open-tts, voice-cloning]
@@ -16,6 +16,7 @@ evidence:
   - {kind: data, url: "https://data.fixture.example/request", check: unchecked}
 entities:
   - {kind: task, name: fixture task}
+  - {kind: maker, name: Unlisted Fixture Lab}
 ---
 
 This is a fictional fixture item used only by the test suite.

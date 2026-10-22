@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "68d66175-9ad6-4267-8f16-afdbc5f1ba94",
+  "issue_id": "ship-1a7a57fc-c3e2-4918-899e-c9d62be5cebd",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:09.736Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Register Shipped in Prospectus as a public-reader site",
+    "description": "Done: Prospectus PR #79 (papyrus-shipped, audience public-reader), reviewed by the Prospectus session.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

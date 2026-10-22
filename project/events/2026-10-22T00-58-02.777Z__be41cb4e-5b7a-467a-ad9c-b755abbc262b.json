@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "be41cb4e-5b7a-467a-ad9c-b755abbc262b",
+  "issue_id": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:02.777Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Reader identity and sign-in",
+    "description": "Public readers sign in with Prospectus (Ryan, 2026-10-21) as a public-reader site. The global Person ID never reaches Shipped: Prospectus issues a per-site siteSubject (pairwise). Reader writes in production stay off until siteSubject is live. Papyrus epic PPY-1546fc.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

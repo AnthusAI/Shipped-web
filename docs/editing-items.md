@@ -1,15 +1,17 @@
 # Editing items
 
-Editors set the verdict, the editor scores, the evidence and the entities of an item in its front matter (the item's `metadata` in the Papyrus CMS). `web/hooks.py` renders them statically on the item page and on the "From the desk" board of Front and New. The dimensions, the hype gap formula and the verdicts are data in `web/scoring.json`.
+Editors set the verdict, the editor scores, the evidence and the entities of an item in its front matter (the item's `metadata` in the Papyrus CMS). `web/hooks.py` renders them statically on the item page and on the "Latest" board of Front and New. The dimensions, the hype gap formula and the verdicts are data in `web/scoring.json`.
 
 ```yaml
 verdict: verified          # shipped, verified, pending or vapor; missing means pending
-verdictBy: the desk        # optional
+verdictBy: an editor       # optional
 verdictAt: 2026-10-20      # optional
 scores: {real: 4.5, useful: 4, notable: 3.5, novel: 3}   # editor's 1-5 per dimension; any subset
 evidence:
   - {kind: weights, url: https://example.org/weights, check: checked}   # check: checked, partly or unchecked
-maker: Some Lab            # optional
+maker: Some Lab            # optional, shown exactly as stored
+makerHandle: some-lab      # optional Hub handle; alone it is shown verbatim in mono
+scoring: {by: agent, label: "Editor's first pass (AI-assisted)", at: 2026-10-21}   # by: agent or human; see docs/placeholders.md
 entities: [{kind: task, name: code completion}]          # optional, hand-entered until extraction lands
 ```
 

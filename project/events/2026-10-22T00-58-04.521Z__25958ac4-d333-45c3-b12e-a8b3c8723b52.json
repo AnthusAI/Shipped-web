@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "event_id": "25958ac4-d333-45c3-b12e-a8b3c8723b52",
+  "issue_id": "ship-b3e1ff5a-506a-4de8-b1a6-e6c74d5b4ab9",
+  "event_type": "field_updated",
+  "occurred_at": "2026-10-22T00:58:04.521Z",
+  "actor_id": "home",
+  "payload": {
+    "changes": {
+      "parent": {
+        "from": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+        "to": "ship-579bbb15-33e2-456f-88de-4f2968aab20c"
+      }
+    }
+  }
+}

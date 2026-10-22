@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "c02f8b9f-5ec0-4658-ac49-06e218922741",
+  "issue_id": "ship-2ca3b2df-6838-4e9a-a589-d016d96e2e11",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:09.292Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Markus-source twins and bare /x.md on Shipped (adopt Papyrus release)",
+    "description": "Adopt the Papyrus release carrying PR #502 / PPY-b2e95d (Markus directives kept, bare /x.md rewrite, authored pages in llms). Pin, redeploy, verify.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-3e4e38a4-6255-4c0d-afa7-b799eafcf5a4",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

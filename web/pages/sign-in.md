@@ -3,14 +3,24 @@
 ::raw
 <div class="shipped-page">
 <div class="signin-panel">
-<p class="preview-notice" role="note"><span class="cintillo">Preview</span><span>Preview: reader accounts are not open yet. Nothing on this page signs you in.</span></p>
 <span class="kicker">Reader accounts</span>
-<h1 class="signin-title">Sign in is coming</h1>
-<p class="form-dek" style="margin:0">Reader accounts will use Google sign-in. Signed-in readers will be able to submit links, vote, and report that they used something. Until then, the board is open to read.</p>
-<div><button type="button" class="button" disabled aria-disabled="true">Sign in with Google (coming later)</button></div>
-<section class="signin-account" aria-labelledby="signin-sample-h">
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><h2 id="signin-sample-h" class="rail-h" style="font-size:20px">What an account will look like</h2> <span class="sample-mark" title="Fictional sample data that previews the design">Sample</span></div>
-<div class="account-panel" style="margin-top:0"><span><b>ryan-sample</b> · signed in</span><span>14 submissions · account age 9 months</span></div>
+<h1 class="signin-title">Sign in</h1>
+<p class="form-dek" style="margin:0">Signing in lets you take part in the board. Reader accounts use Google sign-in. You pick a handle the first time.</p>
+<div class="reader-signin" data-island="ReaderSignIn" data-props="{}"></div>
+<noscript><p class="field-hint">Signing in needs JavaScript. Without it you can still read the board.</p></noscript>
+<section class="signin-account" aria-labelledby="signin-gives-h">
+<h2 id="signin-gives-h" class="rail-h">What signing in gives you</h2>
+<ul class="rail-points">
+<li>Upvote items, and say that you used something.</li>
+<li>Rate an item on real, useful, notable and novel, and say why.</li>
+<li>Comment on items and submissions.</li>
+<li><a href="/submit/">Submit a link</a> to something that shipped.</li>
+</ul>
+<p class="rail-note">Karma is the number beside your handle. It is the upvotes other readers give your submissions, plus 2 for each reader who reports using something you submitted. Your own votes do not count. <a href="/policies/#karma">How karma works →</a></p>
+</section>
+<section class="signin-account" aria-labelledby="signin-privacy-h">
+<h2 id="signin-privacy-h" class="rail-h">Privacy</h2>
+<p style="margin:0">The only thing shown publicly is your handle, beside what you write, submit, vote or rate. Your sign-in identity, such as your Google account or email address, is never published.</p>
 </section>
 <p class="field-hint"><a href="/" class="button button-quiet">Back to the board</a></p>
 </div>

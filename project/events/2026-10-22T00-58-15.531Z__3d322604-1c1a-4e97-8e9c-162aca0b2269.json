@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "3d322604-1c1a-4e97-8e9c-162aca0b2269",
+  "issue_id": "ship-88291e7a-b55d-4219-bb98-682b9ee0959b",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:15.531Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Knowledge base: topics, trends, entity chips, wiki, weekly roundup",
+    "description": "PPY-428252 (wiki 495ec8, snapshots 493930, entity trends a45fd1, cluster callouts 0331f5) plus Biblicus blbs-d380cb.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

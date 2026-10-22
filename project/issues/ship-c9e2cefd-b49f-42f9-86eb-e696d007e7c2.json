@@ -1,0 +1,68 @@
+{
+  "id": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+  "title": "Reader features: replace placeholders one by one",
+  "description": "Plan step 3. Each feature replaces a placeholder and drops its sample mark; architecture in docs/architecture.md. Order: real items, reader sign-in, votes/ratings/karma, submit+moderation, comments, live numbers, topics/trends/entities, wiki, weekly roundup.",
+  "type": "epic",
+  "status": "in_progress",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "b87526c6-b193-4c59-b187-b614715922b0",
+      "author": "home",
+      "text": "Order set by Ryan (2026-10-22): 1. real topic count and Beats (knowledge-base lead); 2. release and enable the reader-steering snapshot and islands, so Rising, ranking and vote counts read /_data/; 3. knowledge-base pipeline (knowledge-base lead).",
+      "created_at": "2026-10-22T04:03:02.720096Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "3b988866-f10d-4c6a-ba71-1a92ff6e46b9",
+      "author": "home",
+      "text": "PR 1 of the knowledge-base series: https://github.com/AnthusAI/Shipped-web/pull/29 merged 2026-10-22T07:08Z, deploy run 39738427906 succeeded. Papyrus 5.21.0 in all four pins; Trending strip is now the knowledge-trending-strip block on Front, New, Rising, Vapor log. Live: all four show typed decisions, Apache-2.0 +50%, Hugging Face +50%, routing, CC-BY-NC-4.0 (same order as index.json trending); no Placeholder tag; index.md keeps the include source. Screenshot /private/tmp/kb-work/shipped-shots/pr1-home.png",
+      "created_at": "2026-10-22T07:21:53.981480Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "aae02ba1-4963-413c-a383-868839208555",
+      "author": "home",
+      "text": "PR 2: Trending topics rail (knowledge-trending-list limit=6, hype-gap pills dropped, honest change note) on Front/New/Rising and Emerging clusters (knowledge-clusters limit=4, heading note 'Clusters found by the topic model, named by AI') on Front. Concept of the week, beats count and Rising rail stay placeholders. Live evidence is in the PR description.",
+      "created_at": "2026-10-22T07:24:04.866192Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "758895c5-e8f9-4145-88ea-a2c3d7267c3c",
+      "author": "home",
+      "text": "PR feat/public-wiki: wiki section, listing type, suggest-edit form on the site's own public form endpoint, wiki stamp/footer/knowledge-block styling (web/assets/shipped-wiki.css); wiki items excluded from the Latest board and from item verdict decoration. Wiki not in nav yet.",
+      "created_at": "2026-10-22T07:50:07.311099Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "b5adb200-e039-42ad-a232-59e6a04bbf98",
+      "author": "home",
+      "text": "knowledge-base PR 3: pin PR https://github.com/AnthusAI/Shipped-web/pull/35 merged 2026-10-22T09:28Z (Papyrus 5.22.0 in all four pins; Amplify job 32 succeeded, backend stacks updated 09:36Z; test suggest-an-edit on /wiki/platform-hugging-face/ arrived as a private form_submission message and was marked handled; page unchanged). Widgets PR https://github.com/AnthusAI/Shipped-web/pull/36 merged 2026-10-22T09:46Z, deploy run 39757982560 succeeded. Live: concept-of-the-week rail on Front/New/Rising (Hugging Face, Edited by AI on 2026-10-22), 'All 282 topics' on Front/New/Rising/Vapor (equals index.json entityCount), clusters terms=5 on Front, wiki pageSize 50, entity chips link to wiki pages on items and board rows, knowledge-beat trend/entities/clusters on the two topic pages; md twins keep include sources. Screenshots /private/tmp/kb-work/shipped-shots/pr3-*.png",
+      "created_at": "2026-10-22T10:00:17.894967Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "83867d8f-c6b7-4886-849f-a8e747dfcca8",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Epic status. Live: real items, topics/trends/wiki/clusters, wide layout, roundup signup, reader steering in read mode. Closed: ship-88291e. In progress: 0efe84, 378fcc, b35fa2, d02e82. Blocked: b3b934 and 7e99a6. Open: 1f3d29.",
+      "created_at": "2026-10-22T10:47:22.357236Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-10-21T22:29:22.118490Z",
+  "updated_at": "2026-10-22T10:47:22.357295Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "papyrus-anthus"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
