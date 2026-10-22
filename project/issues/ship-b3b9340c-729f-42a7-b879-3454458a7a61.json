@@ -3,7 +3,7 @@
   "title": "Votes, ratings and karma",
   "description": "Papyrus reader-steering plugin (PPY-73a82d). Built and tested ahead of sign-in; production writes open when siteSubject is live.",
   "type": "story",
-  "status": "in_progress",
+  "status": "blocked",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -17,10 +17,17 @@
       "text": "Reconciliation 2026-10-22. In progress: built on Papyrus develop (#512, #516, #520, #521); release and enabling on Shipped pending.",
       "created_at": "2026-10-22T04:03:02.568376Z",
       "comment_type": "default"
+    },
+    {
+      "id": "29950d63-2ed3-4e29-bffa-610cf7f8f39a",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Blocked on Ryan. Built and enabled (Papyrus #512, #516, #520, #521 in 5.20.0; Shipped-web #39). Reader steering is enabled: Shipped-web PR #39 merged 10:16Z, deploy run 39761870423 completed success. Live: home renders ReaderSignIn, 30 Vote and 30 UsedIt islands and the Freshness label; the papyrus-reader v1 script and stylesheet load; /_data/reader/items.json, board.json (parameters editorWeight 0.5, halfLifeHours 48, readerMinimum 5, risingWindowHours 6) and readers.json return 200 with generatedAt 2026-10-22T10:36:04Z and no entries yet; /api/auth/prospectus/sign-in answers 303 to the Cognito Google authorize URL. A live scan of the home page, sign-in page, llms.txt, the reader JSON and the knowledge index found no Person ID, siteSubject or email pattern. No vote can be cast until a reader can sign in, which waits on the Google redirect URIs (ship-63b07d). Close after a real upvote and rating appear in items.json.",
+      "created_at": "2026-10-22T10:47:16.276345Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T00:58:13.248740Z",
-  "updated_at": "2026-10-22T04:03:02.568400Z",
+  "updated_at": "2026-10-22T10:47:16.276372Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

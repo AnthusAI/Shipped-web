@@ -3,17 +3,25 @@
   "title": "Agent-readable Shipped (Markus twins, llms, negotiation)",
   "description": "Every page serves its Markus source to agents: .md twins, Accept: text/markdown, llms.txt and llms-full.txt, page actions with Open in ChatGPT/Claude/Perplexity. The core work is in Papyrus PPY-b2e95d (Markus twins, not stripped Markdown) and PR #502 (bare /x.md, authored pages in llms).",
   "type": "epic",
-  "status": "in_progress",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "da09f856-2569-4938-ae9d-5577145523ba",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). All children closed (60c826, 2ca3b2). Live evidence on ship-2ca3b2: twins, bare .md, Accept negotiation, llms.txt (285 links) and llms-full.txt 200.",
+      "created_at": "2026-10-22T10:47:10.936278Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T00:58:02.346481Z",
-  "updated_at": "2026-10-22T00:58:56.690347Z",
-  "closed_at": null,
+  "updated_at": "2026-10-22T10:47:10.944268Z",
+  "closed_at": "2026-10-22T10:47:10.944234Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",

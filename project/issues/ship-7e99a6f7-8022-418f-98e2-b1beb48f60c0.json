@@ -3,7 +3,7 @@
   "title": "Newsletter",
   "description": "Set up a Shipped newsletter and signup (Papyrus public form endpoint, no faked signups) once the design and content policies exist.",
   "type": "story",
-  "status": "in_progress",
+  "status": "blocked",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -24,10 +24,17 @@
       "text": "Live on https://shipped.anth.us (PR #30 merged, Amplify job 29 SUCCEED, newsletter stack created). Verified with the SES mailbox simulator: /roundup/ 200 with the form; subscribe 202; honeypot stores nothing; bad origin rejected (origin answers 403, CloudFront shows its 404 page); invalid email/list 400; garbage confirm link shows the expired page (410); confirm POST 303 with confirmedAt/IP/UA; preferences 200; one-click unsubscribe 200; re-subscribe works; bounce and complaint simulator addresses suppressed through SNS with SUPP rows; alarms OK, configuration set still sending. Simulator subscribers erased, counts zero. Waiting for the human test with a real inbox; no real address was mailed.",
       "created_at": "2026-10-22T07:46:12.197071Z",
       "comment_type": "default"
+    },
+    {
+      "id": "7c21aaed-692f-44a6-a810-bac3af67ddfd",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Blocked. Live since PR #30 and #33: https://shipped.anth.us/roundup/ 200 with the signup form, simulator-verified. Waiting on: (1) the email lead's fix to the confirmation page (reported unstyled and a 404 after submit), then (2) Ryan's real-inbox retest of confirm, test alert and one-click unsubscribe. Papyrus counterpart PPY-64f38a is blocked on the same.",
+      "created_at": "2026-10-22T10:47:21.919851Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T11:42:25.130234Z",
-  "updated_at": "2026-10-22T07:46:12.197096Z",
+  "updated_at": "2026-10-22T10:47:21.919877Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

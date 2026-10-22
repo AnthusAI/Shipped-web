@@ -3,7 +3,7 @@
   "title": "Person ID never public: scanning test over pages and snapshots",
   "description": "Test that fails if a Prospectus Person ID appears in any rendered page, public JSON, snapshot, feed or llms file.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -17,10 +17,17 @@
       "text": "Reconciliation 2026-10-22. Kept open on purpose. The Person ID scan exists in Papyrus #516 (procedures/newsroom/tests/reader_privacy.py, scripts/test-reader-snapshot-privacy.ts) and #518. Shipped will run it when the reader-steering plugin is enabled here; close then.",
       "created_at": "2026-10-22T04:03:02.514743Z",
       "comment_type": "default"
+    },
+    {
+      "id": "690180b1-c6df-4098-bde7-e6e2b4b04f6d",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). In progress. The reader plugin is now enabled, so the scan can run. The test itself lives in Papyrus (procedures/newsroom/tests/reader_privacy.py, scripts/test-reader-snapshot-privacy.ts, released 5.20.0). A one-off live scan today was clean: https://shipped.anth.us/ , /sign-in/, /llms.txt, /_data/reader/items.json, board.json, readers.json and /_data/knowledge/index.json contain no siteSubject, Person ID or email pattern. Not yet a Shipped CI gate; close when it runs there or after the first real reader writes land.",
+      "created_at": "2026-10-22T10:47:14.507573Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T00:58:12.806023Z",
-  "updated_at": "2026-10-22T04:03:02.514762Z",
+  "updated_at": "2026-10-22T10:47:14.507625Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
