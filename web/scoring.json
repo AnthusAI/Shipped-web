@@ -1,27 +1,36 @@
 {
   "dimensions": [
     {
-      "key": "real",
-      "label": "Real"
-    },
-    {
       "key": "useful",
-      "label": "Useful"
+      "label": "Useful",
+      "question": "Does it do a real job well?"
     },
     {
-      "key": "notable",
-      "label": "Notable"
+      "key": "ready",
+      "label": "Ready",
+      "question": "Could you adopt it today (docs, licence, runs on hardware you have)?"
     },
     {
-      "key": "novel",
-      "label": "Novel"
+      "key": "advances",
+      "label": "Advances",
+      "question": "Does it push what’s possible?"
+    },
+    {
+      "key": "open",
+      "label": "Open",
+      "question": "How much is released (weights, data, code, the public record)?"
     }
   ],
   "verdicts": [
-    "shipped",
+    "available",
     "verified",
-    "pending"
+    "announced"
   ],
+  "verdictMeanings": {
+    "available": "Anyone can use it today.",
+    "verified": "Available, and an editor checked the evidence.",
+    "announced": "Claimed, not yet usable or not yet confirmed."
+  },
   "topics": {
     "decision-models": {
       "label": "Decision models",

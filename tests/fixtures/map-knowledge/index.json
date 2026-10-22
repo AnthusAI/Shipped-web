@@ -1,0 +1,206 @@
+{
+ "asOf": "2026-10-19",
+ "beats": [
+  {
+   "href": "/topics/decision-models/",
+   "itemCount": 2,
+   "key": "decision-models",
+   "name": "Decision models",
+   "series8": [
+    0,
+    1,
+    0,
+    2,
+    3,
+    1,
+    4,
+    2
+   ],
+   "topEntities": [
+    "task--fixture-task"
+   ]
+  },
+  {
+   "href": "/topics/open-tts/",
+   "itemCount": 1,
+   "key": "open-tts",
+   "name": "Open TTS",
+   "series8": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1
+   ],
+   "topEntities": [
+    "task--fixture-task"
+   ]
+  }
+ ],
+ "conceptOfTheWeek": {
+  "editedBy": {
+   "actor": "ai",
+   "name": null,
+   "on": "2026-10-21"
+  },
+  "href": "/wiki/task-fixture-task/",
+  "itemCount": 3,
+  "key": "task--fixture-task",
+  "lede": "A fictional fixture concept used only by the test suite.",
+  "makerCount": 2,
+  "name": "fixture task"
+ },
+ "entities": [
+  {
+   "acceptedBy": {
+    "actor": "ai",
+    "name": null,
+    "on": "2026-10-20"
+   },
+   "aliases": [],
+   "change": {
+    "last4": 3,
+    "percent": null,
+    "prior4": 1
+   },
+   "href": "/wiki/task-fixture-task/",
+   "isNew": false,
+   "itemCount": 3,
+   "key": "task--fixture-task",
+   "kind": "task",
+   "name": "fixture task",
+   "series8": [
+    0,
+    1,
+    0,
+    2,
+    3,
+    1,
+    4,
+    2
+   ],
+   "weeksOfHistory": 8
+  },
+  {
+   "acceptedBy": {
+    "actor": "ai",
+    "name": null,
+    "on": "2026-10-20"
+   },
+   "aliases": [],
+   "change": {
+    "last4": 3,
+    "percent": null,
+    "prior4": 1
+   },
+   "href": "/wiki/maker-fixture-lab/",
+   "isNew": false,
+   "itemCount": 2,
+   "key": "maker--fixture-lab",
+   "kind": "maker",
+   "name": "Fixture Lab",
+   "series8": [
+    0,
+    1,
+    0,
+    2,
+    3,
+    1,
+    4,
+    2
+   ],
+   "weeksOfHistory": 8
+  },
+  {
+   "acceptedBy": {
+    "actor": "ai",
+    "name": null,
+    "on": "2026-10-20"
+   },
+   "aliases": [],
+   "change": {
+    "last4": 3,
+    "percent": null,
+    "prior4": 1
+   },
+   "href": "/wiki/concept-fixture-concept/",
+   "isNew": true,
+   "itemCount": 1,
+   "key": "concept--fixture-concept",
+   "kind": "concept",
+   "name": "fixture concept",
+   "series8": [
+    0,
+    1,
+    0,
+    2,
+    3,
+    1,
+    4,
+    2
+   ],
+   "weeksOfHistory": 8
+  },
+  {
+   "acceptedBy": {
+    "actor": "ai",
+    "name": null,
+    "on": "2026-10-20"
+   },
+   "aliases": [],
+   "change": {
+    "last4": 3,
+    "percent": null,
+    "prior4": 1
+   },
+   "href": "/wiki/licence-fixture-licence/",
+   "isNew": true,
+   "itemCount": 1,
+   "key": "licence--fixture-licence",
+   "kind": "licence",
+   "name": "Fixture-1.0",
+   "series8": [
+    0,
+    1,
+    0,
+    2,
+    3,
+    1,
+    4,
+    2
+   ],
+   "weeksOfHistory": 8
+  }
+ ],
+ "entityCount": 4,
+ "kinds": [
+  {
+   "count": 1,
+   "key": "task",
+   "label": "Task"
+  },
+  {
+   "count": 1,
+   "key": "maker",
+   "label": "Maker"
+  },
+  {
+   "count": 1,
+   "key": "concept",
+   "label": "Concept"
+  },
+  {
+   "count": 1,
+   "key": "licence",
+   "label": "Licence"
+  }
+ ],
+ "schemaVersion": 1,
+ "topicCount": 2,
+ "trending": [
+  "task--fixture-task"
+ ]
+}

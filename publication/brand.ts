@@ -4,9 +4,9 @@ import { DEFAULT_THEME_PACK_TOKENS } from "@anthusai/papyrus/lib/site-stack";
 export const shippedBrand: SiteBrand = {
   id: "shipped",
   appTitle: "Shipped",
-  appDescription: "Shipped: the AI that actually shipped, checked against their sources and scored.",
+  appDescription: "Shipped: AI in the wild, and mapped as it moves.",
   mastheadTitle: "Shipped",
-  mastheadSubtitle: "The AI that actually shipped",
+  mastheadSubtitle: "In the wild, and mapped as it moves.",
   backToHomeLabel: "Back to Shipped",
   articleTitleSuffix: "Shipped",
   placeholderByline: "Shipped",

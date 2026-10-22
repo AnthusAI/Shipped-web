@@ -234,17 +234,19 @@ th {
   --rule-strong: #1A1615;
   --paper: var(--papyrus-bg);
   --brand: #4A6B00;
-  --status-shipped: #1A1615;
-  --status-shipped-on: #F5F1EA;
-  --status-pending: #5E5752;
+  --status-available: #1A1615;
+  --status-available-on: #F5F1EA;
+  --status-verified: #1C4C9C;
+  --status-announced: #5E5752;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --rule-strong: #F1ECE4;
     --brand: #C6F432;
-    --status-shipped: #F1ECE4;
-    --status-shipped-on: #141112;
-    --status-pending: #A59D96;
+    --status-available: #F1ECE4;
+    --status-available-on: #141112;
+    --status-verified: #93B4FF;
+    --status-announced: #A59D96;
   }
 }

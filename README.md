@@ -1,8 +1,8 @@
 # Shipped
 
-The AI that actually shipped, checked against their sources and scored.
+In the wild, and mapped as it moves.
 
-Announcements and real-world deployments, including open-weights releases and decision models used in the wild, scored on dimensions such as real, useful, notable and novel. This is a placeholder site: the design comes later.
+AI releases and real-world deployments (signals), a knowledge map built from them (concepts, clusters and trends), and AI-written stories that editors approve. Readers steer the map; editors can override them. Signals are rated on useful, ready, advances and open.
 
 - **Newsroom (CMS)**: the stock Papyrus newsroom (`@anthusai/papyrus`, pinned in `package.json`) at `/newsroom`.
 - **Public site**: Markus pages projected into an S3 bucket and served by CloudFront from `web/projection.json`.

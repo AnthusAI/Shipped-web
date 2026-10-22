@@ -1,6 +1,6 @@
 [
-  { "id": "weekly", "name": "The Shipped roundup" },
-  { "id": "alerts-shipped", "name": "Alerts: Shipped" },
+  { "id": "weekly", "name": "The Weekly" },
+  { "id": "alerts-shipped", "name": "Alerts: In use" },
   { "id": "alerts-open-weights", "name": "Alerts: Open weights" },
   { "id": "alerts-decisions", "name": "Alerts: Decisions in the wild" }
 ]

@@ -81,7 +81,7 @@ Editorial facts (verdict, editor scores, evidence links) stay **item front matte
 
 ## 6. Item pages
 
-- **Editorial items** are Papyrus `article` Items in the three sections. Front matter: `verdict` (`shipped`, `verified`, `pending`), `scores` (the editor's 1–5 per dimension), `evidence` (a typed link list with a check state), `entities` (until extraction lands), and `maker`. The site's `hooks.py` renders the stamp, the scores, the scores and the evidence on the item page and as board cards, statically.
+- **Editorial items** are Papyrus `article` Items in the three sections. Front matter: `verdict` (`available`, `verified`, `announced`), `scores` (the editor's 1–5 per dimension), `evidence` (a typed link list with a check state), `entities` (until extraction lands), and `maker`. The site's `hooks.py` renders the stamp, the scores, the scores and the evidence on the item page and as board cards, statically.
 - **Reader submissions** are public at once as Pending rows on New, from snapshot JSON. Each row links to its source. An item page appears when an editor promotes the submission to an Item. Pending items therefore have no static page in v1. They are listed and agent-readable through the JSON. This keeps unreviewed text out of the sitemap.
 
 ## 7. What needs approval or input

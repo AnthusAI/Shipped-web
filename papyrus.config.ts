@@ -68,8 +68,8 @@ export default defineSite({
         lists: [
           {
             id: "weekly",
-            name: "The Shipped roundup",
-            description: "One email a week with what shipped and the board's movers.",
+            name: "The Weekly",
+            description: "One email on Fridays: what moved on the map, concepts born this week, and what's new in the wild.",
             kind: "roundup",
             schedule: { draft: "cron(0 13 ? * FRI *)", timezone: "America/New_York" },
             issueType: "newsletter_issue",
@@ -77,8 +77,8 @@ export default defineSite({
           },
           {
             id: "alerts-shipped",
-            name: "Alerts: Shipped",
-            description: "A short email when something is added to the Shipped section.",
+            name: "Alerts: In use",
+            description: "A short email when something is added to the In use section.",
             kind: "alert",
             rule: { sections: ["shipped"] },
             approval: "admin",
@@ -104,7 +104,7 @@ export default defineSite({
       {
         name: "reader-steering",
         computeRoleArn: "arn:aws:iam::712236451410:role/amplify-app-shell-shipped-AmplifyComputeRoleD988057-XMW5ARboawnW",
-        dimensions: ["real", "useful", "notable", "novel"],
+        dimensions: ["useful", "ready", "advances", "open"],
         snapshot: { schedule: true, intervalHours: 6 },
         ranking: { combination: "shrinkage", shrinkageK: 20, readerShareCap: 0.4, newAccountWeight: 1 / 3, risingMinimumAccountHours: 24 },
         retirementPoll: true,

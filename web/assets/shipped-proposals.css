@@ -1,0 +1,70 @@
+.proposals-head{display:flex;flex-wrap:wrap;gap:40px;padding-top:34px}
+.proposals-head-main{flex:999 1 640px;min-width:0}
+.proposals-how{flex:1 1 320px;min-width:0}
+.proposals-title{margin:12px 0 10px;font-size:clamp(34px,5.5vw,52px);line-height:1;font-weight:800;letter-spacing:-.03em;text-wrap:balance}
+.proposals-intro{margin:0;font-size:18px;font-weight:500;max-width:62ch}
+.proposals-legend{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0 0;font-size:14px}
+.proposals-draft-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1.5px dotted var(--ink);padding:3px 8px;background:var(--paper-raised);color:var(--ink);white-space:nowrap}
+.proposals-draft-tag svg{width:12px;height:12px}
+.proposals-how ol{margin:10px 0 0;padding-left:20px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.proposals-invite{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin-top:26px;padding:14px 16px;border:1.5px dashed var(--ink);font-size:15px}
+.proposals-invite-in{display:none}
+.proposals-invite:has(.papyrus-reader-handle){border-style:solid;background:var(--brand-tint)}
+.proposals-invite:has(.papyrus-reader-handle) .proposals-invite-out{display:none}
+.proposals-invite:has(.papyrus-reader-handle) .proposals-invite-in{display:inline}
+.proposals-invite-action{display:inline-flex;align-items:center;gap:8px;min-height:44px}
+.proposals-invite .papyrus-reader-button{display:inline-flex;align-items:center;height:44px;padding:0 16px;border:1.5px solid var(--ink);background:var(--paper-raised);color:var(--ink);font-family:var(--font-ui);font-size:15px;font-weight:700;cursor:pointer}
+.proposals-queue{margin-top:48px}
+.proposals-queue-heading{margin:0 0 14px;font-size:25px;font-weight:800;letter-spacing:-.02em}
+.proposals-controls{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px}
+.proposals-tabs{display:flex;flex-wrap:wrap;border-bottom:2px solid var(--rule-strong)}
+.proposals-tabs button{height:48px;padding:0 18px;border:0;background:transparent;color:var(--ink);font-family:var(--font-mono);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:4px solid transparent;margin-bottom:-2px}
+.proposals-tabs button[aria-pressed="true"]{border-bottom-color:var(--brand);color:var(--brand-text)}
+.proposals-tabs span{font-weight:500}
+.proposals-sorts{display:flex;gap:12px;align-items:center;padding-bottom:8px;flex-wrap:wrap}
+.proposals-sorts div{display:flex;gap:6px;flex-wrap:wrap}
+.proposals-sorts button{height:34px;padding:0 10px;font-family:var(--font-mono);font-size:12px;border:1.5px solid var(--ink);background:transparent;color:var(--ink)}
+.proposals-sorts button[aria-pressed="true"]{background:var(--brand-fill);color:var(--brand-on);border-color:var(--brand-on)}
+.proposals-list{list-style:none;margin:0;padding:0}
+.proposals-row{display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--rule)}
+.proposals-vote{display:flex;align-items:center;gap:6px;flex:none}
+.proposals-vote button{width:44px;height:40px;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--ink);background:transparent;color:var(--ink);padding:0}
+.proposals-vote button svg{width:14px;height:14px}
+.proposals-vote-count{font-family:var(--font-mono);font-size:14px;font-weight:700;min-width:28px;text-align:center}
+.proposals-row-body{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:7px}
+.proposals-row-tags{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.proposals-row-kind{color:var(--ink)}
+.proposals-row-meta{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.proposals-row-title{margin:0;font-size:20px;font-weight:700;line-height:1.3}
+.proposals-row-change{margin:0;font-size:15px}
+.proposals-row-evidence{margin:0;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.proposals-row-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.proposals-quiet{display:inline-flex;align-items:center;height:36px;padding:0 12px;border:1px solid var(--rule-strong);font-size:14px;font-weight:600;box-sizing:border-box}
+.proposals-mark{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;line-height:14px;padding:3px 7px 3px 5px;white-space:nowrap;border:1.5px solid currentColor;color:var(--ink)}
+.proposals-mark svg{width:13px;height:13px;flex:none}
+.proposals-mark-draft{border-style:dotted}
+.proposals-mark-steering{border-style:dashed}
+.proposals-mark-overridden{border:3px double currentColor;padding:2px 6px 2px 4px}
+.proposals-tier{display:flex;flex-wrap:wrap;gap:4px 10px;margin:0;font-family:var(--font-mono);font-size:12px;padding:8px 10px;border:1.5px solid var(--ink);background:var(--paper-raised)}
+.proposals-excluded{margin:0;font-family:var(--font-mono);font-size:12px;padding:6px 10px;border:1px dashed var(--ink);display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.proposals-excluded .proposals-quiet{height:28px}
+.proposals-tiers{margin:64px 0}
+.proposals-tiers-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--rule-strong);padding-bottom:10px}
+.proposals-tiers-head h2{margin:0;font-size:25px;font-weight:800;letter-spacing:-.02em}
+.proposals-example-note{margin:12px 0 0;font-family:var(--font-mono);font-size:12px;color:var(--ink)}
+.proposals-tiers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(480px,100%),1fr));gap:28px;margin-top:18px}
+.proposals-tiers-label{color:var(--ink);margin:0 0 8px}
+.proposals-card{border:1.5px solid var(--rule-strong);background:var(--paper-raised);padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.proposals-needs-look{font-family:var(--font-mono);font-size:12px;font-weight:700;text-transform:uppercase}
+.proposals-flags{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-left:3px double var(--ink);font-family:var(--font-mono);font-size:12px}
+.proposals-flags .kicker{color:var(--ink)}
+.proposals-editor-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;border:1.5px dashed var(--ink)}
+.proposals-editor-bar .kicker{color:var(--ink);font-weight:700}
+
+@media (max-width:640px){
+  .proposals-head{gap:28px;padding-top:20px}
+  .proposals-head-main,.proposals-how{flex:1 1 100%}
+  .proposals-row{flex-direction:column;gap:10px}
+  .proposals-tabs button{padding:0 10px;font-size:12px}
+  .proposals-card{padding:14px}
+}

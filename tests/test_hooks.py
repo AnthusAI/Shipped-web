@@ -27,6 +27,15 @@ def _papyrus_executable():
     return shutil.which("papyrus") or "papyrus"
 
 
+def _load_hooks():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("shipped_hooks_under_test", STATIC_DIRECTORY / "hooks.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 @unittest.skipUnless(
     (Path(sys.executable).parent / "papyrus").exists() or shutil.which("papyrus"),
     "the papyrus command from papyrus-newsroom is not installed",
@@ -60,7 +69,7 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page("open-weights/fixture-full-contract")
         self.assertIn("status-stamp-verified", page)
         self.assertIn(">Verified<", page)
-        self.assertIn("Checked by the fixture editor", page)
+        self.assertIn("Verified by the fixture editor", page)
         self.assertIn("Partly", page)
         self.assertIn("Not checked", page)
         self.assertIn("Editor score", page)
@@ -72,7 +81,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn('class="source-link" href="https://source.fixture.example/guard-one" rel="noopener"', page)
         self.assertIn("Source: source.fixture.example", page)
         self.assertIn("Released 18 Oct 2026", page)
-        self.assertIn('<span class="score-note">Fixture note on novel.</span>', page)
+        self.assertIn('<span class="score-note">Fixture note on advances.</span>', page)
         self.assertIn('href="/topics/decision-models/">Beat: Decision models', page)
 
     def test_item_page_without_notes_has_no_score_note_for_missing_dimensions(self):
@@ -81,17 +90,11 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_home_page_has_one_real_board_with_four_rows_and_no_sample_board(self):
         page = self._page(".")
-        self.assertIn("Latest", page)
         self.assertNotIn("Shipped this week", page)
         self.assertEqual(len(re.findall(r'<li class="board-row">', page.split('class="board desk-board"')[1].split("</ol>")[0])), 4)
         self.assertNotIn("Ratings open with reader sign-in", page)
-        self.assertIn('href="/topics/decision-models/">Decision models', page)
-        self.assertIn('href="/topics/open-tts/">Open TTS', page)
         self.assertNotIn("Sample", page)
-        self.assertNotIn("placeholder-tag", page)
-        self.assertIn("Dimmed sections with a dashed outline are placeholders", page)
-        self.assertIn('<a href="/topics/decision-models/">Decision models</a>', page)
-        self.assertIn("Scores on seeded items are an AI-assisted first pass", page)
+        self.assertIn("Latest signals", page)
 
     def test_new_page_has_only_the_real_board_newest_first(self):
         page = self._page("new")
@@ -107,7 +110,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("sample-mark", rising)
 
     def test_placeholder_pages_have_no_sample_marks(self):
-        for relative_path in ("sample/roundup", "sample/tern-3", "sample/voice-agents"):
+        for relative_path in ("sample/roundup", "sample/story", "sample/tern-3", "sample/voice-agents"):
             page = self._page(relative_path)
             self.assertNotIn("sample-mark", page)
             self.assertNotIn(">Sample<", page)
@@ -128,10 +131,9 @@ class HooksProjectionTest(unittest.TestCase):
     def test_footer_is_the_wordmark_links_and_the_plain_line(self):
         page = self._page(".")
         footer = page.split("<footer")[1].split("</footer>")[0]
-        for href in ('href="/policies/#ranking">How ranking works', 'href="/policies/">Policies', 'href="/roundup/">Roundups', 'href="/feed.xml">RSS', 'href="/submit/">Submit'):
+        for href in ('href="/map/">How the map works', 'href="/policies/#steering">How steering works', 'href="/policies/">Policies', 'href="/roundup/">All issues', 'href="/feed.xml">RSS'):
             self.assertIn(href, footer)
-        self.assertIn("AI that shipped.", footer)
-        self.assertNotIn("Anthus", page)
+        self.assertIn("Published by Anthus AI Solutions.", footer)
         self.assertNotIn("ranked by the", page)
 
     def test_theme_color_is_the_brand_fill_in_light_and_dark(self):
@@ -151,10 +153,53 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("scoring-provenance", page)
         self.assertNotIn("AI first pass", page)
 
-    def test_board_rows_tag_only_agent_scored_items(self):
-        page = self._page("topics/decision-models")
-        self.assertEqual(page.count('<span class="ai-first-pass-tag">AI first pass</span>'), 1)
-        self.assertEqual(self._page("topics/open-tts").count("ai-first-pass-tag"), 0)
+    def test_concept_pages_list_latest_signals_instead_of_a_scored_board(self):
+        for path in ("topics/decision-models", "topics/open-tts"):
+            page = self._page(path)
+            self.assertNotIn("board-row", page, path)
+            self.assertIn('class="signal-row"', page, path)
+
+    def test_board_rows_have_status_title_section_and_date_and_no_score_columns(self):
+        for relative_path in (".", "new"):
+            page = self._page(relative_path)
+            rows = re.findall(r'<li class="board-row">.*?</li>', page, flags=re.S)
+            self.assertGreater(len(rows), 0, relative_path)
+            for row in rows:
+                for part in ("board-status", "board-title", "board-section", "board-date", 'data-island="Vote"', 'data-island="UsedIt"'):
+                    self.assertIn(part, row, relative_path)
+                for gone in ("board-dimensions", "score-dimension", "board-rank", "ai-first-pass-tag"):
+                    self.assertNotIn(gone, row, relative_path)
+            self.assertNotIn('class="board-head kicker', page, relative_path)
+
+    def test_old_score_keys_are_never_shown_and_warn_once_per_item(self):
+        page = self._page("decisions/fixture-router-two")
+        self.assertIn("Not yet rated", page)
+        self.assertEqual(page.count('class="score-dimension-value">3.0<'), 1)
+        for retired in ("Real", "Notable", "Novel"):
+            self.assertNotIn(f"<b>{retired}</b>", page)
+        warnings = [line for line in self.projection_log.splitlines() if "fixture-router-two" in line and "retired dimensions" in line]
+        self.assertEqual(len(warnings), 1)
+
+    def test_signal_page_follows_the_design_order(self):
+        page = self._page("open-weights/fixture-full-contract")
+        order = [
+            'class="signal-meta"', 'class="status-stamp status-stamp-verified status-stamp-lg"', "signal-status-provenance",
+            'id="signal-summary-h"', 'id="desk-evidence-h"', 'id="signal-map-h"', 'id="signal-ratings-h"', "signal-underrated",
+            'id="signal-stories-h"', 'id="signal-nearby-h"', 'id="item-comments-h"',
+        ]
+        positions = [page.index(marker) for marker in order]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn("built on", page)
+        self.assertIn('<i>task</i>fixture task', page)
+        self.assertNotIn("this week", page)
+        self.assertEqual(page.count('class="placeholder-tag"'), 3)
+        head = re.search(r'<div class="signal-dimension-head.*?</div>', page, flags=re.S).group(0)
+        self.assertEqual(re.findall(r"<span>(.*?)</span>", head), ["Dimension", "Readers", "Editors", "Your rating"])
+        self.assertEqual(page.count("Not yet rated"), 1)
+
+    def test_an_agent_scored_item_says_who_stamped_it_and_when(self):
+        page = self._page("decisions/fixture-guard-one")
+        self.assertIn("Stamped by AI, first pass on 21 Oct 2026 &middot; awaiting an editor check", page)
 
     def test_maker_handle_is_shown_verbatim(self):
         with_both = self._page("decisions/fixture-router-two")
@@ -162,22 +207,16 @@ class HooksProjectionTest(unittest.TestCase):
         handle_only = self._page("shipped/fixture-invalid-values")
         self.assertIn('<span class="kicker maker-display"><span class="maker-handle">handle-only-lab</span></span>', handle_only)
 
-    def test_decision_models_topic_page_counts_and_profile(self):
+    def test_decision_models_topic_page_lists_its_own_signals(self):
         page = self._page("topics/decision-models")
-        self.assertIn("<title>Decision models that actually shipped", page)
+        self.assertIn("<title>Decision models in the wild", page)
         self.assertNotIn("sample-mark", page)
-        stats = re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)
-        self.assertEqual(stats, [("Items", "2"), ("Makers", "2"), ("Shipped", "1"), ("Pending", "1")])
-        self.assertIn("Editor scores (AI-assisted first pass), mean of 2 items", page)
-        self.assertIn('<span class="profile-value">3.0</span>', page)
-        self.assertEqual(len(re.findall(r'<li class="board-row">', page)), 2)
+        self.assertEqual(len(re.findall(r'class="signal-row"', page)), 2)
         self.assertIn("Other Fixture Lab", page)
         self.assertNotIn("fixture-full-contract", page)
 
     def test_open_tts_topic_page_lists_only_its_own_tag(self):
         page = self._page("topics/open-tts")
-        self.assertEqual(re.findall(r"<dt>(\w+)</dt><dd>(\d+)</dd>", page)[:2], [("Items", "1"), ("Makers", "1")])
-        self.assertIn("Editor scores, mean of 1 items", page)
         self.assertIn("fixture-full-contract", page)
         self.assertNotIn("fixture-guard-one", page)
 
@@ -193,7 +232,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("9.0", page)
         self.assertNotIn("bogus", page)
         self.assertNotIn("invalid.fixture.example", page)
-        self.assertIn("status-stamp-pending", page)
+        self.assertIn("status-stamp-announced", page)
 
     def test_invalid_values_log_a_warning_and_never_fail_the_build(self):
         self.assertIn("fixture-invalid-values", self.projection_log)
@@ -219,13 +258,13 @@ class HooksProjectionTest(unittest.TestCase):
             self.assertEqual(header.count(">Sign in</a>"), 1, relative_path)
 
     def test_board_rows_carry_vote_and_used_it_for_the_lineage_subject_and_one_freshness_per_board(self):
-        for relative_path in (".", "new", "topics/decision-models"):
+        for relative_path in (".", "new"):
             page = self._page(relative_path)
             rows = len(re.findall(r'<li class="board-row">', page))
             self.assertGreater(rows, 0, relative_path)
             self.assertEqual(len(self._island_props(page, "Vote")), rows, relative_path)
             self.assertEqual(len(self._island_props(page, "UsedIt")), rows, relative_path)
-            board = "board" + page.split('class="board', 1)[1].split("</section>")[0] if relative_path != "topics/decision-models" else page.split('topic-block board desk-board')[1].split("</section>")[0]
+            board = "board" + page.split('class="board', 1)[1].split("</section>")[0]
             self.assertEqual(board.count('data-island="Freshness"'), 1, relative_path)
             self.assertNotIn("Ratings open with reader sign-in", page, relative_path)
         self.assertIn({"subject": FIXTURE_SUBJECT}, self._island_props(self._page("new"), "Vote"))
@@ -234,7 +273,10 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page("open-weights/fixture-full-contract")
         self.assertEqual(self._island_props(page, "Vote"), [{"subject": FIXTURE_SUBJECT}])
         self.assertEqual(self._island_props(page, "UsedIt"), [{"subject": FIXTURE_SUBJECT}])
-        self.assertEqual(self._island_props(page, "Rating"), [{"subject": FIXTURE_SUBJECT, "dimensions": ["real", "useful", "notable", "novel"]}])
+        self.assertEqual(
+            self._island_props(page, "Rating"),
+            [{"subject": FIXTURE_SUBJECT, "dimensions": [key]} for key in ("useful", "ready", "advances", "open")],
+        )
         self.assertEqual(self._island_props(page, "Comments"), [{"subject": FIXTURE_SUBJECT}])
         self.assertLess(page.index("</article>"), page.index('data-island="Comments"'))
 
@@ -269,12 +311,16 @@ class HooksProjectionTest(unittest.TestCase):
     def test_submit_page_mounts_the_submit_island_and_says_what_is_true_now(self):
         page = self._page("submit")
         self.assertEqual(self._island_props(page, "Submit"), [{}])
-        for text in ("public as soon as you send it", "Editors will review submissions after the fact", "sign in"):
+        for text in ("public as soon as you send it", "Editors review submissions after the fact", "sign in"):
             self.assertIn(text, page)
-        body = page.split("</header>")[1]
-        self.assertLess(body.index("Submitting opens with reader sign-in, soon."), body.index("<h1"))
-        self.assertIn('content="Submitting opens with reader sign-in, soon.', page)
-        for text in ("is-placeholder", "placeholder-tag", "<fieldset disabled", "not open yet", "Preview", "preview-notice"):
+        self.assertIn("Add something in the wild", page)
+        self.assertIn("New signals start as Announced", page)
+        self.assertIn("Not a release?</b> Propose a concept or a correction to the map.", page)
+        self.assertIn('href="/proposals/"', page)
+        on_the_map = page.split('class="on-the-map is-placeholder"')[1].split("</section>")[0]
+        self.assertEqual(on_the_map.count("placeholder-tag"), 1)
+        self.assertLess(page.index('data-island="Submit"'), page.index("on-the-map"))
+        for text in ("<fieldset disabled", "not open yet", "preview-notice", "soon."):
             self.assertNotIn(text, page)
 
     def test_sign_in_page_explains_privacy_and_mounts_reader_sign_in(self):
@@ -292,25 +338,24 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_rising_rail_and_page_use_the_ranked_list_island_with_a_real_empty_state(self):
         empty = "Rising starts counting once readers vote."
-        for relative_path, limit in ((".", 5), ("new", 5), ("rising", 5)):
+        for relative_path, limit in (("new", 5), ("rising", 5)):
             props = self._island_props(self._page(relative_path), "RankedList")
             self.assertIn({"list": "rising", "limit": limit, "empty": empty}, props, relative_path)
         self.assertIn({"list": "rising", "limit": 30, "empty": empty}, self._island_props(self._page("rising"), "RankedList"))
-        for relative_path in (".", "new", "rising"):
+        for relative_path in ("new", "rising"):
             page = self._page(relative_path)
             self.assertNotIn("Kiln-3B", page, relative_path)
             self.assertNotIn("rail is-placeholder", page, relative_path)
 
     def test_beat_chips_no_longer_point_at_sample_pages(self):
-        for relative_path in (".", "new", "rising"):
+        for relative_path in ("new", "rising"):
             beats = self._page(relative_path).split('aria-label="Editors’ beats"')[1].split("</nav>")[0]
             self.assertNotIn("/sample/", beats, relative_path)
             self.assertIn('href="/wiki/task-voice-agents/">Voice agents', beats, relative_path)
 
     def test_sample_voice_agents_page_says_ai_not_the_desk(self):
         page = self._page("sample/voice-agents")
-        self.assertIn("FOLLOWED BY AI", page)
-        self.assertIn("<b>AI</b>", page)
+        self.assertIn("Edited by AI on [date]", page)
         self.assertNotIn("The desk", page)
         self.assertIn("is-placeholder", page)
 
@@ -346,38 +391,58 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("fixture-issue-one", page)
         self.assertNotIn("coming later", page)
 
-    def test_signup_form_appears_only_on_the_roundup_archive(self):
-        self.assertNotIn("papyrus-newsletter", self._page("."))
+    def test_signup_form_appears_on_the_front_page_and_the_roundup_archive_only(self):
+        self.assertIn("<papyrus-newsletter", self._page("."))
+        self.assertNotIn("papyrus-newsletter", self._page("new"))
         self.assertNotIn("papyrus-newsletter", self._page("sample/roundup"))
+
+    def test_front_page_follows_the_design_in_order_with_real_and_placeholder_parts(self):
+        page = self._page(".")
+        order = ["front-stats", "front-invite", "front-lead-h", "front-table-h", "front-map-h", "front-stories-h",
+                 "front-rising-h", "front-proposals-h", "front-underrated-h", "desk-board-h", "front-weekly-heading"]
+        positions = [page.index(f'id="{name}"') if f'id="{name}"' in page else page.index(name) for name in order]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn("<b>4</b> signals", page)
+        self.assertIn("1 entities on the map", page)
+        self.assertNotIn("weeks of map history", page)
+        self.assertEqual(page.count('class="placeholder-tag"'), 5)
+        self.assertIn("Draft · not yet approved", page)
+        self.assertIn("Approved by <b>[editor]</b>", page)
+        self.assertIn("Fixture theme", page.split('id="front-map-h"')[1].split("</aside>")[0])
+        self.assertIn("The Weekly", page)
+        self.assertIn("In the wild, and mapped as it moves. One email on Fridays.", page)
+        self.assertNotIn("How to read a row", page)
+        self.assertNotIn("vapor", page.lower())
 
     def test_roundup_issues_stay_out_of_the_site_feed(self):
         self.assertNotIn("fixture-issue-one", (self.output_directory / "feed.xml").read_text(encoding="utf-8"))
 
     def test_resolved_entity_chips_link_to_the_wiki_and_unresolved_stay_plain(self):
-        for path in ("open-weights/fixture-full-contract", "topics/open-tts", "new"):
+        for path in ("open-weights/fixture-full-contract",):
             page = self._page(path)
             self.assertIn('<a class="entity-chip" href="/wiki/task-fixture-task/"><i>task</i>fixture task</a>', page, path)
             self.assertIn('<span class="entity-chip"><i>maker</i>Unlisted Fixture Lab</span>', page, path)
             self.assertNotIn("Unlisted Fixture Lab</a>", page, path)
 
     def test_concept_of_the_week_and_topic_count_replace_their_placeholders(self):
-        for path in (".", "new", "rising"):
+        for path in ("new", "rising"):
             page = self._page(path)
             self.assertIn("papyrus-knowledge-cotw", page, path)
             self.assertIn("Edited by AI on 2026-10-21", page, path)
             self.assertNotIn("Training-data manifest", page, path)
-        for path in (".", "new", "rising"):
+        for path in ("new", "rising"):
             page = self._page(path)
             self.assertIn('class="papyrus-knowledge-count"', page, path)
             self.assertIn("Topic index · 1 topics", page, path)
             self.assertNotIn("214 TOPICS", page, path)
         self.assertIn('name="knowledge-topic-count"', (self.output_directory / "index.md").read_text(encoding="utf-8"))
 
-    def test_home_clusters_show_five_terms(self):
+    def test_home_clusters_show_three_terms(self):
         page = self._page(".")
         self.assertIn("Fixture theme", page)
-        self.assertIn("five", page)
-        self.assertNotIn("six", page)
+        map_panel = page.split('id="front-map-h"')[1].split("</aside>")[0]
+        self.assertIn("three", map_panel)
+        self.assertNotIn("four", map_panel)
 
     def test_topic_pages_carry_the_beat_parts(self):
         page = self._page("topics/decision-models")
@@ -393,55 +458,143 @@ class HooksProjectionTest(unittest.TestCase):
     def test_boards_say_what_the_figures_are_and_link_how_ranking_works(self):
         for relative_path in (".", "new"):
             page = self._page(relative_path)
-            self.assertIn("Newest first. Scores are the editor’s", page, relative_path)
-            self.assertIn("upvotes and ratings from readers will be counted apart", page, relative_path)
+            self.assertIn("Newest first. Each signal is Available, Verified or Announced.", page, relative_path)
+            self.assertIn("Upvotes and ratings from readers are counted apart", page, relative_path)
             self.assertIn('href="/policies/#ranking">How ranking works', page, relative_path)
 
     def test_item_page_separates_upvotes_ratings_and_the_editor_score_and_states_the_floor(self):
         page = self._page("open-weights/fixture-full-contract")
         self.assertIn('class="reader-key"', page)
         self.assertIn("Upvotes count the readers who want this seen", page)
-        self.assertIn("The editor’s score is shown on its own", page)
+        self.assertIn("Readers and editors are shown separately", page)
         self.assertIn("fewer than 5 ratings is too few to print", page)
 
-    def test_rail_defines_shipped_by_the_v1_rule_and_the_rising_window_by_its_length(self):
-        for relative_path in (".", "new", "rising"):
-            page = self._page(relative_path)
-            self.assertIn("An editor confirmed it. Once reader sign-in opens, 3 signed-in readers reporting use will count too.", page, relative_path)
-            self.assertNotIn("or 3 signed-in readers reported using it", page, relative_path)
-            self.assertNotIn("Readers have used it.", page, relative_path)
+    def test_rail_key_defines_the_three_statuses_and_the_rising_window_by_its_length(self):
+        for relative_path in ("new", "rising"):
+            key = self._page(relative_path).split('class="rail-key"')[1].split("</dl>")[0]
+            self.assertEqual(re.findall(r'status-stamp-label">(\w+)<', key), ["Available", "Verified", "Announced"], relative_path)
+            self.assertIn("Anyone can use it today.", key, relative_path)
+            self.assertIn("Available, and an editor checked the evidence.", key, relative_path)
+            self.assertIn("Claimed, not yet usable or not yet confirmed.", key, relative_path)
         self.assertIn("Upvotes, last 6 hours", self._page("rising"))
+
+    def test_retired_status_words_stay_out_of_every_page(self):
+        for path in self.output_directory.rglob("index.html"):
+            page = path.read_text(encoding="utf-8")
+            for retired in ("status-stamp-shipped", "status-stamp-pending", "status-stamp-vapor", 'status-stamp-label">Shipped<', 'status-stamp-label">Pending<', 'status-stamp-label">Vapor<'):
+                self.assertNotIn(retired, page, path.as_posix())
+
+    def test_a_retired_verdict_word_in_front_matter_reads_as_its_new_status(self):
+        page = self._page("decisions/fixture-router-two")
+        self.assertIn("status-stamp-announced", page)
+        self.assertIn(">Announced<", page)
 
     def test_sample_item_page_uses_evidence_link_and_item_text_sources_and_shows_the_minimum_n_state(self):
         page = self._page("sample/tern-3")
         self.assertNotIn("cmts", page)
         self.assertNotIn("corrections by readers", page)
-        self.assertNotIn("41 comments &middot; confirmed", page)
+        self.assertNotIn("41 comments", page)
         self.assertIn("evidence link", page)
         self.assertIn("item text", page)
         self.assertIn("n=3, too few", page)
         self.assertIn("188 rated it", page)
 
-    def test_sample_roundup_has_table_rows_with_status_words_and_a_scores_as_of_line(self):
+    def test_sample_roundup_is_the_weekly_with_every_part_as_a_placeholder(self):
         page = self._page("sample/roundup")
-        self.assertNotIn("item-card", page)
-        self.assertIn("roundup-table-items", page)
-        self.assertIn("Scores as of Fri 23 Oct 2026, frozen", page)
-        self.assertIn(">Status<", page)
+        self.assertIn("In the wild, and mapped as it moves.", page)
+        self.assertIn("Drafted by AI", page)
+        self.assertIn("Approved by <b>[editor]</b>", page)
+        for heading in ("What moved on the map", "Concepts born this week", "The community’s top proposal", "Underrated this week", "Also out this week"):
+            self.assertIn(heading, page)
+        self.assertEqual(page.count("placeholder-tag"), 6)
+        for old in ("Weekly roundup", ">Real<", ">Notable<", ">Novel<"):
+            self.assertNotIn(old, page)
+
+    def test_roundup_archive_has_the_weekly_strap_and_links_the_sample_issue(self):
+        page = self._page("roundup")
+        self.assertIn("<h1>The Weekly</h1>", page)
+        self.assertIn("In the wild, and mapped as it moves.", page)
+        self.assertIn('href="/sample/roundup/"', page)
+
+    def test_proposals_page_explains_steering_and_keeps_the_queue_as_a_placeholder(self):
+        page = self._page("proposals")
+        for text in ("AI proposes. You steer. Editors decide.", "Draft · not yet approved", "How steering works", "Karma is shown but never gates voting", "both results stay visible, with a reason", "Sign in with Google", "Two tiers", "Example only"):
+            self.assertIn(text, page)
+        for text in ("Stories", "Concepts", "Map changes", "Top", "New", "Controversial", "Overridden by editor", "Editor review", "In steering"):
+            self.assertIn(text, page)
+        self.assertEqual(self._island_props(page, "ReaderSignIn")[-1], {})
+        queue = page.split('class="proposals-queue is-placeholder"')[1].split("</section>")[0]
+        self.assertEqual(queue.count("placeholder-tag"), 1)
+        self.assertEqual(queue.count('class="proposals-row"'), 4)
+        self.assertNotRegex(queue, r"▲ \d")
+        self.assertNotIn("<button type=\"button\" aria-pressed", queue)
+        self.assertNotRegex((STATIC_DIRECTORY / "pages" / "proposals.md").read_text(encoding="utf-8").lower(), r"\bdesk\b")
+
+    def test_sample_story_is_a_placeholder_with_citations_lineage_and_a_draft_box(self):
+        page = self._page("sample/story")
+        self.assertIn("Decision models are starting to have family trees", page)
+        self.assertIn("Figure: Shipped map · Edited by AI", page)
+        self.assertIn("Draft · not yet approved", page)
+        self.assertIn("Signals cited", page)
+        self.assertIn("Was this story right?", page)
+        self.assertIn("This is wrong", page)
+        self.assertIn("Sample lineage · not yet verified", page)
+        for number in range(1, 6):
+            self.assertIn(f'href="#src-{number}"', page)
+            self.assertIn(f'id="src-{number}"', page)
+        self.assertIn("<b>[n]</b> readers steered it", page)
+        self.assertIn("Approved by <b>[editor]</b>", page)
+        self.assertNotIn("sample-mark", page)
 
     def test_sign_in_page_defines_karma(self):
         page = self._page("sign-in")
         self.assertIn("Karma will be the number beside your handle", page)
         self.assertIn("plus 2 for each reader", page)
 
+    def test_masthead_carries_the_tagline_and_the_new_navigation(self):
+        page = self._page(".")
+        header = page.split("<header")[1].split("</header>")[0]
+        self.assertIn("In the wild, and mapped as it moves.", header)
+        for label in ("Front", "Map", "Proposals", "New", "Wiki", "The Weekly", "Submit"):
+            self.assertIn(f">{label}</a>", header)
+        for label in ("Rising", "Vapor"):
+            self.assertNotIn(f">{label}</a>", header)
 
-def _load_hooks():
-    import importlib.util
+    def test_every_page_carries_the_default_social_card(self):
+        page = self._page(".")
+        self.assertIn('<meta property="og:image" content="https://shipped.anth.us/assets/social/shipped-default.png">', page)
+        self.assertIn('<meta name="twitter:image" content="https://shipped.anth.us/assets/social/shipped-default.png">', page)
 
-    spec = importlib.util.spec_from_file_location("shipped_hooks_under_test", STATIC_DIRECTORY / "hooks.py")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
+    def test_concept_page_has_the_design_sections_and_no_wiki_chrome(self):
+        page = self._page("topics/decision-models")
+        for heading in ("Where it came from", "Signals per week", "Neighbourhood", "Sub-concepts", "Clusters it touches", "Latest signals", "Stories that cite it"):
+            self.assertIn(heading, page)
+        self.assertIn("Edited by AI on 21 Oct 2026", page)
+        self.assertIn("Graph JSON", page)
+        self.assertIn("Suggest an edit", page)
+        for removed in ("Edit wiki", "Discuss", "contributors"):
+            self.assertNotIn(removed, page)
+        self.assertEqual(page.count('class="placeholder-tag"'), 3)
+
+    def test_concept_stats_come_from_the_knowledge_snapshot_and_items(self):
+        page = self._page("topics/decision-models")
+        stats = re.search(r'<dl class="concept-stats">(.*?)</dl>', page, re.S).group(1)
+        values = dict(re.findall(r"<dt>([^<]+)</dt><dd>(\d+)</dd>", stats))
+        self.assertEqual(values, {"Signals, 8 wks": "13", "This week": "2", "Makers": "2", "Clusters": "1"})
+
+    def test_section_landing_lists_only_that_sections_items_newest_first(self):
+        page = self._page("decisions")
+        self.assertIn("Latest signals in Decisions in the wild", page)
+        self.assertIn('aria-current="page">Decisions in the wild', page)
+        self.assertNotIn("Concepts bubbling up", page)
+        self.assertIn("Clusters across Shipped", page)
+        self.assertIn("CLUSTERS ARE NOT SPLIT BY SECTION YET", page)
+        self.assertEqual(page.count('class="placeholder-tag"'), 1)
+        self.assertNotIn("fixture-full-contract", page)
+        self.assertLess(page.index("fixture-router-two"), page.index("fixture-guard-one"))
+        weights = self._page("open-weights")
+        self.assertIn("Concepts bubbling up", weights)
+        self.assertIn("1 in section", weights)
 
 
 class StampNoteTest(unittest.TestCase):
@@ -453,17 +606,19 @@ class StampNoteTest(unittest.TestCase):
         return self.hooks._checked_note({"verdict": verdict, "by": by, "at": at})
 
     def test_a_stamp_names_who_and_when_in_the_words_of_its_verdict(self):
-        self.assertEqual(self._note("shipped", "A. Editor", "2026-10-21"), "Confirmed by A. Editor, 21 Oct 2026")
-        self.assertEqual(self._note("verified", "A. Editor", "2026-10-21"), "Checked by A. Editor, 21 Oct 2026")
-        self.assertEqual(self._note("shipped", None, "2026-10-21"), "Confirmed on 21 Oct 2026")
+        self.assertEqual(self._note("available", "A. Editor", "2026-10-21"), "Confirmed by A. Editor, 21 Oct 2026")
+        self.assertEqual(self._note("verified", "A. Editor", "2026-10-21"), "Verified by A. Editor, 21 Oct 2026")
+        self.assertEqual(self._note("available", None, "2026-10-21"), "Confirmed on 21 Oct 2026")
 
-    def test_an_old_vapor_verdict_reads_as_pending(self):
+    def test_the_old_verdict_words_read_as_the_new_statuses(self):
         summary = type("Summary", (), {"item_id": "x", "output_path": "x", "slug": "x"})()
-        self.assertEqual(self.hooks._read_verdict(summary, {"verdict": "vapor"}), "pending")
+        for old, new in (("shipped", "available"), ("pending", "announced"), ("vapor", "announced"), ("verified", "verified"), ("available", "available"), ("bogus", "announced")):
+            self.assertEqual(self.hooks._read_verdict(summary, {"verdict": old}), new)
+        self.assertEqual(self.hooks._read_verdict(summary, {}), "announced")
 
     def test_without_the_data_or_for_pending_it_says_nothing(self):
-        self.assertEqual(self._note("shipped"), "")
-        self.assertEqual(self._note("pending", "A. Editor", "2026-10-21"), "")
+        self.assertEqual(self._note("available"), "")
+        self.assertEqual(self._note("announced", "A. Editor", "2026-10-21"), "")
 
 
 class ReaderSteeringConfigurationTest(unittest.TestCase):
@@ -530,7 +685,7 @@ class PageVocabularyTest(unittest.TestCase):
     def test_no_reader_votes_authors_or_desk_in_the_insights(self):
         for page in STATIC_DIRECTORY.joinpath("pages").glob("*.md"):
             text = self._text(page.name)
-            for word in ("Agree", "Disagree", "signal"):
+            for word in ("Agree", "Disagree"):
                 self.assertNotIn(word, text, page.name)
             if page.name == "topic-voice-agents.md":
                 self.assertNotIn("dsp_nadia", text)
@@ -539,8 +694,8 @@ class PageVocabularyTest(unittest.TestCase):
     def test_beats_are_beats_and_the_index_counts_topics(self):
         for name in ("topic-open-tts.md", "topic-decision-models.md"):
             text = self._text(name)
-            self.assertIn("Beats", text)
-            self.assertIn("Topics in this beat", text)
+            self.assertIn("Sub-concepts", text)
+            self.assertIn("FOLLOWED AS A BEAT", text)
             self.assertNotIn("Concepts in this topic", text)
         for name in ("home.md", "new.md", "rising.md"):
             self.assertNotIn("All {n} topics", (STATIC_DIRECTORY / "pages" / name).read_text(encoding="utf-8"))
