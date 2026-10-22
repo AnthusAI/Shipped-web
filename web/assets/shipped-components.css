@@ -1,7 +1,7 @@
 .kicker{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .cintillo{display:inline-flex;align-items:center;gap:8px;background:var(--brand-fill);color:var(--brand-on);font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;line-height:16px;white-space:nowrap}
 .placeholder-tag{position:absolute;top:-7px;left:8px;transform:translateY(-50%);z-index:1;display:inline-block;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;line-height:12px;padding:2px 6px;border:1px solid var(--ink);color:var(--ink);background:var(--paper);white-space:nowrap}
-.is-placeholder{position:relative;opacity:.6;outline:1px dashed var(--rule-strong);outline-offset:6px}
+.is-placeholder{position:relative;opacity:.8;--muted:color-mix(in srgb,var(--ink) 80%,var(--paper));--papyrus-muted:color-mix(in srgb,var(--ink) 80%,var(--paper));--brand-text:color-mix(in srgb,var(--brand) 60%,var(--ink));outline:1px dashed var(--rule-strong);outline-offset:6px}
 .is-placeholder-inline{outline:none;text-decoration:underline dotted;text-underline-offset:3px}
 .ai-first-pass-tag{grid-column:1/-1;justify-self:start;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;line-height:12px;padding:2px 6px;border:1px solid var(--ink);color:var(--ink);white-space:nowrap}
 .scoring-provenance{margin:8px 0 0;font-family:var(--font-mono);font-size:12px;color:var(--muted);line-height:1.5}
@@ -139,7 +139,7 @@ main:has(>.shipped-page){max-width:none}
   .markus-site-masthead{padding:14px 16px 0;display:block}
   .markus-site-wordmark{font-size:38px;margin:0 0 6px}
   .markus-site-tagline{text-align:left;font-size:16px;margin:0 0 12px;max-width:none}
-  .markus-site-nav{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;gap:0 16px;font-size:11px;padding:10px 0}
+  .markus-site-nav{flex-wrap:wrap;gap:8px 16px;font-size:11px;padding:10px 0}
   .markus-site-nav a[href="/submit/"]{margin-left:0}
 }
 
@@ -168,7 +168,7 @@ main:has(>.shipped-page){max-width:none}
   .markus-site-masthead{padding:20px 16px 0}
   .markus-site-wordmark,.markus-site-wordmark a{font-size:56px;gap:12px}
   .markus-site-tagline{font-size:18px;margin-bottom:12px}
-  .markus-site-nav{gap:0 18px}
+  .markus-site-nav{gap:8px 16px}
   .section-heading-note{margin-left:0}
 }
 .rail .papyrus-knowledge-trending-list{margin-top:10px;--papyrus-knowledge-line:var(--brand);--papyrus-knowledge-rule:var(--rule);--papyrus-knowledge-muted:var(--muted)}
