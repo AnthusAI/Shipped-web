@@ -12,6 +12,30 @@
 </header>
 ::endraw
 
+::raw
+<section class="topic-knowledge" aria-labelledby="beat-trend-h"><div class="section-heading"><span class="cintillo">Coverage</span><h2 id="beat-trend-h">Items per week</h2></div>
+::endraw
+
+::include{kind="block" name="knowledge-beat" key=open-tts part=trend}
+
+::raw
+</section>
+<section class="topic-knowledge" aria-labelledby="beat-entities-h"><div class="section-heading"><span class="cintillo">From the wiki</span><h2 id="beat-entities-h">Concepts in this topic</h2></div>
+::endraw
+
+::include{kind="block" name="knowledge-beat" key=open-tts part=entities}
+
+::raw
+</section>
+<section class="topic-knowledge clusters" aria-labelledby="beat-clusters-h"><div class="section-heading"><span class="cintillo">Topic model</span><h2 id="beat-clusters-h">Themes found here</h2></div>
+::endraw
+
+::include{kind="block" name="knowledge-beat" key=open-tts part=clusters}
+
+::raw
+</section>
+::endraw
+
 ::include{kind="block" name="topic-board" tag="open-tts" depends="*"}
 
 ::raw

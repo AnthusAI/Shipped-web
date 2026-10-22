@@ -16,6 +16,7 @@ evidence:
   - {kind: data, url: "https://data.fixture.example/request", check: unchecked}
 entities:
   - {kind: task, name: fixture task}
+  - {kind: maker, name: Unlisted Fixture Lab}
 ---
 
 This is a fictional fixture item used only by the test suite.

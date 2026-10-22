@@ -36,6 +36,7 @@
         "description": "What Shipped has accepted about the makers, models, platforms and tasks in its coverage, with the trend and the coverage behind each.",
         "feed": false,
         "sort": "order",
+        "pageSize": 50,
         "listEmpty": true
       }
     }
