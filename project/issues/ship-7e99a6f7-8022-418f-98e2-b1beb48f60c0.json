@@ -3,16 +3,24 @@
   "title": "Newsletter",
   "description": "Set up a Shipped newsletter and signup (Papyrus public form endpoint, no faked signups) once the design and content policies exist.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "a3739668-327c-4989-82a5-1daee68c8e15",
+      "author": "home",
+      "text": "PR open: https://github.com/AnthusAI/Shipped-web/pull/30 (newsletter plugin config, /roundup/ archive with the signup form, placeholder issue moved to /sample/roundup). Papyrus 5.21.0 pin arrived with #29. Deploy and live verification follow the merge.",
+      "created_at": "2026-10-22T07:13:24.215812Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-21T11:42:25.130234Z",
-  "updated_at": "2026-10-22T00:58:16.860850Z",
+  "updated_at": "2026-10-22T07:13:24.215833Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
