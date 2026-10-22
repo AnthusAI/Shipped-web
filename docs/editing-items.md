@@ -3,7 +3,7 @@
 Editors set the verdict, the editor scores, the evidence and the entities of an item in its front matter (the item's `metadata` in the Papyrus CMS). `web/hooks.py` renders them statically on the item page and on the "Latest" board of Front and New. The dimensions and the verdicts are data in `web/scoring.json`.
 
 ```yaml
-verdict: verified          # shipped, verified or pending; missing means pending (an old `vapor` reads as pending)
+verdict: verified          # available, verified or announced; missing means announced (the old shipped, pending and vapor read as available, announced and announced)
 verdictBy: an editor       # optional
 verdictAt: 2026-10-20      # optional
 scores: {real: 4.5, useful: 4, notable: 3.5, novel: 3}   # editor's 1-5 per dimension; any subset

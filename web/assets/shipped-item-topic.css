@@ -30,8 +30,8 @@
 .evidence-note{font-size:14px;margin-top:6px;color:var(--muted)}
 .check{font-family:var(--font-mono);font-size:12px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:var(--ink)}
 .check svg{width:14px;height:14px}
-.check-checked{color:var(--verified)}
-.check-unchecked{color:var(--status-pending)}
+.check-checked{color:var(--status-verified)}
+.check-unchecked{color:var(--status-announced)}
 .editors-note{background:var(--brand-tint);border-top:4px solid var(--brand);padding:22px 28px 26px}
 .editors-note-head{display:flex;justify-content:space-between;align-items:center;gap:8px 16px;flex-wrap:wrap}
 .editors-note-head h2{margin:0;font-size:12px;font-weight:600}
