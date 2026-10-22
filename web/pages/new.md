@@ -1,7 +1,8 @@
 ::band{size="bare"}
 
+::include{kind="block" name="knowledge-trending-strip" limit=5}
+
 ::raw
-<div class="ticker is-placeholder"><div class="ticker-inner"><span class="ticker-label">TRENDING</span><a href="/"><b>Autonomous SRE</b><span>▲ +210%</span></a><a href="/sample/voice-agents/"><b>Voice agents</b><span>▲ +112%</span></a><a href="/"><b>Training-data manifests</b><span>▲ +64%</span></a><a href="/"><b>On-device speech</b><span>▲ +41%</span></a><a href="/"><b>Override rates</b><span>▲ +38%</span></a><span class="placeholder-tag">Placeholder</span></div></div>
 <div class="shipped-page">
 
 <nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/sample/voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a><a class="beats-all is-placeholder is-placeholder-inline" title="Placeholder" href="/">ALL 214 TOPICS →</a></nav>
