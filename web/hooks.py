@@ -342,10 +342,16 @@ def _evidence_row_html(entry):
     )
 
 
-def _entity_chips_html(entities):
-    return "".join(
-        f'<span class="entity-chip"><i>{escape(entity["kind"])}</i>{escape(entity["name"])}</span>' for entity in entities
-    )
+def _entity_chip_html(entity, site):
+    resolved = site.knowledge.entity_for(entity["kind"], entity["name"]) if site is not None else None
+    inner = f'<i>{escape(entity["kind"])}</i>{escape(entity["name"])}'
+    if resolved and resolved.get("href"):
+        return f'<a class="entity-chip" href="{escape(resolved["href"], quote=True)}">{inner}</a>'
+    return f'<span class="entity-chip">{inner}</span>'
+
+
+def _entity_chips_html(entities, site=None):
+    return "".join(_entity_chip_html(entity, site) for entity in entities)
 
 
 def _checked_note(item):
@@ -357,7 +363,7 @@ def _checked_note(item):
     return ", ".join(parts)
 
 
-def item_decorator(html, summary):
+def item_decorator(html, summary, site=None):
     if summary.type == WIKI_ITEM_TYPE:
         return html
     item = _read_item(summary)
@@ -365,7 +371,7 @@ def item_decorator(html, summary):
     note = _checked_note(item)
     note_html = f'<div class="item-stamp-note">{note}</div>' if note else ""
     maker_html = f'<span class="kicker maker-display">{_maker_html(item)}</span>' if _maker_key(item) else ""
-    chips = _entity_chips_html(item["entities"])
+    chips = _entity_chips_html(item["entities"], site)
     chips_html = f'<div class="desk-entities">{chips}</div>' if chips else ""
     scores_html = ""
     if item["scores"]:
@@ -415,7 +421,7 @@ def _source_domain(item):
     return ""
 
 
-def _board_row_html(position, summary, entry, section_label):
+def _board_row_html(position, summary, entry, section_label, site=None):
     item = _read_item(summary)
     gap_html = _hype_gap_html(_hype_gap(item["scores"]))
     meta = [f"<b>{escape(_source_domain(item))}</b>"] if _source_domain(item) else []
@@ -425,7 +431,7 @@ def _board_row_html(position, summary, entry, section_label):
     date_label = _date_label(summary)
     if date_label:
         meta.append(f"<span>{escape(date_label)}</span>")
-    chips = _entity_chips_html(item["entities"])
+    chips = _entity_chips_html(item["entities"], site)
     agent_tag_html = f'<span class="ai-first-pass-tag">{AGENT_TAG_TEXT}</span>' if _is_agent_scored(item) else ""
     return (
         '<li class="board-row">'
@@ -457,9 +463,9 @@ def _board_pairs(page, keep):
     return pairs
 
 
-def _board_list_html(pairs):
+def _board_list_html(pairs, site=None):
     body = "".join(
-        _board_row_html(position, summary, entry, label) for position, (summary, entry, label) in enumerate(pairs, start=1)
+        _board_row_html(position, summary, entry, label, site) for position, (summary, entry, label) in enumerate(pairs, start=1)
     )
     head_dimensions = "".join(f'<span>{escape(dimension["label"])}</span>' for dimension in _scoring()["dimensions"])
     return (
@@ -489,7 +495,7 @@ def _desk_board(page, attributes):
         '<section class="board desk-board" aria-labelledby="desk-board-h">'
         f'<div class="board-heading"><{tag} id="desk-board-h">{escape(heading)}</{tag}></div>'
         '<p class="board-note desk-board-note">Ratings open with reader sign-in</p>'
-        f"{_board_list_html(pairs[:limit])}{more_html}</section>"
+        f"{_board_list_html(pairs[:limit], page.site)}{more_html}</section>"
     )
 
 
@@ -569,7 +575,7 @@ def _topic_board(page, attributes):
     ranked_html = (
         '<section aria-labelledby="items-h" class="topic-block board desk-board"><div class="section-heading">'
         '<span class="cintillo">Newest first</span><h2 id="items-h">Items in this topic</h2></div>'
-        f'<p class="board-note desk-board-note">Ratings open with reader sign-in</p>{_board_list_html(pairs)}</section>'
+        f'<p class="board-note desk-board-note">Ratings open with reader sign-in</p>{_board_list_html(pairs, page.site)}</section>'
         if pairs else ""
     )
     return (

@@ -5,7 +5,13 @@
 ::raw
 <div class="shipped-page">
 
-<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/sample/voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a><a class="beats-all is-placeholder is-placeholder-inline" title="Placeholder" href="/">ALL 214 TOPICS →</a></nav>
+<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/sample/voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a>
+::endraw
+
+::include{kind="block" name="knowledge-topic-count" count=entities href="/wiki/" label="All {n} topics"}
+
+::raw
+</nav>
 <div class="shipped-layout">
 <div class="shipped-main">
 <nav class="view-tabs" aria-label="Views"><a href="/">Front</a><a href="/new/">New</a><a href="/rising/">Rising</a><a href="/vapor/" aria-current="page">Vapor log</a></nav>

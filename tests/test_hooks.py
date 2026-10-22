@@ -10,6 +10,7 @@ from pathlib import Path
 REPOSITORY_ROOT = Path(__file__).resolve().parent.parent
 FIXTURE_DIRECTORY = REPOSITORY_ROOT / "tests" / "fixtures" / "content"
 STATIC_DIRECTORY = REPOSITORY_ROOT / "web"
+KNOWLEDGE_DIRECTORY = REPOSITORY_ROOT / "tests" / "fixtures" / "knowledge"
 
 
 def _papyrus_executable():
@@ -32,6 +33,7 @@ class HooksProjectionTest(unittest.TestCase):
                 _papyrus_executable(), "ops", "content", "project", "--all",
                 "--from-dir", str(FIXTURE_DIRECTORY),
                 "--static-dir", str(STATIC_DIRECTORY),
+                "--knowledge-dir", str(KNOWLEDGE_DIRECTORY),
                 "--out", str(cls.output_directory),
             ],
             capture_output=True, text=True,
@@ -206,6 +208,43 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_roundup_issues_stay_out_of_the_site_feed(self):
         self.assertNotIn("fixture-issue-one", (self.output_directory / "feed.xml").read_text(encoding="utf-8"))
+
+    def test_resolved_entity_chips_link_to_the_wiki_and_unresolved_stay_plain(self):
+        for path in ("open-weights/fixture-full-contract", "topics/open-tts", "new"):
+            page = self._page(path)
+            self.assertIn('<a class="entity-chip" href="/wiki/task-fixture-task/"><i>task</i>fixture task</a>', page, path)
+            self.assertIn('<span class="entity-chip"><i>maker</i>Unlisted Fixture Lab</span>', page, path)
+            self.assertNotIn("Unlisted Fixture Lab</a>", page, path)
+
+    def test_concept_of_the_week_and_topic_count_replace_their_placeholders(self):
+        for path in (".", "new", "rising"):
+            page = self._page(path)
+            self.assertIn("papyrus-knowledge-cotw", page, path)
+            self.assertIn("Edited by AI on 2026-10-21", page, path)
+            self.assertNotIn("Training-data manifest", page, path)
+        for path in (".", "new", "rising", "vapor"):
+            page = self._page(path)
+            self.assertIn('class="papyrus-knowledge-count"', page, path)
+            self.assertIn("All 1 topics", page, path)
+            self.assertNotIn("214 TOPICS", page, path)
+        self.assertIn('name="knowledge-topic-count"', (self.output_directory / "index.md").read_text(encoding="utf-8"))
+
+    def test_home_clusters_show_five_terms(self):
+        page = self._page(".")
+        self.assertIn("Fixture theme", page)
+        self.assertIn("five", page)
+        self.assertNotIn("six", page)
+
+    def test_topic_pages_carry_the_beat_parts(self):
+        page = self._page("topics/decision-models")
+        self.assertIn("papyrus-knowledge-beat-trend", page)
+        self.assertIn("papyrus-knowledge-beat-entities", page)
+        self.assertIn("Fixture theme", page)
+        self.assertIn('name="knowledge-beat" key=decision-models part=trend', (self.output_directory / "topics" / "decision-models" / "index.md").read_text(encoding="utf-8"))
+
+    def test_wiki_listing_page_size_is_fifty(self):
+        projection = json.loads((STATIC_DIRECTORY / "projection.json").read_text(encoding="utf-8"))
+        self.assertEqual(projection["urls"]["sections"]["wiki"]["pageSize"], 50)
 
 
 class NewsletterConfigurationTest(unittest.TestCase):
