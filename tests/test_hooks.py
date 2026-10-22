@@ -1,3 +1,4 @@
+import json
 import re
 import shutil
 import subprocess
@@ -97,7 +98,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("sample-mark", self._page("rising"))
 
     def test_placeholder_pages_have_no_sample_marks(self):
-        for relative_path in ("roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents"):
+        for relative_path in ("sample/roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents"):
             page = self._page(relative_path)
             self.assertNotIn("sample-mark", page)
             self.assertNotIn(">Sample<", page)
@@ -188,6 +189,40 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_invalid_values_log_a_warning_and_never_fail_the_build(self):
         self.assertIn("fixture-invalid-values", self.projection_log)
+
+
+
+    def test_roundup_archive_has_the_signup_form_and_lists_issues(self):
+        page = self._page("roundup")
+        self.assertIn("<papyrus-newsletter", page)
+        self.assertIn("/_plugins/papyrus-newsletter@1.js", page)
+        self.assertIn("Email me the lists I ticked. I can unsubscribe in one click.", page)
+        self.assertIn("fixture-issue-one", page)
+        self.assertNotIn("coming later", page)
+
+    def test_signup_form_appears_only_on_the_roundup_archive(self):
+        self.assertNotIn("papyrus-newsletter", self._page("."))
+        self.assertNotIn("papyrus-newsletter", self._page("sample/roundup"))
+
+    def test_roundup_issues_stay_out_of_the_site_feed(self):
+        self.assertNotIn("fixture-issue-one", (self.output_directory / "feed.xml").read_text(encoding="utf-8"))
+
+
+class NewsletterConfigurationTest(unittest.TestCase):
+    def test_signup_form_lists_match_the_newsletter_plugin_configuration(self):
+        configuration = (REPOSITORY_ROOT / "papyrus.config.ts").read_text(encoding="utf-8")
+        configured = re.findall(r'id: "([a-z0-9-]+)",\s+name: "([^"]+)"', configuration)
+        listed = [(entry["id"], entry["name"]) for entry in json.loads((STATIC_DIRECTORY / "newsletter-lists.json").read_text(encoding="utf-8"))]
+        self.assertEqual(configured, listed)
+
+    def test_alert_lists_follow_the_projection_sections(self):
+        projection = json.loads((STATIC_DIRECTORY / "projection.json").read_text(encoding="utf-8"))
+        configuration = (REPOSITORY_ROOT / "papyrus.config.ts").read_text(encoding="utf-8")
+        alert_sections = set(re.findall(r'rule: \{ sections: \["([a-z0-9-]+)"\] \}', configuration))
+        self.assertEqual(alert_sections, {"shipped", "open-weights", "decisions"})
+        self.assertTrue(alert_sections <= set(projection["urls"]["sections"]))
+        self.assertEqual(projection["urls"]["style"], "directory")
+        self.assertIn("newsletter_issue", projection["listings"]["types"])
 
 
 if __name__ == "__main__":
