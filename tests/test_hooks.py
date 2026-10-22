@@ -81,17 +81,11 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_home_page_has_one_real_board_with_four_rows_and_no_sample_board(self):
         page = self._page(".")
-        self.assertIn("Latest", page)
         self.assertNotIn("Shipped this week", page)
         self.assertEqual(len(re.findall(r'<li class="board-row">', page.split('class="board desk-board"')[1].split("</ol>")[0])), 4)
         self.assertNotIn("Ratings open with reader sign-in", page)
-        self.assertIn('href="/topics/decision-models/">Decision models', page)
-        self.assertIn('href="/topics/open-tts/">Open TTS', page)
         self.assertNotIn("Sample", page)
-        self.assertNotIn("placeholder-tag", page)
-        self.assertIn("Dimmed sections with a dashed outline are placeholders", page)
-        self.assertIn('<a href="/topics/decision-models/">Decision models</a>', page)
-        self.assertIn("Scores on seeded items are an AI-assisted first pass", page)
+        self.assertIn("Latest signals", page)
 
     def test_new_page_has_only_the_real_board_newest_first(self):
         page = self._page("new")
@@ -291,17 +285,17 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_rising_rail_and_page_use_the_ranked_list_island_with_a_real_empty_state(self):
         empty = "Rising starts counting once readers vote."
-        for relative_path, limit in ((".", 5), ("new", 5), ("rising", 5)):
+        for relative_path, limit in (("new", 5), ("rising", 5)):
             props = self._island_props(self._page(relative_path), "RankedList")
             self.assertIn({"list": "rising", "limit": limit, "empty": empty}, props, relative_path)
         self.assertIn({"list": "rising", "limit": 30, "empty": empty}, self._island_props(self._page("rising"), "RankedList"))
-        for relative_path in (".", "new", "rising"):
+        for relative_path in ("new", "rising"):
             page = self._page(relative_path)
             self.assertNotIn("Kiln-3B", page, relative_path)
             self.assertNotIn("rail is-placeholder", page, relative_path)
 
     def test_beat_chips_no_longer_point_at_sample_pages(self):
-        for relative_path in (".", "new", "rising"):
+        for relative_path in ("new", "rising"):
             beats = self._page(relative_path).split('aria-label="Editors’ beats"')[1].split("</nav>")[0]
             self.assertNotIn("/sample/", beats, relative_path)
             self.assertIn('href="/wiki/task-voice-agents/">Voice agents', beats, relative_path)
@@ -345,9 +339,28 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("fixture-issue-one", page)
         self.assertNotIn("coming later", page)
 
-    def test_signup_form_appears_only_on_the_roundup_archive(self):
-        self.assertNotIn("papyrus-newsletter", self._page("."))
+    def test_signup_form_appears_on_the_front_page_and_the_roundup_archive_only(self):
+        self.assertIn("<papyrus-newsletter", self._page("."))
+        self.assertNotIn("papyrus-newsletter", self._page("new"))
         self.assertNotIn("papyrus-newsletter", self._page("sample/roundup"))
+
+    def test_front_page_follows_the_design_in_order_with_real_and_placeholder_parts(self):
+        page = self._page(".")
+        order = ["front-stats", "front-invite", "front-lead-h", "front-table-h", "front-map-h", "front-stories-h",
+                 "front-rising-h", "front-proposals-h", "front-underrated-h", "desk-board-h", "front-weekly-heading"]
+        positions = [page.index(f'id="{name}"') if f'id="{name}"' in page else page.index(name) for name in order]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn("<b>4</b> signals", page)
+        self.assertIn("1 entities on the map", page)
+        self.assertNotIn("weeks of map history", page)
+        self.assertEqual(page.count('class="placeholder-tag"'), 5)
+        self.assertIn("Draft · not yet approved", page)
+        self.assertIn("Approved by <b>[editor]</b>", page)
+        self.assertIn("Fixture theme", page.split('id="front-map-h"')[1].split("</aside>")[0])
+        self.assertIn("The Weekly", page)
+        self.assertIn("In the wild, and mapped as it moves. One email on Fridays.", page)
+        self.assertNotIn("How to read a row", page)
+        self.assertNotIn("vapor", page.lower())
 
     def test_roundup_issues_stay_out_of_the_site_feed(self):
         self.assertNotIn("fixture-issue-one", (self.output_directory / "feed.xml").read_text(encoding="utf-8"))
@@ -360,23 +373,24 @@ class HooksProjectionTest(unittest.TestCase):
             self.assertNotIn("Unlisted Fixture Lab</a>", page, path)
 
     def test_concept_of_the_week_and_topic_count_replace_their_placeholders(self):
-        for path in (".", "new", "rising"):
+        for path in ("new", "rising"):
             page = self._page(path)
             self.assertIn("papyrus-knowledge-cotw", page, path)
             self.assertIn("Edited by AI on 2026-10-21", page, path)
             self.assertNotIn("Training-data manifest", page, path)
-        for path in (".", "new", "rising"):
+        for path in ("new", "rising"):
             page = self._page(path)
             self.assertIn('class="papyrus-knowledge-count"', page, path)
             self.assertIn("Topic index · 1 topics", page, path)
             self.assertNotIn("214 TOPICS", page, path)
         self.assertIn('name="knowledge-topic-count"', (self.output_directory / "index.md").read_text(encoding="utf-8"))
 
-    def test_home_clusters_show_five_terms(self):
+    def test_home_clusters_show_three_terms(self):
         page = self._page(".")
         self.assertIn("Fixture theme", page)
-        self.assertIn("five", page)
-        self.assertNotIn("six", page)
+        map_panel = page.split('id="front-map-h"')[1].split("</aside>")[0]
+        self.assertIn("three", map_panel)
+        self.assertNotIn("four", map_panel)
 
     def test_topic_pages_carry_the_beat_parts(self):
         page = self._page("topics/decision-models")
@@ -404,7 +418,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("fewer than 5 ratings is too few to print", page)
 
     def test_rail_key_defines_the_three_statuses_and_the_rising_window_by_its_length(self):
-        for relative_path in (".", "new", "rising"):
+        for relative_path in ("new", "rising"):
             key = self._page(relative_path).split('class="rail-key"')[1].split("</dl>")[0]
             self.assertEqual(re.findall(r'status-stamp-label">(\w+)<', key), ["Available", "Verified", "Announced"], relative_path)
             self.assertIn("Anyone can use it today.", key, relative_path)
@@ -575,4 +589,3 @@ class PageVocabularyTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

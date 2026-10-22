@@ -106,7 +106,8 @@
       "assets/shipped-desk.css",
       "assets/shipped-newsletter.css",
       "assets/shipped-wiki.css",
-      "assets/shipped-reader.css"
+      "assets/shipped-reader.css",
+      "assets/shipped-front.css"
     ]
   },
   "fonts": {

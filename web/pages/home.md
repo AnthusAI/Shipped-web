@@ -1,48 +1,117 @@
 ::band{size="bare"}
 
-::include{kind="block" name="knowledge-trending-strip" limit=5 empty="Nothing is trending yet."}
-
 ::raw
-<div class="shipped-page">
-<p class="preview-line">Dimmed sections with a dashed outline are placeholders that show the design. Everything at full strength is real.</p>
-<nav class="beats" aria-label="Editors’ beats"><span class="kicker">Beats</span><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/wiki/task-voice-agents/">Voice agents</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Coding models</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Document AI</a><a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Speech</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Evals</a><a class="is-placeholder is-placeholder-inline" title="Placeholder" href="/">Agents</a>
+<div class="shipped-page front">
+<div class="front-bar">
+<p class="front-stats">
 ::endraw
 
-::include{kind="block" name="knowledge-topic-count" count=entities href="/wiki/" label="Topic index · {n} topics"}
+::include{kind="block" name="front" part="signals"}
+
+::include{kind="block" name="knowledge-topic-count" count=entities label="{n} entities on the map"}
 
 ::raw
-</nav>
-<div class="shipped-layout">
-<div class="shipped-main">
-<nav class="view-tabs" aria-label="Views"><a href="/" aria-current="page">Front</a><a href="/new/">New</a><a href="/rising/">Rising</a></nav>
+</p>
+<div class="front-invite">
+<span class="front-invite-out">This map is steered by its readers. <span class="is-placeholder is-placeholder-inline" title="Placeholder">Sign in to vote on drafts.</span></span>
+<span class="front-invite-in">You are signed in. Voting on drafts opens with the Proposals queue.</span>
+<div class="front-invite-action" data-island="ReaderSignIn" data-props="{}"><a class="front-quiet-button" href="/sign-in/">Sign in</a></div>
+</div>
+</div>
+
+<div class="front-row front-row-lead">
+<article class="front-lead is-placeholder" aria-labelledby="front-lead-h">
+<span class="placeholder-tag">Placeholder</span>
+<div class="front-lead-figure" role="img" aria-label="Lead image: three lines of descent between decision models">
+<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>
+<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>
+<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>
+<p class="front-lead-caption">Three “built on” relations from the map · Figure: Shipped map, Edited by AI</p>
+</div>
+<div class="front-lead-labels"><span class="cintillo">Lead story</span><span class="kicker">§ Decisions in the wild</span></div>
+<h1 id="front-lead-h"><a href="/topics/decision-models/">Decision models are starting to have family trees</a></h1>
+<p class="front-lead-standfirst">Three decision models released since [date] say whose weights they started from. The map now draws those lines, and a new concept is waiting for your vote.</p>
+<p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span><b>[n]</b> readers steered it</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p>
+<p class="front-chips"><span class="entity-chip"><i>topic</i>Decision models</span><span class="entity-chip"><i>task</i>[task]</span><span class="entity-chip"><i>model</i>[model]</span><span class="entity-chip"><i>maker</i>[maker]</span></p>
+</article>
+
+<aside class="front-side" aria-label="This week on the map">
+<section class="front-table-entry is-placeholder" aria-labelledby="front-table-h">
+<span class="placeholder-tag">Placeholder</span>
+<div class="front-side-heading"><h2 id="front-table-h">The table this week</h2><a class="front-link" href="/map/">Open the map</a></div>
+<p class="front-side-note">A periodic table of the concepts on the map. This week’s movers are marked.</p>
+<ul class="front-table-legend"><li><span class="front-legend-mark front-legend-new" aria-hidden="true"></span>New: [n] entities</li><li><span class="front-legend-mark front-legend-moved" aria-hidden="true"></span>Moved: [n] entities</li></ul>
+</section>
+<section class="front-map" aria-labelledby="front-map-h">
+<div class="front-side-heading"><h2 id="front-map-h">The map this week</h2><a class="front-link" href="/map/">Open the map</a></div>
+<p class="front-side-kicker kicker">Week 1 · first build · Edited by AI</p>
 ::endraw
 
-::include{kind="block" name="desk-board" depends="*" heading="Latest" more="true" level="1"}
+::include{kind="block" name="knowledge-clusters" limit=4 terms=3 empty="No clusters yet. They appear when the topic model finds a group of items that belong together."}
 
 ::raw
-<section class="clusters" aria-labelledby="clusters-h"><div class="section-heading"><span class="cintillo">Clusters</span><h2 id="clusters-h">Emerging clusters this month</h2><span class="section-heading-note">Clusters found by the topic model, named by AI</span></div>
+<p class="front-side-note">Everything is new in week 1. From next week this panel shows what continued, what was born, and what merged or split.</p>
+</section>
+</aside>
+</div>
+
+<div class="front-row">
+<section class="front-stories is-placeholder" aria-labelledby="front-stories-h">
+<span class="placeholder-tag">Placeholder</span>
+<div class="front-section-heading"><span class="cintillo">Stories</span><h2 id="front-stories-h">Also on the map this week</h2></div>
+<div class="front-story-grid">
+<article class="front-story"><span class="kicker">§ [Section]</span><h3><a href="/new/">[Story headline]</a></h3><p>[One-sentence standfirst, written by AI.]</p><p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p><p class="front-chips"><span class="entity-chip"><i>cluster</i>[cluster]</span><span class="entity-chip"><i>model</i>[model]</span></p></article>
+<article class="front-story"><span class="kicker">§ [Section]</span><h3><a href="/new/">[Story headline]</a></h3><p>[One-sentence standfirst, written by AI.]</p><p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p><p class="front-chips"><span class="entity-chip"><i>cluster</i>[cluster]</span><span class="entity-chip"><i>model</i>[model]</span></p></article>
+</div>
+</section>
+
+<section class="rail front-rising" aria-labelledby="front-rising-h">
+<div class="rail-heading"><h2 id="front-rising-h" class="rail-h">Rising concepts</h2><span class="kicker">8 weeks</span></div>
 ::endraw
 
-::include{kind="block" name="knowledge-clusters" limit=4 terms=5 empty="No new clusters yet. They appear when the topic model finds a group of items that belong together."}
+::include{kind="block" name="knowledge-trending-list" limit=5 definition=false empty="Nothing is rising yet. Concepts need a month of coverage to show a trend."}
 
 ::raw
 </section>
 </div>
-<aside class="shipped-rails">
-<section class="rail" aria-labelledby="trending-h"><div class="rail-heading"><h2 id="trending-h" class="rail-h">Trending topics</h2><span class="kicker">8 wks</span></div>
-::endraw
 
-::include{kind="block" name="knowledge-trending-list" limit=6 definition=false empty="Nothing is trending yet. Topics need a month of coverage to show a trend."}
+<div class="front-row front-row-wide">
+<section class="front-proposals is-placeholder" aria-labelledby="front-proposals-h">
+<span class="placeholder-tag">Placeholder</span>
+<div class="front-section-heading"><span class="cintillo">Proposals</span><h2 id="front-proposals-h">Steer the map</h2><a class="front-link front-link-end" href="/sign-in/">Sign in to vote</a></div>
+<p class="front-proposals-note">AI-written drafts, not yet approved · ranked by reader votes · editors decide</p>
+<ul class="front-proposal-list">
+<li class="front-proposal"><div class="front-vote"><button type="button" disabled aria-label="Vote up: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l5.5 9h-11z"/></svg></button><span class="front-vote-count">[n]</span><button type="button" disabled aria-label="Vote down: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg></button></div><div class="front-proposal-body"><div class="front-proposal-tags"><span class="front-draft-tag"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft · not yet approved</span><span class="front-steering-tag"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>In steering</span><span class="kicker">Concept</span></div><a class="front-proposal-title" href="/sign-in/">[Proposal title]</a><span class="front-proposal-change">[What changes on the map if this is approved.]</span></div></li>
+<li class="front-proposal"><div class="front-vote"><button type="button" disabled aria-label="Vote up: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l5.5 9h-11z"/></svg></button><span class="front-vote-count">[n]</span><button type="button" disabled aria-label="Vote down: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg></button></div><div class="front-proposal-body"><div class="front-proposal-tags"><span class="front-draft-tag"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft · not yet approved</span><span class="front-steering-tag"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>In steering</span><span class="kicker">Map change</span></div><a class="front-proposal-title" href="/sign-in/">[Proposal title]</a><span class="front-proposal-change">[What changes on the map if this is approved.]</span></div></li>
+<li class="front-proposal"><div class="front-vote"><button type="button" disabled aria-label="Vote up: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l5.5 9h-11z"/></svg></button><span class="front-vote-count">[n]</span><button type="button" disabled aria-label="Vote down: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg></button></div><div class="front-proposal-body"><div class="front-proposal-tags"><span class="front-draft-tag"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft · not yet approved</span><span class="front-steering-tag"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>In steering</span><span class="kicker">Story</span></div><a class="front-proposal-title" href="/sign-in/">[Proposal title]</a><span class="front-proposal-change">[What changes on the map if this is approved.]</span></div></li>
+</ul>
+</section>
 
-::raw
-</section><section class="rail rail-tinted" aria-labelledby="concept-h"><div class="kicker rail-kicker" id="concept-h">From the wiki · concept of the week</div>
-::endraw
-
-::include{kind="block" name="knowledge-concept-of-the-week" empty="No concept of the week yet."}
-
-::raw
-</section><section class="rail" aria-labelledby="rising-h"><div class="rail-heading"><h2 id="rising-h" class="rail-h">Rising</h2><span class="kicker">Upvotes, last 6 hours</span></div><div data-island="RankedList" data-props="{&quot;list&quot;:&quot;rising&quot;,&quot;limit&quot;:5,&quot;empty&quot;:&quot;Rising starts counting once readers vote.&quot;}"></div></section><section class="rail" aria-labelledby="key-h"><h2 id="key-h" class="rail-h">How to read a row</h2><dl class="rail-key"><dt><span class="status-stamp status-stamp-available"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 2.5h11v11h-11z"/><path d="M5 8.2l2 2 4-4.4"/></svg><span class="status-stamp-label">Available</span></span></dt><dd>Anyone can use it today.</dd><dt><span class="status-stamp status-stamp-verified"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="5.8"/><path d="M5.4 8.1l1.8 1.8 3.4-3.7"/></svg><span class="status-stamp-label">Verified</span></span></dt><dd>Available, and an editor checked the evidence.</dd><dt><span class="status-stamp status-stamp-announced"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="8" cy="8" r="1.6"/><path d="M4.8 11.2a4.5 4.5 0 0 1 0-6.4"/><path d="M11.2 4.8a4.5 4.5 0 0 1 0 6.4"/></svg><span class="status-stamp-label">Announced</span></span></dt><dd>Claimed, not yet usable or not yet confirmed.</dd></dl><p class="rail-note">Scores on seeded items are an AI-assisted first pass from the linked sources; human editors re-score them. The headline figure is the editor’s score. Once readers sign in, upvotes (readers who want it seen) and ratings (readers who scored it) will be counted apart on each item, and ratings will pull an item’s score toward the readers’ view only as more readers rate it. <a href="/policies/#ranking">How ranking works →</a> <a href="/policies/#scores">How we score →</a></p></section>
-</aside>
+<section class="front-underrated is-placeholder" aria-labelledby="front-underrated-h">
+<span class="placeholder-tag">Placeholder</span>
+<div class="front-side-heading"><h2 id="front-underrated-h">Underrated</h2><span class="front-underrated-mark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2 13.5h12"/><path d="M4 11l4-4 2 2 3.5-3.5"/><path d="M10 5.5h3.5V9"/></svg>Underrated</span></div>
+<p class="front-side-note">Works better than it’s talked about: rated high on Useful and Ready, with few mentions.</p>
+<ol class="front-underrated-list">
+<li><a href="/new/">[Signal title]</a><span class="front-underrated-figures">Useful [n] · Ready [n] · [n] mentions</span></li>
+<li><a href="/new/">[Signal title]</a><span class="front-underrated-figures">Useful [n] · Ready [n] · [n] mentions</span></li>
+<li><a href="/new/">[Signal title]</a><span class="front-underrated-figures">Useful [n] · Ready [n] · [n] mentions</span></li>
+</ol>
+</section>
 </div>
+
+<div class="front-latest">
+::endraw
+
+::include{kind="block" name="desk-board" depends="*" heading="Latest signals" more="true"}
+
+::raw
+<p class="front-footnote">Scores on seeded items are an AI-assisted first pass from the linked sources; human editors re-score them. <a href="/policies/#ranking">How ranking works →</a> <a href="/policies/#scores">How we score →</a></p>
+</div>
+
+::endraw
+
+::include{kind="block" name="front" part="newsletter"}
+
+::raw
 </div>
 ::endraw
