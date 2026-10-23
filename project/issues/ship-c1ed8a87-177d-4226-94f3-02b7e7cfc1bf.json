@@ -3,7 +3,7 @@
   "title": "Rewrite the policies page and status-key copy for the new model",
   "description": "Rewrite the CMS page `item-policies` (live at version 5):\n- remove the old statuses, the old four dimensions and the hype gap;\n- describe the three layers;\n- describe public AI drafts, how steering works (any signed-in reader can vote; karma never gates voting), editor override with a visible reason, and vote exclusion;\n- describe the new statuses and dimensions.\n\nAlso update the rail notes on home and the copy on sign-in and Submit.\n\nAcceptance: the policies page and every rail note use only the new vocabulary, and the page has a \"How steering works\" anchor that the footer links to.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -23,10 +23,18 @@
       "type": "blocked-by"
     }
   ],
-  "comments": [],
+  "comments": [
+    {
+      "id": "53cfc1e6-7112-46a5-b7fe-f8002de5df11",
+      "author": "home",
+      "text": "Done and live: CMS item-policies v7 with #privacy, #analytics, #steering, #ranking, #status-marks, #scores and #layers; no old vocabulary.",
+      "created_at": "2026-10-23T13:25:16.953226Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T15:28:59.487289Z",
-  "updated_at": "2026-10-22T15:28:59.584347Z",
-  "closed_at": null,
+  "updated_at": "2026-10-23T13:25:16.982078Z",
+  "closed_at": "2026-10-23T13:25:16.982034Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
