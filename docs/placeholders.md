@@ -14,7 +14,7 @@ Item front matter may carry `scoring: {by: agent, label: "Editor's first pass (A
 
 ## Signal page
 
-"Appears in these stories" on every signal page is a placeholder with one tag; stories do not exist yet. Items still carrying the old score keys (real, notable, novel) show no scores for them, show the new dimensions as "Not yet rated", and log one warning per item.
+"Appears in these stories" on signal pages and "Stories that cite it" on concept pages are real: they list approved stories that cite the page, and hide when none do. Items still carrying the old score keys (real, notable, novel) show no scores for them, show the new dimensions as "Not yet rated", and log one warning per item.
 
 The Underrated mark, the Underrated panel on the home page and "Nearby on the map" are real, built at projection time from the items and the knowledge snapshot (`site.knowledge`):
 
