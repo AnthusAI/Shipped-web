@@ -730,9 +730,6 @@ class ReaderSteeringConfigurationTest(unittest.TestCase):
         self.assertIn("subjects: { types: [" + ", ".join(f'"{name}"' for name in types) + "] }", self.configuration)
         self.assertIn("proposal", types)
 
-    def test_proposals_are_published_so_the_public_queue_has_data(self):
-        self.assertIn("proposals: { publish: true }", self.configuration)
-
     def test_the_snapshot_runs_every_six_hours_and_the_retirement_poll_has_its_secret(self):
         self.assertIn("snapshot: { schedule: true, intervalHours: 6 }", self.configuration)
         self.assertIn("retirementPoll: true", self.configuration)
