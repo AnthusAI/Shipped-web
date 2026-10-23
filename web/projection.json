@@ -128,7 +128,8 @@
       "assets/shipped-map.css",
       "assets/shipped-logotype.css",
       "assets/shipped-underrated.css",
-      "assets/shipped-stories.css"
+      "assets/shipped-stories.css",
+      "assets/shipped-story-links.css"
     ]
   },
   "fonts": {

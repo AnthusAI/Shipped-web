@@ -34,3 +34,22 @@ Feature: Approved stories replace the story placeholders
     When I open the page "/decisions/"
     Then the page contains "Fixture story: guard models now name their parents"
     And the page does not contain "The lead story for this section will appear here"
+
+  Scenario: A story page mounts the real vote and flag islands for the story
+    When I open the page "/stories/fixture-story-newest/"
+    Then the page contains "Was this story right?"
+    And the page contains "story-vote-island"
+    And the page contains "story-flag-island"
+    And the page does not contain "Story votes open later"
+
+  Scenario: A cited signal lists the stories that cite it and a pending story never appears
+    When I open the page "/decisions/fixture-guard-one/"
+    Then the page contains "Appears in these stories"
+    And the page contains "Fixture story: guard models now name their parents"
+    And the page contains "Cited as [2]"
+    And the page does not contain "PENDING-STORY-MUST-NOT-RENDER"
+
+  Scenario: A topic page lists the approved stories that cite it
+    When I open the page "/topics/open-tts/"
+    Then the page contains "Stories that cite it"
+    And the page contains "Fixture story: open weights for fictional speech"

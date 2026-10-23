@@ -8,7 +8,7 @@ concepts:
   - {kind: model, name: Fixture Guard Two}
 cites:
   - {n: 1, title: "Fixture Guard Two is built on Fixture Guard One", url: "https://source.fixture.example/guard-two", date: 2026-10-20}
-  - {n: 2, title: "Fixture Guard One ships under a permissive licence", url: "https://source.fixture.example/guard-one", date: 2026-10-18}
+  - {n: 2, title: "Fixture Guard One ships under a permissive licence", url: "https://shipped.anth.us/decisions/fixture-guard-one/", date: 2026-10-18}
 figure:
   type: lineage
   pairs:

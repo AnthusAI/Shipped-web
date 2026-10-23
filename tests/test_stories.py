@@ -126,13 +126,13 @@ class StoriesProjectionTest(unittest.TestCase):
         self.assertNotIn("What this changes on the map", older)
         self.assertNotIn("not yet approved", older)
 
-    def test_story_votes_are_one_tagged_placeholder(self):
+    def test_story_votes_are_the_real_vote_and_flag_islands_with_no_placeholder(self):
         page = _page(self.output_directory, "stories/fixture-story-newest")
         self.assertIn("Was this story right?", page)
         react = re.search(r'<section id="story-react".*?</section>', page, re.S).group(0)
-        self.assertIn("is-placeholder", react)
-        self.assertEqual(react.count("placeholder-tag"), 1)
-        self.assertEqual(react.count("disabled"), 2)
+        self.assertNotIn("is-placeholder", react)
+        self.assertNotIn("placeholder-tag", react)
+        self.assertNotIn("disabled", react)
 
     def test_the_home_lead_is_the_newest_approved_story_and_the_next_one_is_also_on_the_map(self):
         home = _page(self.output_directory, "")

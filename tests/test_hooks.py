@@ -192,7 +192,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("built on", page)
         self.assertIn('<i>task</i>fixture task', page)
         self.assertNotIn("this week", page)
-        self.assertEqual(page.count('class="placeholder-tag"'), 1)
+        self.assertEqual(page.count('class="placeholder-tag"'), 0)
         self.assertNotIn("signal-underrated", page)
         self.assertNotIn("signal-nearby-h", page)
         head = re.search(r'<div class="signal-dimension-head.*?</div>', page, flags=re.S).group(0)
@@ -623,7 +623,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("Suggest an edit", page)
         for removed in ("Edit wiki", "Discuss", "contributors"):
             self.assertNotIn(removed, page)
-        self.assertEqual(page.count('class="placeholder-tag"'), 2)
+        self.assertEqual(page.count('class="placeholder-tag"'), 1)
 
     def test_concept_stats_come_from_the_knowledge_snapshot_and_items(self):
         page = self._page("topics/decision-models")

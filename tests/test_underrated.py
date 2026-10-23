@@ -247,10 +247,10 @@ class UnderratedProjectionTest(unittest.TestCase):
         self.assertNotIn("signal-nearby-h", page)
         self.assertNotIn("Nearby on the map", page)
 
-    def test_only_the_stories_block_is_still_a_placeholder_on_a_signal_page(self):
+    def test_a_signal_page_no_story_cites_has_no_placeholder_and_no_stories_block(self):
         page = self._page("decisions/quiet-pair-one")
-        self.assertEqual(page.count('class="placeholder-tag"'), 1)
-        self.assertIn("Appears in these stories", page)
+        self.assertEqual(page.count('class="placeholder-tag"'), 0)
+        self.assertNotIn("Appears in these stories", page)
 
 
 if __name__ == "__main__":

@@ -31,3 +31,4 @@ Feature: A signal page shows the status, the evidence, the map and the ratings
     Then the page does not contain "signal-underrated"
     And the page does not contain "Nearby on the map"
     And the page contains "Appears in these stories"
+    And the page contains "Cited as [2]"

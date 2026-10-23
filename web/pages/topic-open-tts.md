@@ -85,11 +85,11 @@
 
 ::raw
 </section>
-<section class="concept-column-narrow concept-stories is-placeholder" aria-labelledby="stories-h"><span class="placeholder-tag">Placeholder</span>
-<h2 id="stories-h">Stories that cite it</h2>
-<p class="concept-note">AI-written stories are not switched on yet. Stories that cite this concept will be listed here once an editor approves them.</p>
-<p class="concept-story-sample">[Story headline]<span class="concept-note">Approved by [editor] &middot; [date]</span></p>
-</section>
+::endraw
+
+::include{kind="block" name="concept-stories" key=open-tts label="Open TTS" tag="open-tts" depends="*"}
+
+::raw
 </div>
 </div>
 ::endraw

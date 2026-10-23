@@ -86,7 +86,6 @@ AWAITING_EDITOR_TEXT = "awaiting an editor check"
 EVIDENCE_NOTE_FOR_SOURCE = "Source of this signal"
 SOURCE_EVIDENCE_KIND = "Release"
 UNDERRATED_MARK_TEXT = "Works better than it\u2019s talked about."
-STORIES_PLACEHOLDER_TEXT = "Stories that cite this signal will be listed here, with who approved them."
 WARNINGS_ALREADY_LOGGED = set()
 STAMP_NOTE_VERBS = {"available": "Confirmed by", "verified": "Verified by"}
 STAMP_NOTE_UNNAMED_VERBS = {"available": "Confirmed on", "verified": "Verified on"}
@@ -561,13 +560,6 @@ def _ratings_section_html(item, summary):
     )
 
 
-def _rail_placeholder_html(heading_id, heading, text):
-    return (
-        f'<section class="signal-rail-block is-placeholder" aria-labelledby="{heading_id}"><span class="placeholder-tag">Placeholder</span>'
-        f'<h2 id="{heading_id}">{escape(heading)}</h2><p>{escape(text)}</p></section>'
-    )
-
-
 SIGNAL_STANDING_MEMO = "shipped-signal-standing"
 UNDERRATED_ICON = (
     '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'
@@ -792,7 +784,7 @@ def item_decorator(html, summary, site=None):
         + _underrated_mark_html(record, standing)
     )
     rail = (
-        _rail_placeholder_html("signal-stories-h", "Appears in these stories", STORIES_PLACEHOLDER_TEXT)
+        _stories_citing_signal_html(summary, site)
         + _nearby_html(record, standing)
     )
     return (
@@ -1860,6 +1852,8 @@ def _map_block(name, attributes, page):
 
 STORIES_SECTION = "stories"
 STORY_KIND = "story"
+STORY_VOTE_SUBJECT_TYPE = "story"
+APPROVED_STORIES_MEMO = "shipped-approved-stories"
 STORY_APPROVED_STATUS = "approved"
 STORY_AGENT_AUTHOR = "agent"
 STORY_HOME_ALSO_LIMIT = 2
@@ -1871,19 +1865,10 @@ STORY_ARROW_SVG = (
     '<svg viewBox="0 0 120 14" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">'
     '<path d="M0 7h110"/><path d="M104 1l9 6-9 6"/></svg>'
 )
-STORY_VOTE_UP_SVG = (
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">'
-    '<path d="M8 3l5.5 9h-11z"/></svg>'
-)
-STORY_VOTE_DOWN_SVG = (
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">'
-    '<path d="M8 13l5.5-9h-11z"/></svg>'
-)
 STORY_PROPOSAL_TAG_SVG = (
     '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">'
     '<path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>'
 )
-STORY_VOTES_LATER_NOTE = "Story votes open later."
 HOME_LEAD_PLACEHOLDER_HTML = (
     '<article class="front-lead is-placeholder" aria-labelledby="front-lead-h">\n'
     '<span class="placeholder-tag">Placeholder</span>\n'
@@ -2087,16 +2072,13 @@ def _story_proposal_html(story):
     )
 
 
-def _story_react_placeholder_html():
+def _story_react_html(summary):
+    subject = {"type": STORY_VOTE_SUBJECT_TYPE, "id": _subject(summary)}
     return (
-        '<section id="story-react" class="story-react is-placeholder" aria-labelledby="story-react-h">'
-        '<span class="placeholder-tag">Placeholder</span>'
+        '<section id="story-react" class="story-react" aria-labelledby="story-react-h">'
         '<h2 id="story-react-h" class="kicker">Was this story right?</h2>'
-        '<div class="story-vote" role="group" aria-label="Vote on the story">'
-        f'<button type="button" class="story-vote-button" disabled aria-label="Vote the story up">{STORY_VOTE_UP_SVG}</button>'
-        '<span class="story-vote-count">[n]</span>'
-        f'<button type="button" class="story-vote-button" disabled aria-label="Vote the story down">{STORY_VOTE_DOWN_SVG}</button></div>'
-        f'<span class="story-comment-count">{escape(STORY_VOTES_LATER_NOTE)}</span></section>'
+        f'{_island("Vote", subject, css_class="story-vote-island")}'
+        f'{_island("Flag", subject, css_class="story-flag-island")}</section>'
     )
 
 
@@ -2147,7 +2129,7 @@ def _story_page_html(html, summary, site):
         f'<div class="story-provenance">{_story_provenance_html(story, "story")}</div>'
         f'{_story_figure_html(story)}'
         f'<div class="story-body">{_story_body_with_citations(body_html, story)}</div>'
-        f'{_story_proposal_html(story)}{_story_react_placeholder_html()}{_story_sources_html(story)}'
+        f'{_story_proposal_html(story)}{_story_react_html(summary)}{_story_sources_html(story)}'
         f'</article>{_story_rail_html(story, site)}</div></div>'
     )
 
@@ -2233,6 +2215,103 @@ def _landing_lead_for_section(page, section_name, label):
     return _landing_lead_story_html(story) if story else _landing_lead_html(label)
 
 
+def _citation_page_path(url):
+    if not url:
+        return None
+    path = urlparse(url).path
+    if path.endswith("/index.html"):
+        path = path[: -len("index.html")]
+    trimmed = path.strip("/")
+    return f"/{trimmed}/" if trimmed else None
+
+
+def _approved_story_records(site):
+    def build():
+        ordered = sorted(
+            (
+                (summary, _read_story(summary))
+                for summary in site.items
+                if _is_story(summary) and _story_is_approved(summary)
+            ),
+            key=lambda pair: (pair[1]["approved_at"] or "", pair[0].slug),
+            reverse=True,
+        )
+        records = []
+        for summary, story in ordered:
+            story["url"] = _signal_url(summary)
+            numbers_by_path = {_citation_page_path(cite["url"]): cite["n"] for cite in sorted(story["cites"], key=lambda cite: -cite["n"])}
+            numbers_by_path.pop(None, None)
+            story["cited_paths"] = numbers_by_path
+            records.append(story)
+        return records
+
+    return site.memo(APPROVED_STORIES_MEMO, build)
+
+
+def _story_approval_text(story):
+    parts = [f'Approved by <b>{escape(story["approved_by"])}</b>' if story["approved_by"] else "Approved"]
+    if story["approved_at"]:
+        parts.append(escape(_full_date_label(story["approved_at"])))
+    return " &middot; ".join(parts)
+
+
+def _stories_citing_signal(site, signal_path):
+    return [(story, story["cited_paths"][signal_path]) for story in _approved_story_records(site) if signal_path in story["cited_paths"]]
+
+
+def _stories_citing_signal_html(summary, site):
+    if site is None:
+        return ""
+    citing = _stories_citing_signal(site, _signal_url(summary))
+    if not citing:
+        return ""
+    rows = "".join(
+        f'<li><a class="signal-story-title" href="{escape(story["url"], quote=True)}">{escape(story["title"])}</a>'
+        f'<span class="signal-story-meta">Cited as [{number}] &middot; {_story_approval_text(story)}</span></li>'
+        for story, number in citing
+    )
+    return (
+        '<section class="signal-rail-block signal-stories" aria-labelledby="signal-stories-h">'
+        f'<h2 id="signal-stories-h">Appears in these stories</h2><ul class="signal-story-list">{rows}</ul></section>'
+    )
+
+
+def _topic_signal_paths(site, tag):
+    return {
+        _signal_url(summary)
+        for summary in site.items
+        if summary.type not in (WIKI_ITEM_TYPE, PAGE_ITEM_TYPE) and not _is_story(summary) and _read_item(summary)["tags"][:1] == [tag]
+    }
+
+
+def _story_names_concept(story, names):
+    return any(concept["name"].lower() in names for concept in story["concepts"])
+
+
+def _stories_for_topic(site, key, label, tag):
+    names = {label.lower(), key.lower()}
+    signal_paths = _topic_signal_paths(site, tag)
+    return [
+        story for story in _approved_story_records(site)
+        if _story_names_concept(story, names) or signal_paths & set(story["cited_paths"])
+    ]
+
+
+def _concept_stories(page, attributes):
+    stories = _stories_for_topic(page.site, attributes["key"], attributes["label"], attributes["tag"])
+    if not stories:
+        return ""
+    rows = "".join(
+        f'<li><a class="concept-story-title" href="{escape(story["url"], quote=True)}">{escape(story["title"])}</a>'
+        f'<span class="concept-note">{_story_approval_text(story)}</span></li>'
+        for story in stories
+    )
+    return (
+        '<section class="concept-column-narrow concept-stories" aria-labelledby="stories-h">'
+        f'<h2 id="stories-h">Stories that cite it</h2><ul class="concept-story-list">{rows}</ul></section>'
+    )
+
+
 def block(name, attributes, page):
     if name in MAP_BLOCK_NAMES:
         return _map_block(name, attributes, page)
@@ -2244,6 +2323,8 @@ def block(name, attributes, page):
         return _stories_block(page, attributes)
     if name == "topic-board":
         return _topic_board(page, attributes)
+    if name == "concept-stories":
+        return _concept_stories(page, attributes)
     if name in CONCEPT_BLOCKS:
         return CONCEPT_BLOCKS[name](page, attributes)
     raise ValueError(f"unknown block {name!r}")
