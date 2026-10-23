@@ -36,7 +36,13 @@ NEWSLETTER_HEADING = "Get The Weekly by email"
 NEWSLETTER_DEK = "Tick the lists you want: The Weekly, and a short alert when something is added to a section. Nothing is sent until you confirm your address from the email we send you."
 NEWSLETTER_FEED_NOTE = 'Prefer a feed? <a href="/feed.xml">RSS</a> carries the latest items.'
 
-DEPENDS_ON = {"*": [], "item": ["*"]}
+DEPENDS_ON = {
+    "*": [],
+    "item": ["*"],
+    "listing:shipped": ["shipped", "stories"],
+    "listing:open-weights": ["open-weights", "stories"],
+    "listing:decisions": ["decisions", "stories"],
+}
 
 MINIMUM_SCORE = 1.0
 MAXIMUM_SCORE = 5.0
