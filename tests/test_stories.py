@@ -204,3 +204,30 @@ class StoriesFallbackTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class StoryTimestampTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+
+        hooks_path = Path(__file__).resolve().parent.parent / "web" / "hooks.py"
+        specification = importlib.util.spec_from_file_location("shipped_hooks_for_story_timestamps", hooks_path)
+        cls.hooks = importlib.util.module_from_spec(specification)
+        specification.loader.exec_module(cls.hooks)
+
+    def test_full_date_label_reads_dates_and_iso_datetimes(self):
+        from datetime import datetime, timezone
+
+        self.assertEqual(self.hooks._full_date_label("2026-10-22"), "22 Oct 2026")
+        self.assertEqual(self.hooks._full_date_label("2026-10-22T23:50:00Z"), "22 Oct 2026")
+        self.assertEqual(self.hooks._full_date_label("2026-10-22T23:50:00+00:00"), "22 Oct 2026")
+        self.assertEqual(self.hooks._full_date_label(self.hooks._timestamp_text(datetime(2026, 10, 22, 23, 50, tzinfo=timezone.utc))), "22 Oct 2026")
+
+    def test_approval_times_keep_second_precision_for_ordering(self):
+        from datetime import datetime, timezone
+
+        earlier = self.hooks._timestamp_text(datetime(2026, 10, 22, 23, 50, 0, tzinfo=timezone.utc))
+        later = self.hooks._timestamp_text(datetime(2026, 10, 22, 23, 50, 1, tzinfo=timezone.utc))
+        self.assertLess(earlier, later)
+        self.assertEqual(self.hooks._timestamp_text("2026-10-22T23:50:01Z"), "2026-10-22T23:50:01Z")

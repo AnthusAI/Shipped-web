@@ -373,9 +373,15 @@ def _score_dimension_html(label, score, note=None):
 
 def _full_date_label(iso_date):
     try:
-        return datetime.strptime(iso_date, "%Y-%m-%d").strftime("%-d %b %Y")
+        return datetime.fromisoformat(str(iso_date).replace("Z", "+00:00")).strftime("%-d %b %Y")
     except (TypeError, ValueError):
         return iso_date or ""
+
+
+def _timestamp_text(value):
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    return _text(value)
 
 
 def _topic_of(item):
@@ -1989,7 +1995,7 @@ def _read_story(summary, entry=None):
         "proposes": _read_story_proposal(front),
         "drafted_by_ai": drafting.get("by") == STORY_AGENT_AUTHOR,
         "approved_by": _text(approval.get("by")),
-        "approved_at": _date_text(approval.get("at")),
+        "approved_at": _timestamp_text(approval.get("at")),
     }
 
 
