@@ -112,6 +112,7 @@ export default defineSite({
         reservedConcurrency: 10,
         moderation: { mode: "human" },
         subjects: { types: ["item", "submission", "story", "proposal"] },
+        proposals: { publish: true },
       },
     ],
     features: {
