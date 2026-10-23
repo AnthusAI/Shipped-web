@@ -59,6 +59,8 @@ npm install --package-lock-only
 (cd infra && npm install --package-lock-only)
 ```
 
+**Before bumping Papyrus past 5.32.0:** Papyrus #641 makes proposals private by default; the snapshot only publishes `/_data/proposals/*` when the site sets `proposals.publish: true`. Shipped renders `/proposals/` publicly, so add that setting, in the place Papyrus `docs/reader-steering.md` names, in the same PR as the bump. Otherwise the queue goes empty on the next snapshot.
+
 **Deploy:** merge to `main`. The push run deploys through OIDC, and the `current-main` job stops a late run from deploying an older commit over a newer one. If GitHub does not create the push run (an Actions incident), and only with the owner's OK, start the same job by hand:
 
 ```bash
