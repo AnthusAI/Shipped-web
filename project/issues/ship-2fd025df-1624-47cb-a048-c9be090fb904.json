@@ -3,7 +3,7 @@
   "title": "AI trend stories from the knowledge snapshot, with editor approval",
   "description": "Needs Papyrus: a story pipeline that drafts trend and cluster stories from the knowledge snapshot (trends, clusters, new relations), citing signals, and posts them to Proposals as public drafts.\n\nEditors approve the copy and the figure. Figures are drawn from map data, such as the lineage diagram, so no stock images are needed.\n\nQuality matters more than volume: start with 1-2 stories a week, and have every factual claim traced to a cited signal.\n\nAcceptance: one real trend story goes from draft, through steering and editor approval, to the home lead slot.",
   "type": "story",
-  "status": "open",
+  "status": "in_progress",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -15,9 +15,17 @@
       "type": "blocked-by"
     }
   ],
-  "comments": [],
+  "comments": [
+    {
+      "id": "35c4167f-07a3-44bc-a411-e2ee2104580c",
+      "author": "home",
+      "text": "In progress. The manual pipeline is proven: three AI-drafted stories with cited claims, approved by Ryan and published 2026-10-23. The automated pipeline from the snapshot is the Papyrus side (PPY-fb4dfa).",
+      "created_at": "2026-10-23T13:25:36.585155Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T15:29:00.014134Z",
-  "updated_at": "2026-10-22T15:29:00.198463Z",
+  "updated_at": "2026-10-23T13:25:36.610325Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

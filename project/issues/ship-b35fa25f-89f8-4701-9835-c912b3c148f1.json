@@ -3,7 +3,7 @@
   "title": "Collaborative voting pilot",
   "description": "Pilot reader and collaborative voting on items as input to the ranking. The core capability is future Papyrus work: link the Papyrus initiative here once it is filed (Papyrus board, PPY-).",
   "type": "story",
-  "status": "blocked",
+  "status": "in_progress",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -36,10 +36,17 @@
       "text": "Blocked 2026-10-22: the voting pilot needs real reader sign-ins. Components are live (30 Vote, 30 UsedIt, ReaderSignIn); Google still answers redirect_uri_mismatch until Ryan adds the papyrus-shipped-cms URIs (ship-63b07d).",
       "created_at": "2026-10-22T11:57:00.560432Z",
       "comment_type": "default"
+    },
+    {
+      "id": "fcdec364-312b-4108-8833-d4168805709d",
+      "author": "home",
+      "text": "Unblocked: Google sign-in works (ship-63b07d). The islands are deployed; waiting for the first real signed-in use.",
+      "created_at": "2026-10-23T13:25:36.823237Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T11:42:25.120429Z",
-  "updated_at": "2026-10-22T11:57:00.560457Z",
+  "updated_at": "2026-10-23T13:25:36.852898Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

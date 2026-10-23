@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "e854b8e0-9317-42f7-b2d0-d9788d69b95e",
+  "issue_id": "ship-80fa0142-3ba7-4866-b4e8-855d4e686516",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-23T13:25:36.878Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Re-apply the Papyrus bump on the patched release, with proposals.publish",
+    "description": "Shipped-web 09133d9 bumped to Papyrus 5.33.0 with `proposals: { publish: true }`. Amplify job 69 then failed at the CDK assembly: FunctionDirectiveStack had 505 resources against a maximum of 500, an engine problem. 5c43894 reverted to 5.31.0 so main stays deployable.\n\nNext: when the Papyrus patch (5.33.1 or later) is on both npm and PyPI:\n- re-apply the bump from branch chore/papyrus-5.33.0, updating the version numbers to the patch;\n- keep `proposals: { publish: true }` and its test;\n- deploy, then check /proposals/ and /_data/proposals/index.json.\n\nAcceptance: the deploy succeeds, proposals stay public, and the newsroom shows the Notification Center.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

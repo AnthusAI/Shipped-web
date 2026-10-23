@@ -24,10 +24,17 @@
       "text": "2026-10-22: Repositioning decided with the product owner. Shipped moves from a verdict board to a living map with three layers (signals, the map, AI-written stories), steered by signed-in readers, with an editor tier that can override them. Tagline: \"In the wild, and mapped as it moves.\" Planned as three epics: ship-573e70 (vocabulary, statuses, dimensions; site only; do before sign-in opens), ship-f4cd69 (page layouts from the round-3 design) and ship-054405 (engine-backed features). Design canvas: https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r",
       "created_at": "2026-10-22T15:29:07.205908Z",
       "comment_type": "default"
+    },
+    {
+      "id": "b535879f-c055-484c-a934-3b91733839a9",
+      "author": "home",
+      "text": "Status 2026-10-23 (pausing for a day).\n\nLive:\n- the living-map redesign, the label logotype with a daily barcode, and the tagline 'New arrivals in machine learning.';\n- 70 signals on the new statuses and dimensions;\n- the periodic table, Graph and River;\n- three approved stories leading Front and two sections, with story votes and citations;\n- Underrated and Nearby;\n- Papyrus 5.31.0 with votes on items, submissions, stories and proposals;\n- the branded newsletter (closed);\n- the unattended weekly knowledge run (Mondays 05:00 UTC);\n- 376 wiki pages.\n\nOpen:\n- ship-37026d, the first proposal: needs Ryan's `papyrus login`, run twice;\n- ship-b3b934: one real Google sign-in and vote;\n- the Papyrus bump re-apply on the engine patch, with proposals.publish;\n- the GA4 consent decision: Shipped is analytics_only; the reported switch to the anth.us standard is awaiting Ryan's direct confirmation;\n- the sponsorship epic, never filed: awaiting Ryan's go-ahead;\n- docs PR #80, awaiting review.",
+      "created_at": "2026-10-23T13:25:36.909011Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-21T11:42:18.979878Z",
-  "updated_at": "2026-10-22T15:29:07.205931Z",
+  "updated_at": "2026-10-23T13:25:36.909043Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

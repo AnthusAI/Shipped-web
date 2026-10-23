@@ -3,17 +3,25 @@
   "title": "Story page template from the round-2 design",
   "description": "Build the story page template to the Story artboard (round 2, https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r), so trend stories have somewhere to land. Round 3 doesn't change this page.\n\nThe page:\n- headline and standfirst;\n- a figure drawn from map data, with caption and credit;\n- the provenance trail (\"Drafted by AI · N readers steered it · Approved by ‹handle› · DATE\");\n- body text with numbered citations to signals and concept chips;\n- a \"What this changes on the map\" box;\n- \"Was this story right?\" with up/down votes and \"This is wrong\";\n- signals cited, concepts in the story, and related stories.\n\nUntil AI trend stories exist (ship-2fd025), use one tagged sample story, and keep the vote controls as placeholders until voting on stories exists (ship-15b04c). Start after Phase 1 (ship-573e70).\n\nAcceptance: the sample story page matches the artboard in light and dark at 1440 and 390, and every placeholder is tagged.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "ed74c21a-f654-4908-b44e-66ee737b02d6",
+      "author": "home",
+      "text": "Done and live: #76, #78 and b541338. Three stories approved by Ryan are live under /stories/; the story pages have lineage figures, citations and real story votes and flags.",
+      "created_at": "2026-10-23T13:25:17.394864Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T16:24:13.329478Z",
-  "updated_at": "2026-10-22T16:24:13.329552Z",
-  "closed_at": null,
+  "updated_at": "2026-10-23T13:25:17.418132Z",
+  "closed_at": "2026-10-23T13:25:17.418087Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
