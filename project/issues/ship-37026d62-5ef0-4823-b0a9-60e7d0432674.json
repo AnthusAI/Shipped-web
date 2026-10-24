@@ -22,10 +22,17 @@
       "text": "Blocked. The renderer is live (#77, plus pressed-state votes), and /proposals/ keeps its placeholder while /_data/proposals/index.json is 404. Two things are needed: (1) Ryan runs `papyrus login` twice, with the admin group added between the runs, so the first proposal 'decision-model lineage' (kind new_concept) can be filed and published; (2) from Papyrus 5.33.0, proposals need `proposals: { publish: true }`, which ships with the re-applied bump.",
       "created_at": "2026-10-23T13:25:17.856266Z",
       "comment_type": "default"
+    },
+    {
+      "id": "7398de52-fb7a-4b90-8b70-d637f1c02f1a",
+      "author": "home",
+      "text": "2026-10-24: Ryan is signed in and in the admin group, and Papyrus 5.33.1 with proposals.publish is live. Filing the first proposal fails with 'Cannot return null for non-nullable type String (/fileProposal/status)'. Engine cause: the Amplify Lambda payload has fieldName at the top level and no 'info' key, but the reader-steering handler routes staff mutations only when 'info' is present, so the call falls through to the public reader path. moderateReader is affected the same way. Reported to the Papyrus session; waiting on the patch release, then the pin bump, then file 'decision-model lineage' (body ready).",
+      "created_at": "2026-10-24T17:10:12.848007Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T15:28:59.964773Z",
-  "updated_at": "2026-10-23T13:25:36.556811Z",
+  "updated_at": "2026-10-24T17:10:12.848030Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",
