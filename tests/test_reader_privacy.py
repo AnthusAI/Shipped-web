@@ -68,12 +68,13 @@ class BuiltPagesTest(unittest.TestCase):
         self.assertIn('href="/policies/#privacy"', page)
         self.assertIn('href="#cookie-settings"', page)
 
-    def test_accept_never_grants_the_advertising_signals_and_the_banner_does_not_offer_advertising(self):
+    def test_consent_follows_the_anthus_standard_with_advertising_only_after_accept(self):
         page = self.pages["index.html"]
-        self.assertIn("ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:v", page)
-        self.assertNotIn("ad_storage:v", page)
-        self.assertIn("We do not use them for advertising.", page)
-        self.assertNotIn("if you agree, for advertising", page)
+        self.assertIn("ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500,region:[", page)
+        self.assertIn("ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'", page)
+        self.assertIn("ad_storage:v,ad_user_data:v,ad_personalization:v,analytics_storage:v", page)
+        self.assertIn("if you agree, for advertising", page)
+        self.assertNotIn("We do not use them for advertising.", page)
 
     def test_the_whole_built_site_passes_the_reader_privacy_scan(self):
         self.assertEqual(reader_privacy.scan_files(self.pages), {})
