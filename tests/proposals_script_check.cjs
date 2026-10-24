@@ -45,6 +45,19 @@ assert.ok(script.votingEnabled({ papyrusReader: { voteSubjects: ["item", "propos
 assert.ok(script.votingEnabled({ papyrusReader: { proposalVoting: true } }));
 assert.ok(!script.votingEnabled({ papyrusReader: { voteSubjects: ["item"] } }));
 assert.ok(!script.votingEnabled({}));
+const trend = entries.find((entry) => entry.id === "fixture-story-three");
+const figure = script.figureHtml(trend);
+assert.ok(figure.startsWith('<figure class="proposals-figure">'));
+assert.ok(figure.includes("Cluster A") && figure.includes("Cluster B") && figure.includes("Source: Shipped knowledge snapshot"));
+assert.ok(figure.includes('stroke-dasharray="7 4"'));
+assert.ok(figure.includes("Cluster A from 1 signals to 9 signals; Cluster B from 5 signals to 2 signals"));
+assert.ok(figure.includes("21 Sep 2026") && figure.includes("19 Oct 2026"));
+assert.ok(!/NaN/.test(figure));
+assert.strictEqual(script.figureHtml(entries.find((entry) => entry.state === "draft")), "");
+assert.strictEqual(script.figureHtml({ evidence: { figure: { type: "bar", x: ["a", "b"], series: [{ values: [1, 2] }] } } }), "");
+assert.strictEqual(script.figureHtml({ evidence: { figure: { type: "line", x: ["a", "b"], series: [{ values: [1] }] } } }), "");
+assert.ok(!script.figureHtml({ evidence: { figure: { type: "line", title: "<script>x</script>", x: ["2026-10-05", "2026-10-12"], series: [{ label: "<b>", values: [1, 2] }] } } }).includes("<script>"));
+assert.ok(script.queueHtml(entries, { group: "stories", sort: "top" }, { enabled: false, mine: {}, baseline: {}, busy: false }, 0).includes("proposals-figure"));
 
 ["draft", "in_steering", "editor_review", "approved", "declined", "overridden_by_editor"].forEach((state) => {
   const mark = script.stateMark(state);

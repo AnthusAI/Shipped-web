@@ -51,6 +51,12 @@
 .proposals-tiers{margin:64px 0}
 .proposals-tiers-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--rule-strong);padding-bottom:10px}
 .proposals-tiers-head h2{margin:0;font-size:25px;font-weight:800;letter-spacing:-.02em}
+.proposals-figure{margin:4px 0;padding:12px 14px;border:1.5px solid var(--rule-strong);background:var(--paper-raised);max-width:640px}
+.proposals-figure-title{margin:0 0 6px;font-weight:700}
+.proposals-figure-unit{font-family:var(--font-mono);font-size:12px;font-weight:400}
+.proposals-figure svg{display:block;width:100%;height:auto;color:var(--ink)}
+.proposals-figure text{font-family:var(--font-mono);font-size:11px;fill:currentColor}
+.proposals-figure figcaption{margin-top:6px;font-family:var(--font-mono);font-size:12px}
 .proposals-tiers-rules{margin:12px 0 0;max-width:72ch}
 .proposals-tiers-list{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(480px,100%),1fr));gap:20px}
 .proposals-tiers-list .proposals-row-title{color:inherit}
