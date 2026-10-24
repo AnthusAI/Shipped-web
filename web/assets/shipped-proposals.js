@@ -34,6 +34,14 @@
     pinned: { word: "Pinned", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 2h4l-.5 4 2.5 2.5H4L6.5 6z"/><path d="M8 8.5V14"/></svg>' },
     held: { word: "On hold", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5.5 3v10M10.5 3v10"/></svg>' }
   };
+  var FIGURE_WIDTH = 560;
+  var FIGURE_HEIGHT = 200;
+  var FIGURE_PADDING = { top: 14, right: 120, bottom: 28, left: 44 };
+  var FIGURE_SERIES_STYLES = [
+    { dash: "", marker: "circle" },
+    { dash: "7 4", marker: "square" },
+    { dash: "1.5 3.5", marker: "triangle" }
+  ];
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   function escapeHtml(value) {
@@ -276,6 +284,7 @@
       + (entry.summary ? '<p class="proposals-row-change">' + escapeHtml(entry.summary) + "</p>" : "")
       + (targets.length ? '<p class="proposals-row-targets">Touches ' + targets.map(function (name) { return "<b>" + escapeHtml(name) + "</b>"; }).join(", ") + "</p>" : "")
       + (evidence ? '<p class="proposals-row-evidence">Evidence · ' + escapeHtml(evidence) + "</p>" : "")
+      + figureHtml(entry)
       + decisionLineHtml(entry)
       + excludedHtml(entry)
       + '<p class="proposals-vote-note" role="status" aria-live="polite" data-proposal-note="' + escapeHtml(entry.id) + '"></p>'
@@ -499,6 +508,83 @@
     render();
   }
 
+  function figureOf(entry) {
+    var figure = entry.evidence && typeof entry.evidence === "object" ? entry.evidence.figure : null;
+    if (!figure || figure.type !== "line" || !Array.isArray(figure.x) || figure.x.length < 2 || !Array.isArray(figure.series)) return null;
+    var series = figure.series.filter(function (line) {
+      return line && Array.isArray(line.values) && line.values.length === figure.x.length;
+    }).slice(0, FIGURE_SERIES_STYLES.length);
+    return series.length ? { figure: figure, series: series } : null;
+  }
+
+  function finiteValue(value) {
+    return value !== null && value !== undefined && value !== "" && isFinite(Number(value));
+  }
+
+  function markerPath(kind, x, y) {
+    if (kind === "square") return "M" + (x - 3) + " " + (y - 3) + "h6v6h-6z";
+    if (kind === "triangle") return "M" + x + " " + (y - 3.8) + "l3.8 6.6h-7.6z";
+    return "M" + (x - 3.2) + " " + y + "a3.2 3.2 0 1 0 6.4 0a3.2 3.2 0 1 0 -6.4 0";
+  }
+
+  function formatFigureValue(value, unit) {
+    return formatNet(Number(value)) + (unit ? " " + unit : "");
+  }
+
+  function figureHtml(entry) {
+    var parsed = figureOf(entry);
+    if (!parsed) return "";
+    var figure = parsed.figure;
+    var values = [];
+    parsed.series.forEach(function (line) { line.values.forEach(function (value) { if (finiteValue(value)) values.push(Number(value)); }); });
+    if (!values.length) return "";
+    var low = Math.min(0, Math.min.apply(null, values));
+    var high = Math.max.apply(null, values);
+    if (high === low) high = low + 1;
+    var plotWidth = FIGURE_WIDTH - FIGURE_PADDING.left - FIGURE_PADDING.right;
+    var plotHeight = FIGURE_HEIGHT - FIGURE_PADDING.top - FIGURE_PADDING.bottom;
+    var lastIndex = figure.x.length - 1;
+    function xAt(index) { return Math.round((FIGURE_PADDING.left + plotWidth * index / lastIndex) * 10) / 10; }
+    function yAt(value) { return Math.round((FIGURE_PADDING.top + plotHeight * (1 - (Number(value) - low) / (high - low))) * 10) / 10; }
+    var unit = figure.unit ? String(figure.unit) : "";
+    var descriptions = [];
+    var lines = parsed.series.map(function (line, seriesIndex) {
+      var style = FIGURE_SERIES_STYLES[seriesIndex];
+      var label = String(line.label || line.signal || "Series " + (seriesIndex + 1));
+      var path = "";
+      var markers = "";
+      var lastPoint = null;
+      var firstValue = null;
+      line.values.forEach(function (value, index) {
+        if (!finiteValue(value)) { path += " "; return; }
+        var x = xAt(index);
+        var y = yAt(value);
+        path += (path === "" || /\s$/.test(path) ? "M" : "L") + x + " " + y;
+        markers += markerPath(style.marker, x, y);
+        if (firstValue === null) firstValue = value;
+        lastPoint = { x: x, y: y, value: value };
+      });
+      if (!lastPoint) return "";
+      descriptions.push(label + " from " + formatFigureValue(firstValue, unit) + " to " + formatFigureValue(lastPoint.value, unit));
+      return '<g class="proposals-figure-series">'
+        + '<path d="' + path.trim() + '" fill="none" stroke="currentColor" stroke-width="2"' + (style.dash ? ' stroke-dasharray="' + style.dash + '"' : "") + "/>"
+        + '<path d="' + markers + '" fill="currentColor"/>'
+        + '<text x="' + (lastPoint.x + 8) + '" y="' + (lastPoint.y + 4) + '">' + escapeHtml(label) + "</text></g>";
+    }).join("");
+    var title = figure.title ? String(figure.title) : "Trend";
+    var axis = '<g class="proposals-figure-axis">'
+      + '<path d="M' + FIGURE_PADDING.left + " " + FIGURE_PADDING.top + "V" + (FIGURE_HEIGHT - FIGURE_PADDING.bottom) + "H" + (FIGURE_WIDTH - FIGURE_PADDING.right) + '" fill="none" stroke="currentColor" stroke-width="1"/>'
+      + '<text x="' + (FIGURE_PADDING.left - 6) + '" y="' + (FIGURE_PADDING.top + 4) + '" text-anchor="end">' + escapeHtml(formatNet(high)) + "</text>"
+      + '<text x="' + (FIGURE_PADDING.left - 6) + '" y="' + (FIGURE_HEIGHT - FIGURE_PADDING.bottom) + '" text-anchor="end">' + escapeHtml(formatNet(low)) + "</text>"
+      + '<text x="' + FIGURE_PADDING.left + '" y="' + (FIGURE_HEIGHT - 8) + '">' + escapeHtml(formatDate(figure.x[0])) + "</text>"
+      + '<text x="' + (FIGURE_WIDTH - FIGURE_PADDING.right) + '" y="' + (FIGURE_HEIGHT - 8) + '" text-anchor="end">' + escapeHtml(formatDate(figure.x[lastIndex])) + "</text></g>";
+    var summary = title + ", weekly" + (unit ? ", in " + unit : "") + ": " + descriptions.join("; ") + ".";
+    var footer = [figure.caption, figure.source ? "Source: " + figure.source : ""].filter(Boolean).map(function (text) { return escapeHtml(String(text)); }).join(" · ");
+    return '<figure class="proposals-figure"><p class="proposals-figure-title">' + escapeHtml(title) + (unit ? ' <span class="proposals-figure-unit">' + escapeHtml(unit) + "</span>" : "") + "</p>"
+      + '<svg viewBox="0 0 ' + FIGURE_WIDTH + " " + FIGURE_HEIGHT + '" role="img" aria-label="' + escapeHtml(summary) + '">' + axis + lines + "</svg>"
+      + (footer ? "<figcaption>" + footer + "</figcaption>" : "") + "</figure>";
+  }
+
   function tiersRowHtml(entry) {
     return '<li class="proposals-card"><div class="proposals-row-tags">' + stateMark(entry.state) + editorMarksHtml(entry)
       + '<span class="kicker proposals-row-kind">' + KIND_LABELS[entry.group] + "</span></div>"
@@ -569,6 +655,7 @@
     ageText: ageText,
     decisionLineHtml: decisionLineHtml,
     excludedHtml: excludedHtml,
+    figureHtml: figureHtml,
     editorDecisions: editorDecisions,
     votingEnabled: votingEnabled,
     stateMark: stateMark,
