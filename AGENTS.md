@@ -92,21 +92,21 @@ aws amplify start-job --app-id dkycd9pntgo6d --branch-name main --job-type RELEA
 - **Prospectus:** reader identity. Tell the Prospectus session before anything touches Prospectus `main`.
 - **Owner decisions:** Ryan decides product and policy. A change he relays through another session is confirmed with him before it is acted on.
 
-## Current state (2026-10-23)
+## Current state (2026-10-24)
 
 **Live:**
+- GA4 with the anth.us standard Consent Mode (2026-10-24, Ryan's decision): Accept all grants analytics and the three ad signals; Reject all denies all; the EEA, UK and CH start denied; `analytics_only` stays off; no reader identity is sent.
 - the living-map redesign, with the label logotype and daily barcode;
 - Front, the Map (periodic table, graph, river), signal, concept, section and story pages, Submit, The Weekly and Proposals;
 - 70 signals rescored on the new dimensions;
 - three approved stories, leading Front and two section pages;
-- Papyrus 5.31.0, with voting on items, submissions, stories and proposals;
+- Papyrus 5.33.1, with voting on items, submissions, stories and proposals, `proposals: { publish: true }`, and the newsroom Notification Center and review requests;
 - the branded newsletter, with one-click unsubscribe proven server-side;
 - the unattended weekly knowledge run, with about 376 wiki pages.
 
 **Open:**
 - The first proposal needs Ryan's editor login (`papyrus login`) before it can be filed. Until then the Proposals placeholders stay.
 - A real end-to-end Google sign-in and vote by a person is still to be confirmed. The server path was verified with a synthetic reader.
-- GA4 consent is currently `analytics_only: true`, with the "we do not use them for advertising" banner. A reported change to the anth.us standard (ad signals granted on Accept) is **awaiting the owner's confirmation**; until then, leave it as it is.
 - The 26-week river fills in as weekly history accumulates.
 
 ## Where to look next
