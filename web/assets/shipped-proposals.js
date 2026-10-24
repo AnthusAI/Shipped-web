@@ -30,6 +30,10 @@
     declined: { word: "Declined", className: "proposals-mark-declined", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>' },
     overridden_by_editor: { word: "Overridden by editor", className: "proposals-mark-overridden", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1.8l5.2 2v4.1c0 3.2-2.3 5.4-5.2 6.3-2.9-.9-5.2-3.1-5.2-6.3V3.8z"/></svg>' }
   };
+  var EDITOR_MARKS = {
+    pinned: { word: "Pinned", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 2h4l-.5 4 2.5 2.5H4L6.5 6z"/><path d="M8 8.5V14"/></svg>' },
+    held: { word: "On hold", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5.5 3v10M10.5 3v10"/></svg>' }
+  };
   var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   function escapeHtml(value) {
@@ -69,20 +73,24 @@
     return isFinite(parsed) ? parsed : 0;
   }
 
+  function pinnedFirst(compare) {
+    return function (a, b) { return ((b.pinned === true) - (a.pinned === true)) || compare(a, b); };
+  }
+
   function sortEntries(entries, sortName) {
     var copy = entries.slice();
     var byNewest = function (a, b) { return timeOf(b, "createdAt") - timeOf(a, "createdAt"); };
-    if (sortName === "new") return copy.sort(byNewest);
+    if (sortName === "new") return copy.sort(pinnedFirst(byNewest));
     if (sortName === "controversial") {
-      return copy.sort(function (a, b) {
+      return copy.sort(pinnedFirst(function (a, b) {
         var left = voteCounts(a);
         var right = voteCounts(b);
         return (Math.min(right.up, right.down) - Math.min(left.up, left.down))
           || ((right.up + right.down) - (left.up + left.down))
           || byNewest(a, b);
-      });
+      }));
     }
-    return copy.sort(function (a, b) { return (voteCounts(b).net - voteCounts(a).net) || byNewest(a, b); });
+    return copy.sort(pinnedFirst(function (a, b) { return (voteCounts(b).net - voteCounts(a).net) || byNewest(a, b); }));
   }
 
   function entriesInGroup(entries, group) {
@@ -170,6 +178,31 @@
     return '<span class="proposals-mark ' + mark.className + '">' + mark.icon + label + "</span>";
   }
 
+  function editorMarksHtml(entry) {
+    return ["pinned", "held"].filter(function (flag) { return entry[flag] === true; }).map(function (flag) {
+      return '<span class="proposals-mark proposals-mark-' + flag + '">' + EDITOR_MARKS[flag].icon + EDITOR_MARKS[flag].word + "</span>";
+    }).join("");
+  }
+
+  function excludedVotes(entry) {
+    return entry.excluded && typeof entry.excluded === "object" ? numberOrZero(entry.excluded.votes) : 0;
+  }
+
+  function excludedHtml(entry) {
+    var count = excludedVotes(entry);
+    if (count <= 0) return "";
+    var text = entry.excluded.note || "Excluded " + pluralise(count, "vote", "votes") + ". They no longer count.";
+    return '<p class="proposals-excluded">' + escapeHtml(text) + "</p>";
+  }
+
+  function editorDecisions(entries) {
+    return entries.filter(function (entry) {
+      return !!(entry.override && entry.override.result) || excludedVotes(entry) > 0;
+    }).sort(function (a, b) {
+      return timeOf(b.override || {}, "at") - timeOf(a.override || {}, "at") || timeOf(b, "updatedAt") - timeOf(a, "updatedAt");
+    });
+  }
+
   function provenanceLabel(entry) {
     var mark = STATE_MARKS[entry.state];
     var label = String(entry.label || "");
@@ -178,7 +211,7 @@
   }
 
   function hasDecisionLine(entry) {
-    return entry.state === "overridden_by_editor" || !!(entry.decision && entry.decision.result);
+    return entry.state === "overridden_by_editor" || !!(entry.override && entry.override.result) || !!(entry.decision && entry.decision.result);
   }
 
   function communityText(entry) {
@@ -195,7 +228,7 @@
 
   function decisionLineHtml(entry) {
     if (!hasDecisionLine(entry)) return "";
-    var decision = entry.decision || {};
+    var decision = (entry.override && entry.override.result ? entry.override : entry.decision) || {};
     var result = decision.result || decision.state || "";
     var editorPart = result ? "<b>" + escapeHtml(capitalise(result)) + "</b>" : "<b>Decision recorded</b>";
     if (decision.reason) editorPart += ", “" + escapeHtml(decision.reason) + "”";
@@ -235,7 +268,7 @@
     var metaParts = [ageText(entry.createdAt, now), pluralise(comments, "comment", "comments")].filter(Boolean);
     return '<li class="proposals-row" id="proposal-' + escapeHtml(entry.id) + '">'
       + voteControlsHtml(entry, voteState)
-      + '<div class="proposals-row-body"><div class="proposals-row-tags">' + stateMark(entry.state)
+      + '<div class="proposals-row-body"><div class="proposals-row-tags">' + stateMark(entry.state) + editorMarksHtml(entry)
       + '<span class="kicker proposals-row-kind">' + KIND_LABELS[entry.group] + "</span>"
       + (provenanceLabel(entry) ? '<span class="proposals-row-label">' + escapeHtml(provenanceLabel(entry)) + "</span>" : "")
       + '<span class="proposals-row-meta">' + escapeHtml(metaParts.join(" · ")) + "</span></div>"
@@ -244,6 +277,7 @@
       + (targets.length ? '<p class="proposals-row-targets">Touches ' + targets.map(function (name) { return "<b>" + escapeHtml(name) + "</b>"; }).join(", ") + "</p>" : "")
       + (evidence ? '<p class="proposals-row-evidence">Evidence · ' + escapeHtml(evidence) + "</p>" : "")
       + decisionLineHtml(entry)
+      + excludedHtml(entry)
       + '<p class="proposals-vote-note" role="status" aria-live="polite" data-proposal-note="' + escapeHtml(entry.id) + '"></p>'
       + "</div></li>";
   }
@@ -307,7 +341,7 @@
 
   function votingEnabled(scope) {
     var settings = (scope && scope.papyrusReader) || {};
-    return settings.proposalVoting === true;
+    return settings.proposalVoting === true || (Array.isArray(settings.voteSubjects) && settings.voteSubjects.indexOf("proposal") >= 0);
   }
 
   function postVote(scope, proposalId, value) {
@@ -465,6 +499,21 @@
     render();
   }
 
+  function tiersRowHtml(entry) {
+    return '<li class="proposals-card"><div class="proposals-row-tags">' + stateMark(entry.state) + editorMarksHtml(entry)
+      + '<span class="kicker proposals-row-kind">' + KIND_LABELS[entry.group] + "</span></div>"
+      + '<a class="proposals-row-title" href="/proposals/#proposal-' + escapeHtml(entry.id) + '">' + escapeHtml(entry.title) + "</a>"
+      + decisionLineHtml(entry) + excludedHtml(entry) + "</li>";
+  }
+
+  function mountTiers(section, entries) {
+    var list = section.querySelector("[data-proposals-tiers-list]");
+    var decided = editorDecisions(entries);
+    if (!list || !decided.length) return;
+    list.innerHTML = decided.map(tiersRowHtml).join("");
+    section.setAttribute("data-proposals-state", "live");
+  }
+
   function fetchIndex(scope) {
     var settings = readSettings(scope);
     return scope.fetch(settings.base + INDEX_PATH, { credentials: "omit", cache: "no-cache" })
@@ -503,6 +552,7 @@
           if (kind === "queue") mountQueue(section, entries, scope, voteState, now);
           else if (kind === "home") mountHome(section, entries, scope, voteState);
           else if (kind === "concept") mountConcept(section, entries, scope, voteState);
+          else if (kind === "tiers") mountTiers(section, entries);
         });
       });
     });
@@ -518,6 +568,9 @@
     formatNet: formatNet,
     ageText: ageText,
     decisionLineHtml: decisionLineHtml,
+    excludedHtml: excludedHtml,
+    editorDecisions: editorDecisions,
+    votingEnabled: votingEnabled,
     stateMark: stateMark,
     provenanceLabel: provenanceLabel,
     queueHtml: queueHtml,

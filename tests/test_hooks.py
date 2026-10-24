@@ -521,7 +521,7 @@ class HooksProjectionTest(unittest.TestCase):
 
     def test_proposals_page_explains_steering_and_keeps_the_queue_as_a_placeholder(self):
         page = self._page("proposals")
-        for text in ("AI proposes. You steer. Editors decide.", "Draft · not yet approved", "How steering works", "Karma is shown but never gates voting", "both results stay visible, with a reason", "Sign in with Google", "Two tiers", "Example only"):
+        for text in ("AI proposes. You steer. Editors decide.", "Draft · not yet approved", "How steering works", "Karma is shown but never gates voting", "both results stay visible, with a reason", "Sign in with Google", "Two tiers", "When editors overrule the community", "data-proposals-tiers-list"):
             self.assertIn(text, page)
         for text in ("Stories", "Concepts", "Map changes", "Top", "New", "Controversial", "Overridden by editor", "Editor review", "In steering"):
             self.assertIn(text, page)
