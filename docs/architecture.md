@@ -32,7 +32,7 @@ Choice: **routes in the CMS app plus one plugin Lambda.** The alternatives were 
 | `GET /api/reader/me` | handle, karma, own votes for the given item ids |
 | `POST /api/reader/handle` | choose the handle once (unique per publication, a reserved-word list) |
 | `POST /api/reader/vote` | upvote toggle on an item |
-| `POST /api/reader/rating` | 1–5 on one dimension; the dimensions are publication data (Shipped: real, useful, notable, novel) |
+| `POST /api/reader/rating` | 1–5 on one dimension; the dimensions are publication data (Shipped: useful, ready, advances, open) |
 | `POST /api/reader/used-it` | "I used it" report (feeds the Shipped rule) |
 | `POST /api/reader/submit` | submit a link; public at once as Pending; extraction is asynchronous |
 | `POST /api/reader/comment` | comment, optionally attached to the reader's rating as its rationale |
