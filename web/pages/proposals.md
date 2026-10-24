@@ -52,34 +52,10 @@
 </ol>
 </section>
 
-<section class="proposals-tiers is-placeholder" aria-labelledby="proposals-tiers-h">
-<span class="placeholder-tag">Placeholder</span>
-<div class="proposals-tiers-head"><span class="cintillo">Two tiers</span><h2 id="proposals-tiers-h">One proposal, as readers and editors see it</h2></div>
-<p class="proposals-example-note">Example only. The numbers, the reason and the editor below are made up to show the layout.</p>
-<div class="proposals-tiers-grid">
-<div>
-<p class="kicker proposals-tiers-label">Reader view</p>
-<div class="proposals-card">
-<div class="proposals-row-tags"><span class="proposals-mark proposals-mark-overridden"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1.8l5.2 2v4.1c0 3.2-2.3 5.4-5.2 6.3-2.9-.9-5.2-3.1-5.2-6.3V3.8z"/></svg>Overridden by editor</span><span class="kicker proposals-row-kind">Map change</span></div>
-<p class="proposals-row-title">[PROPOSAL TITLE]</p>
-<p class="proposals-tier"><span>Community: <b>▲ 42</b></span><span aria-hidden="true">·</span><span>Editor: <b>Declined</b>, “coordinated votes from new accounts”</span><span aria-hidden="true">·</span><span>[editor] · [DATE]</span></p>
-<p class="proposals-excluded">Excluded 18 votes from accounts under 24 h. They no longer count.</p>
-<p class="proposals-row-evidence">Readers see results and reasons, never the controls.</p>
-</div>
-</div>
-<div>
-<p class="kicker proposals-tiers-label">Editor view</p>
-<div class="proposals-card">
-<div class="proposals-row-tags"><span class="proposals-mark proposals-mark-overridden"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1.8l5.2 2v4.1c0 3.2-2.3 5.4-5.2 6.3-2.9-.9-5.2-3.1-5.2-6.3V3.8z"/></svg>Overridden by editor</span><span class="kicker proposals-row-kind">Map change</span><span class="proposals-needs-look">⚑ Needs a look</span></div>
-<p class="proposals-row-title">[PROPOSAL TITLE]</p>
-<div class="proposals-flags"><span class="kicker">Why it needs a look</span><span>⚑ Vote spike: 40 votes in 2 hours, after 2 in the previous day</span><span>⚑ 22 of 42 voters created their accounts today</span></div>
-<p class="proposals-tier"><span>Community: <b>▲ 42</b></span><span aria-hidden="true">·</span><span>Editor: <b>Declined</b>, “coordinated votes from new accounts”</span><span aria-hidden="true">·</span><span>[editor] · [DATE]</span></p>
-<p class="proposals-excluded">Excluded 18 votes from accounts under 24 h · [editor] <span class="proposals-quiet">Undo</span></p>
-<div class="proposals-editor-bar"><span class="kicker">Editor only</span><span class="proposals-quiet">✓ Approve</span><span class="proposals-quiet">✕ Decline</span><span class="proposals-quiet">Pin</span><span class="proposals-quiet">Hold</span><span class="proposals-quiet">Override community result</span><span class="proposals-quiet">Exclude votes…</span></div>
-<p class="proposals-row-evidence">Reason for override: required, shown to readers.</p>
-</div>
-</div>
-</div>
+<section class="proposals-tiers" data-proposals-live="tiers" aria-labelledby="proposals-tiers-h">
+<div class="proposals-tiers-head"><span class="cintillo">Two tiers</span><h2 id="proposals-tiers-h">When editors overrule the community</h2></div>
+<p class="proposals-tiers-rules">Editors can approve, decline, pin or hold a proposal, and can override the community result. An override always shows the community result beside the editor's, with the editor's reason. Editors can also set aside votes from accounts less than a day old; the page says how many, and they can be restored.</p>
+<ol class="proposals-tiers-list" data-proposals-tiers-list><li class="proposals-empty">No editor has overruled the community or set votes aside yet.</li></ol>
 </section>
 </div>
 ::endraw

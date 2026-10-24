@@ -27,6 +27,14 @@
       "by": null,
       "reason": null,
       "at": null
+    },
+    "override": null,
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   },
   {
@@ -57,6 +65,14 @@
       "by": null,
       "reason": null,
       "at": null
+    },
+    "override": null,
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   },
   {
@@ -88,6 +104,14 @@
       "by": null,
       "reason": null,
       "at": null
+    },
+    "override": null,
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   },
   {
@@ -118,6 +142,14 @@
       "by": "Editor",
       "reason": "Well sourced.",
       "at": "2026-10-12T10:00:00Z"
+    },
+    "override": null,
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   },
   {
@@ -148,6 +180,14 @@
       "by": null,
       "reason": null,
       "at": null
+    },
+    "override": null,
+    "pinned": true,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   },
   {
@@ -178,6 +218,14 @@
       "by": null,
       "reason": null,
       "at": null
+    },
+    "override": null,
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   },
   {
@@ -208,6 +256,14 @@
       "by": null,
       "reason": null,
       "at": null
+    },
+    "override": null,
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   },
   {
@@ -238,6 +294,27 @@
       "by": "Editor",
       "reason": "Coordinated votes from new accounts.",
       "at": "2026-10-16T09:00:00Z"
+    },
+    "override": {
+      "result": "declined",
+      "reason": "Coordinated votes from new accounts.",
+      "by": "Editor",
+      "at": "2026-10-16T09:00:00Z"
+    },
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 18,
+      "rules": [
+        {
+          "id": "excl-fixture",
+          "rule": "new-accounts-24h",
+          "label": "Accounts under 24 h",
+          "votes": 18,
+          "at": "2026-10-16T08:00:00Z"
+        }
+      ],
+      "note": "Excluded 18 votes from accounts under 24 h. They no longer count."
     }
   },
   {
@@ -268,6 +345,14 @@
       "by": "Editor",
       "reason": "Too few signals.",
       "at": "2026-10-15T09:00:00Z"
+    },
+    "override": null,
+    "pinned": false,
+    "held": false,
+    "excluded": {
+      "votes": 0,
+      "rules": [],
+      "note": null
     }
   }
 ]

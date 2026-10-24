@@ -19,7 +19,9 @@ assert.strictEqual(script.sortEntries(stories, "new")[0].id, "fixture-story-two"
 assert.strictEqual(script.sortEntries(stories, "controversial")[0].id, "fixture-story-three");
 
 const leaders = script.steeringLeaders(entries, 3);
-assert.deepStrictEqual(plain(leaders.map((entry) => entry.id)), ["fixture-story-one", "fixture-concept-one", "fixture-change-one"]);
+assert.deepStrictEqual(plain(leaders.map((entry) => entry.id)), ["fixture-concept-one", "fixture-story-one", "fixture-change-one"]);
+const concepts = script.entriesInGroup(entries, "concepts");
+["top", "new", "controversial"].forEach((sortName) => assert.strictEqual(script.sortEntries(concepts, sortName)[0].id, "fixture-concept-one", sortName));
 
 const touching = entries.filter((entry) => script.touchesConcept(entry, "Open TTS", "open-tts")).map((entry) => entry.id);
 assert.deepStrictEqual(plain(touching.sort()), ["fixture-change-two", "fixture-concept-one", "fixture-story-two"]);
@@ -34,6 +36,15 @@ const overridden = entries.find((entry) => entry.state === "overridden_by_editor
 const line = script.decisionLineHtml(overridden);
 assert.ok(line.includes("Approved by readers") && line.includes("Declined") && line.includes("Coordinated votes from new accounts."));
 assert.strictEqual(script.decisionLineHtml(entries.find((entry) => entry.state === "draft")), "");
+const overrideOnly = { id: "o", group: "concepts", title: "T", state: "in_steering", votes: { up: 5, down: 0, net: 5 }, communityResult: null, decision: null, override: { result: "approved", reason: "Well sourced.", by: "Ryan", at: "2026-10-24T10:00:00Z" } };
+assert.ok(script.decisionLineHtml(overrideOnly).includes("Approved") && script.decisionLineHtml(overrideOnly).includes("Well sourced.") && script.decisionLineHtml(overrideOnly).includes("Ryan"));
+assert.ok(script.excludedHtml(overridden).includes("Excluded 18 votes"));
+assert.strictEqual(script.excludedHtml(entries.find((entry) => entry.state === "draft")), "");
+assert.deepStrictEqual(plain(script.editorDecisions(entries).map((entry) => entry.id)), ["fixture-change-two"]);
+assert.ok(script.votingEnabled({ papyrusReader: { voteSubjects: ["item", "proposal"] } }));
+assert.ok(script.votingEnabled({ papyrusReader: { proposalVoting: true } }));
+assert.ok(!script.votingEnabled({ papyrusReader: { voteSubjects: ["item"] } }));
+assert.ok(!script.votingEnabled({}));
 
 ["draft", "in_steering", "editor_review", "approved", "declined", "overridden_by_editor"].forEach((state) => {
   const mark = script.stateMark(state);
@@ -46,6 +57,10 @@ const html = script.queueHtml(entries, { group: "stories", sort: "top" }, voteSt
 assert.ok(html.includes("Proposal voting opens soon"));
 assert.ok(html.includes("disabled"));
 assert.ok(!html.includes("[n]"));
+const conceptHtml = script.queueHtml(entries, { group: "concepts", sort: "top" }, voteState, Date.parse("2026-10-22T12:00:00Z"));
+assert.ok(conceptHtml.includes("proposals-mark-pinned") && conceptHtml.includes("Pinned"));
+const changeHtml = script.queueHtml(entries, { group: "map_changes", sort: "top" }, voteState, Date.parse("2026-10-22T12:00:00Z"));
+assert.ok(changeHtml.includes("Excluded 18 votes from accounts under 24 h."));
 
 const hostile = [{ id: "x", group: "stories", title: "<img src=x onerror=alert(1)>", state: "draft", votes: { up: 0, down: 0, net: 0 } }];
 assert.ok(!script.queueHtml(hostile, { group: "stories", sort: "top" }, voteState, 0).includes("<img"));
