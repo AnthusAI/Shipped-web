@@ -3,7 +3,7 @@
   "title": "Front page rebuilt to the new design",
   "description": "Rebuild `web/pages/home.md` to the Main artboard (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r), top to bottom:\n1. a stats row;\n2. the steering invitation, signed in and signed out;\n3. the lead story;\n4. \"The table this week\";\n5. \"The map this week\";\n6. more stories;\n7. Rising concepts;\n8. the Proposals preview;\n9. Underrated;\n10. Latest signals;\n11. The Weekly signup.\n\nStories, the Proposals preview and Underrated ship as placeholders until Reposition 3. Data-driven panels use the existing knowledge blocks.\n\nAcceptance: the live home matches the artboard in light and dark at 1440 and 390, and every placeholder is tagged.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -15,10 +15,18 @@
       "type": "blocked-by"
     }
   ],
-  "comments": [],
+  "comments": [
+    {
+      "id": "0b740608-fd8a-426c-bad6-2c16cc9c5c14",
+      "author": "home",
+      "text": "Done and live: #62, #74, #75 and #76. Front shows a real lead story, 'Also on the map', the table this week, Underrated, rising concepts and latest signals. The only remaining placeholder is the Proposals preview (ship-37026d).",
+      "created_at": "2026-10-23T13:25:17.010880Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T15:28:59.615645Z",
-  "updated_at": "2026-10-22T15:28:59.775714Z",
-  "closed_at": null,
+  "updated_at": "2026-10-23T13:25:17.038300Z",
+  "closed_at": "2026-10-23T13:25:17.038251Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",

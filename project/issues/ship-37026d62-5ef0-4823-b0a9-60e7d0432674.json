@@ -3,7 +3,7 @@
   "title": "Proposals queue live: public AI drafts with states",
   "description": "Needs Papyrus: a Proposal record (story draft, new concept, rename, merge, split, new column, element symbol) with states:\n- Draft\n- In steering\n- Editor review\n- Approved\n- Declined\n- Overridden by editor\n\nDrafts are public and always labelled \"Draft · not yet approved\".\n\nBuild `/proposals/` (tabs Stories, Concepts, Map changes; sort Top, New, Controversial) and the previews on home, concept and story pages.\n\nAcceptance: a real AI proposal appears publicly with its label, and an editor approval moves it to Approved with the decision line shown.",
   "type": "story",
-  "status": "open",
+  "status": "blocked",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -15,9 +15,17 @@
       "type": "blocked-by"
     }
   ],
-  "comments": [],
+  "comments": [
+    {
+      "id": "23870663-6d77-4ffb-b2ed-d3eae2109ce4",
+      "author": "home",
+      "text": "Blocked. The renderer is live (#77, plus pressed-state votes), and /proposals/ keeps its placeholder while /_data/proposals/index.json is 404. Two things are needed: (1) Ryan runs `papyrus login` twice, with the admin group added between the runs, so the first proposal 'decision-model lineage' (kind new_concept) can be filed and published; (2) from Papyrus 5.33.0, proposals need `proposals: { publish: true }`, which ships with the re-applied bump.",
+      "created_at": "2026-10-23T13:25:17.856266Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T15:28:59.964773Z",
-  "updated_at": "2026-10-22T15:29:00.083115Z",
+  "updated_at": "2026-10-23T13:25:36.556811Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

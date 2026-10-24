@@ -3,7 +3,7 @@
   "title": "Public submit-a-link with moderation (human first, AI option)",
   "description": "PPY-5b8cdc and PPY-af98c7. Public at once; human queue with undo; AI mode on GPT-6 Luna.",
   "type": "story",
-  "status": "blocked",
+  "status": "in_progress",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -24,10 +24,17 @@
       "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Blocked on Ryan. Papyrus side is released: submit-a-link (PR #531), moderation (#535) and AI moderation (#537) in 5.21.0; Shipped is pinned to 5.22.0 and https://shipped.anth.us/submit/ renders the Submit island. A real submission needs sign-in, which waits on the Google redirect URIs (ship-63b07d). Not built: extraction after submit (PPY-da545d). Close after a real link is submitted and appears as pending.",
       "created_at": "2026-10-22T10:47:18.434733Z",
       "comment_type": "default"
+    },
+    {
+      "id": "3cab90f0-a1b6-4c48-96a1-e06ac2787bb6",
+      "author": "home",
+      "text": "Unblocked: Google sign-in works (ship-63b07d). The islands are deployed; waiting for the first real signed-in use.",
+      "created_at": "2026-10-23T13:25:36.727780Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T00:58:14.129879Z",
-  "updated_at": "2026-10-22T10:47:18.434770Z",
+  "updated_at": "2026-10-23T13:25:36.749066Z",
   "closed_at": null,
   "agent": {
     "platform": "claude_code",

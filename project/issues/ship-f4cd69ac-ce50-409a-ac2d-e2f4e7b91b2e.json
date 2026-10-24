@@ -3,17 +3,25 @@
   "title": "Reposition 2: new page layouts from the round-3 design",
   "description": "Rebuild the public pages to the round-3 Claude Design canvas (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r):\n- Front;\n- Map, with the periodic table as its first view, then Graph and River;\n- concept, section landing and signal pages;\n- Submit and The Weekly;\n- mobile versions.\n\nParts that need Papyrus features not yet built ship as dimmed placeholders. Starts when round 3 is delivered.",
   "type": "epic",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
   "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "0557ce69-76e7-4b20-a83e-441a389d0c1a",
+      "author": "home",
+      "text": "All children closed and live (2026-10-23).",
+      "created_at": "2026-10-23T13:25:17.788323Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T15:28:59.372296Z",
-  "updated_at": "2026-10-22T15:28:59.372322Z",
-  "closed_at": null,
+  "updated_at": "2026-10-23T13:25:17.820049Z",
+  "closed_at": "2026-10-23T13:25:17.820007Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",

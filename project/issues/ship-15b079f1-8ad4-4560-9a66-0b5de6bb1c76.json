@@ -3,7 +3,7 @@
   "title": "Tagline and masthead: In the wild, and mapped as it moves",
   "description": "Set the tagline to \"In the wild, and mapped as it moves.\" in:\n- `site.tagline` in `web/projection.json`, and the home page title area;\n- the newsletter list descriptions;\n- the llms.txt description.\n\nAlso rewrite `site.description` and the home page description for the three-layer model: signals, the map, stories.\n\nNever repeat the word \"shipped\" in a tagline or strapline.\n\nAcceptance: the masthead, `/llms.txt` and the feed descriptions show the new wording.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -15,10 +15,18 @@
       "type": "blocked-by"
     }
   ],
-  "comments": [],
+  "comments": [
+    {
+      "id": "c53ec6d7-294c-490c-8f8e-e4e81a532a59",
+      "author": "home",
+      "text": "Done and live, with a changed tagline. #60, #69 and #73: the tagline is now 'New arrivals in machine learning.', with the descriptor 'Open weights, decision models, real products. Mapped as they land.'; the label-box logotype carries a daily Code 128 date barcode; the default social card and the barcode web icon and manifest are live.",
+      "created_at": "2026-10-23T13:25:16.899179Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-22T15:28:59.470737Z",
-  "updated_at": "2026-10-22T15:28:59.527888Z",
-  "closed_at": null,
+  "updated_at": "2026-10-23T13:25:16.928584Z",
+  "closed_at": "2026-10-23T13:25:16.928531Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",

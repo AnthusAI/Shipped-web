@@ -3,7 +3,7 @@
   "title": "Submit and The Weekly rebuilt to the new design",
   "description": "Submit:\n- new copy;\n- signals start as Announced;\n- \"On the map\" entity confirmation;\n- the \"Propose a concept or a correction\" entry point (placeholder until Reposition 3).\n\nThe Weekly:\n- the archive article and the 600 px email, in this order: lead essay, what moved on the map, concepts born this week, top proposal, Underrated, \"Also out this week\";\n- AI-drafted parts ship as placeholders until Reposition 3.\n\nArtboards: Submit, Roundup and WeeklyEmail (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r).\n\nAcceptance: `/submit/` and `/roundup/` match the artboards, and a test send of the email template renders at 600 px.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
@@ -17,11 +17,18 @@
       "text": "Unblocked 2026-10-22 by the user: round 3 doesn't change this page, so build it from the round-2 design (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r). Start after Phase 1 (ship-573e70) lands, since both touch web/hooks.py and the shared CSS.",
       "created_at": "2026-10-22T16:24:13.275314Z",
       "comment_type": "default"
+    },
+    {
+      "id": "821bcab9-45fe-49ee-ae3c-5d653805ecc2",
+      "author": "home",
+      "text": "Done and live: #63. The Submit page, The Weekly archive and the sample issue are live.",
+      "created_at": "2026-10-23T13:25:17.349648Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T15:28:59.713398Z",
-  "updated_at": "2026-10-22T16:24:13.275349Z",
-  "closed_at": null,
+  "updated_at": "2026-10-23T13:25:17.372032Z",
+  "closed_at": "2026-10-23T13:25:17.371978Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
