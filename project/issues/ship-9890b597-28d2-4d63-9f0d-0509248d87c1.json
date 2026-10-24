@@ -3,7 +3,7 @@
   "title": "Editor tier: override, vote exclusion and Needs a look",
   "description": "Needs Papyrus:\n- Editors can approve, decline, pin or hold, and override a community result with a required public reason. Readers see both results.\n- Editors can exclude a batch of votes (for example from accounts under 24 hours old), mark an account as spam or limited, and undo either. The public count notes how many votes were excluded and why.\n- A \"Needs a look\" filter catches vote spikes, many new accounts, and community-AI disagreement.\n\nAcceptance: an editor override and a vote exclusion both show publicly with their reasons, and both can be undone.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -26,11 +26,18 @@
       "text": "Open. Waiting on Papyrus PPY-0af7db (editor tier). Proposals data already carries the community result, the decision and the reason, and Shipped renders the two-tier line.",
       "created_at": "2026-10-23T13:25:36.636763Z",
       "comment_type": "default"
+    },
+    {
+      "id": "b9098bdc-652b-4538-8218-1d2ca855eda3",
+      "author": "home",
+      "text": "Done and live 2026-10-24: Papyrus 5.37.0 (#86, Amplify job 77) brings the editor tier (override, pin, hold, vote exclusion, needs-a-look, editor CLI). Shipped #87 (job 78) renders override, excluded, Pinned and On hold in the queue. The Two tiers section is real: it states the rules and lists editor decisions from the published data, with an empty line until one exists. Proposal vote buttons are enabled (they follow voteSubjects). The Proposals page has no placeholders left. Editors use the papyrus proposals CLI until the console has a Proposals view.",
+      "created_at": "2026-10-24T20:19:58.281536Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T15:28:59.996083Z",
-  "updated_at": "2026-10-23T13:25:36.636797Z",
-  "closed_at": null,
+  "updated_at": "2026-10-24T20:19:58.296823Z",
+  "closed_at": "2026-10-24T20:19:58.296793Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
