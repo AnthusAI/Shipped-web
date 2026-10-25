@@ -3,17 +3,25 @@
   "title": "Promotion analytics and outbound links",
   "description": "One small script sends view_promotion once per unit (50% visible for 1 s) and select_promotion on click. Each event carries the standard promotion fields plus topic, match kind and action. Every sponsored link gets rel='sponsored noopener' and UTMs. Extend the reader privacy scan to cover the new events.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 1,
   "assignee": null,
   "creator": null,
   "parent": "ship-322b5331-ed73-4365-91d0-424a60d9842a",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "6089a5bf-f050-4acf-9835-94fbf1ade8ee",
+      "author": "home",
+      "text": "Live 2026-10-25 (Shipped #94, Amplify job 84; Ryan approved the copy and links). select_promotion verified on the live site with the design's fields and no reader identity. view_promotion verified in headless Chrome with live styles: one event per unit, only once it is on screen. rel='sponsored noopener' and UTMs are on every sponsored link. The reader privacy scan covers the new events.",
+      "created_at": "2026-10-25T13:48:09.328195Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-25T13:04:16.160532Z",
-  "updated_at": "2026-10-25T13:04:16.160554Z",
-  "closed_at": null,
+  "updated_at": "2026-10-25T13:48:09.345248Z",
+  "closed_at": "2026-10-25T13:48:09.345210Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
