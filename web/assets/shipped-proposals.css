@@ -67,6 +67,7 @@
   .proposals-head-main,.proposals-how{flex:1 1 100%}
   .proposals-row{flex-direction:column;gap:10px}
   .proposals-tabs button{padding:0 10px;font-size:12px}
+  .proposals-vote button,.front-proposal .front-vote button{width:48px;height:48px}
   .proposals-card{padding:14px}
 }
 
@@ -74,12 +75,17 @@
 .proposals-mark-struck{text-decoration:line-through;text-decoration-thickness:1.5px}
 .proposals-row-label{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
 .proposals-row-targets{margin:0;font-size:14px}
-.proposals-vote button[aria-pressed="true"],.front-vote button[aria-pressed="true"]{background:var(--brand-fill);color:var(--brand-on);border-color:var(--brand-on)}
+.proposals-vote button[aria-pressed="true"],.front-proposal .front-vote button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .proposals-vote button:disabled,.front-vote button:disabled{opacity:.55;cursor:not-allowed}
 .proposals-voting-soon{margin:12px 0 0;font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
 .proposals-vote-note{margin:0;font-size:14px;color:var(--ink)}
 .proposals-vote-note:empty{display:none}
+.proposals-vote-note.is-alert{padding:10px 12px;border:2px solid var(--ink);background:var(--paper-raised);font-weight:700}
+.proposals-vote-note.is-alert a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:2px}
+.proposals-vote-mine{margin:0;font-family:var(--font-mono);font-size:13px;font-weight:700;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
+.proposals-undo{min-height:44px;min-width:44px;padding:0 12px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:inherit;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.proposals-undo:disabled{opacity:.55;cursor:not-allowed}
 .proposals-empty{margin:18px 0;font-size:15px}
 .concept-proposal-row{align-items:center}
 .concept-proposal-row .proposals-vote{order:-1}
-.concept-proposal-row .proposals-vote-note{flex-basis:100%}
+.concept-proposal-row .proposals-vote-note,.concept-proposal-row .proposals-vote-mine{flex-basis:100%}

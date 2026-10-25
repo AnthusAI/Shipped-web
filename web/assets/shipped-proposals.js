@@ -19,6 +19,8 @@
   var SIGN_IN_TEXT = "Sign in to vote on proposals.";
   var SIGN_IN_PATH = "/sign-in/";
   var VOTE_FAILED_TEXT = "Your vote did not go through. Try again later.";
+  var SENDING_TEXT = "Sending\u2026";
+  var STEERING_STATES = ["in_steering", "editor_review"];
 
   var ICON_UP = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l5.5 9h-11z"/></svg>';
   var ICON_DOWN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg>';
@@ -68,6 +70,38 @@
     var down = numberOrZero(votes.down);
     var net = votes.net === undefined || votes.net === null ? up - down : numberOrZero(votes.net);
     return { up: up, down: down, net: net };
+  }
+
+  function indexGeneratedAt(payload) {
+    var parsed = payload && !Array.isArray(payload) ? Date.parse(payload.generatedAt) : NaN;
+    return isFinite(parsed) ? parsed : 0;
+  }
+
+  function ownVoteAdjustment(entry, voteState) {
+    var mine = voteState.mine[entry.id] || 0;
+    if (!mine) return 0;
+    var castAt = voteState.castAt[entry.id];
+    if (castAt !== undefined) return voteState.generatedAt >= castAt ? 0 : mine;
+    var counts = voteCounts(entry);
+    return counts.up + counts.down === 0 && counts.net === 0 ? mine : 0;
+  }
+
+  function shownNetFor(entry, voteState) {
+    var baseline = voteState.baseline[entry.id];
+    if (baseline !== undefined) return baseline;
+    return voteCounts(entry).net + ownVoteAdjustment(entry, voteState);
+  }
+
+  function defaultGroup(entries) {
+    var best = null;
+    var bestCount = 0;
+    GROUP_ORDER.forEach(function (group) {
+      var count = entriesInGroup(entries, group).filter(function (entry) { return STEERING_STATES.indexOf(entry.state) >= 0; }).length;
+      if (count > bestCount) { best = group; bestCount = count; }
+    });
+    if (best) return best;
+    if (entriesInGroup(entries, "stories").length) return "stories";
+    return GROUP_ORDER.filter(function (group) { return entriesInGroup(entries, group).length; })[0] || "stories";
   }
 
   function formatNet(net) {
@@ -246,19 +280,37 @@
       + '<span aria-hidden="true">·</span><span>' + escapeHtml(byPart) + "</span></p>";
   }
 
-  function voteControlsHtml(entry, voteState) {
-    var counts = voteCounts(entry);
+  function voteButtonsHtml(entry, voteState, countClass) {
     var mine = voteState.mine[entry.id] || 0;
-    var baseline = voteState.baseline[entry.id];
-    var shownNet = baseline !== undefined ? baseline : counts.net;
-    var disabled = voteState.enabled ? "" : " disabled";
+    var sending = voteState.sending[entry.id] === true;
+    var disabled = voteState.enabled && !sending ? "" : " disabled";
     var soon = voteState.enabled ? "" : ' title="' + VOTING_SOON_TEXT + '"';
     var title = escapeHtml(entry.title);
-    return '<div class="proposals-vote" role="group" aria-label="Votes on ' + title + '">'
-      + '<button type="button" data-proposal-vote="up" data-proposal-id="' + escapeHtml(entry.id) + '" aria-pressed="' + (mine === 1) + '" aria-label="Vote up: ' + title + '"' + disabled + soon + ">" + ICON_UP + "</button>"
-      + '<span class="proposals-vote-count" aria-label="Net votes">' + formatNet(shownNet) + "</span>"
-      + '<button type="button" data-proposal-vote="down" data-proposal-id="' + escapeHtml(entry.id) + '" aria-pressed="' + (mine === -1) + '" aria-label="Vote down: ' + title + '"' + disabled + soon + ">" + ICON_DOWN + "</button>"
-      + "</div>";
+    var identifier = escapeHtml(entry.id);
+    return '<button type="button" data-proposal-vote="up" data-proposal-id="' + identifier + '" aria-pressed="' + (mine === 1) + '" aria-label="Vote up: ' + title + '"' + disabled + soon + ">" + ICON_UP + "</button>"
+      + '<span class="' + countClass + '" aria-label="Net votes">' + formatNet(shownNetFor(entry, voteState)) + "</span>"
+      + '<button type="button" data-proposal-vote="down" data-proposal-id="' + identifier + '" aria-pressed="' + (mine === -1) + '" aria-label="Vote down: ' + title + '"' + disabled + soon + ">" + ICON_DOWN + "</button>";
+  }
+
+  function voteControlsHtml(entry, voteState) {
+    return '<div class="proposals-vote" role="group" aria-label="Votes on ' + escapeHtml(entry.title) + '">'
+      + voteButtonsHtml(entry, voteState, "proposals-vote-count") + "</div>";
+  }
+
+  function ownVoteLineHtml(entry, voteState) {
+    var mine = voteState.mine[entry.id] || 0;
+    if (!mine) return "";
+    var disabled = voteState.enabled && voteState.sending[entry.id] !== true ? "" : " disabled";
+    return '<p class="proposals-vote-mine">You voted ' + (mine === 1 ? "up" : "down") + " \u00b7 "
+      + '<button type="button" class="proposals-undo" data-proposal-undo data-proposal-id="' + escapeHtml(entry.id) + '"' + disabled + ">Undo</button></p>";
+  }
+
+  function voteNoteHtml(entry, voteState) {
+    var sending = voteState.sending[entry.id] === true;
+    var note = voteState.notes[entry.id];
+    var content = sending ? escapeHtml(SENDING_TEXT) : note ? note.html : "";
+    var alertClass = !sending && note && note.alert ? " is-alert" : "";
+    return '<p class="proposals-vote-note' + alertClass + '" role="status" aria-live="polite" data-proposal-note="' + escapeHtml(entry.id) + '">' + content + "</p>";
   }
 
   function votingNoticeHtml(voteState) {
@@ -287,7 +339,8 @@
       + figureHtml(entry)
       + decisionLineHtml(entry)
       + excludedHtml(entry)
-      + '<p class="proposals-vote-note" role="status" aria-live="polite" data-proposal-note="' + escapeHtml(entry.id) + '"></p>'
+      + ownVoteLineHtml(entry, voteState)
+      + voteNoteHtml(entry, voteState)
       + "</div></li>";
   }
 
@@ -310,32 +363,26 @@
   }
 
   function homeRowHtml(entry, voteState) {
-    var counts = voteCounts(entry);
     var title = escapeHtml(entry.title);
-    var shownNet = voteState.baseline[entry.id] !== undefined ? voteState.baseline[entry.id] : counts.net;
-    var mine = voteState.mine[entry.id] || 0;
-    var disabled = voteState.enabled ? "" : " disabled";
-    var soon = voteState.enabled ? "" : ' title="' + VOTING_SOON_TEXT + '"';
     return '<li class="front-proposal"><div class="front-vote" role="group" aria-label="Votes on ' + title + '">'
-      + '<button type="button" data-proposal-vote="up" data-proposal-id="' + escapeHtml(entry.id) + '" aria-pressed="' + (mine === 1) + '" aria-label="Vote up: ' + title + '"' + disabled + soon + ">" + ICON_UP + "</button>"
-      + '<span class="front-vote-count" aria-label="Net votes">' + formatNet(shownNet) + "</span>"
-      + '<button type="button" data-proposal-vote="down" data-proposal-id="' + escapeHtml(entry.id) + '" aria-pressed="' + (mine === -1) + '" aria-label="Vote down: ' + title + '"' + disabled + soon + ">" + ICON_DOWN + "</button></div>"
+      + voteButtonsHtml(entry, voteState, "front-vote-count") + "</div>"
       + '<div class="front-proposal-body"><div class="front-proposal-tags">' + stateMark(entry.state)
       + '<span class="kicker">' + KIND_LABELS[entry.group] + "</span></div>"
       + '<a class="front-proposal-title" href="/proposals/#proposal-' + escapeHtml(entry.id) + '">' + title + "</a>"
       + (entry.summary ? '<span class="front-proposal-change">' + escapeHtml(entry.summary) + "</span>" : "")
-      + '<p class="proposals-vote-note" role="status" aria-live="polite" data-proposal-note="' + escapeHtml(entry.id) + '"></p></div></li>';
+      + ownVoteLineHtml(entry, voteState)
+      + voteNoteHtml(entry, voteState) + "</div></li>";
   }
 
   function conceptRowHtml(entry, voteState) {
-    var counts = voteCounts(entry);
-    var shownNet = voteState.baseline[entry.id] !== undefined ? voteState.baseline[entry.id] : counts.net;
+    var shownNet = shownNetFor(entry, voteState);
     return '<li class="concept-proposal-row">' + voteControlsHtml(entry, voteState)
       + stateMark(entry.state)
       + '<span class="concept-proposal-kind">' + KIND_LABELS[entry.group] + "</span> "
       + '<a href="/proposals/#proposal-' + escapeHtml(entry.id) + '">' + escapeHtml(entry.title) + "</a> "
       + '<span class="concept-note">' + escapeHtml(pluralise(Math.round(shownNet * 10) / 10, "net vote", "net votes")) + "</span>"
-      + '<p class="proposals-vote-note" role="status" aria-live="polite" data-proposal-note="' + escapeHtml(entry.id) + '"></p></li>';
+      + ownVoteLineHtml(entry, voteState)
+      + voteNoteHtml(entry, voteState) + "</li>";
   }
 
   function dropPlaceholderMarking(section) {
@@ -384,48 +431,47 @@
 
   function wireVotes(container, scope, voteState, entriesById, rerender) {
     container.addEventListener("click", function (event) {
-      var button = event.target.closest && event.target.closest("[data-proposal-vote]");
-      if (!button || !container.contains(button) || button.disabled || voteState.busy) return;
+      var button = event.target.closest && event.target.closest("[data-proposal-vote],[data-proposal-undo]");
+      if (!button || !container.contains(button) || button.disabled) return;
       var proposalId = button.getAttribute("data-proposal-id");
+      if (voteState.sending[proposalId]) return;
+      var isUndo = button.hasAttribute("data-proposal-undo");
       var direction = button.getAttribute("data-proposal-vote") === "up" ? 1 : -1;
       var previous = voteState.mine[proposalId] || 0;
-      var next = previous === direction ? null : direction;
-      voteState.busy = true;
+      var next = isUndo || previous === direction ? null : direction;
+      var shownBefore = shownNetFor(entriesById[proposalId], voteState);
+      voteState.sending[proposalId] = true;
+      delete voteState.notes[proposalId];
+      rerender();
       postVote(scope, proposalId, next).then(function (result) {
-        voteState.busy = false;
+        delete voteState.sending[proposalId];
         if (result.ok) {
-          var entry = entriesById[proposalId];
-          var base = voteState.baseline[proposalId] !== undefined ? voteState.baseline[proposalId] : voteCounts(entry).net;
           var reported = netFromResponse(result.body);
-          voteState.baseline[proposalId] = reported !== null ? reported : base + (next || 0) - previous;
+          voteState.baseline[proposalId] = reported !== null ? reported : shownBefore + (next || 0) - previous;
           voteState.mine[proposalId] = next || 0;
+          voteState.castAt[proposalId] = Date.now();
           rerender();
           return;
         }
         var failure = voteFailureText(result);
-        var note = container.querySelector('[data-proposal-note="' + proposalId.replace(/"/g, "") + '"]');
         if (failure === "unsupported") {
           voteState.enabled = false;
-          rerender();
-          return;
+        } else if (failure === "signed-out") {
+          voteState.notes[proposalId] = { html: signInNoteHtml(), alert: true };
+        } else {
+          voteState.notes[proposalId] = { html: escapeHtml(failure), alert: false };
         }
-        if (!note) return;
-        if (failure === "signed-out") note.innerHTML = signInNoteHtml();
-        else note.textContent = failure;
+        rerender();
       }).catch(function () {
-        voteState.busy = false;
-        var note = container.querySelector('[data-proposal-note="' + proposalId.replace(/"/g, "") + '"]');
-        if (note) note.textContent = VOTE_FAILED_TEXT;
+        delete voteState.sending[proposalId];
+        voteState.notes[proposalId] = { html: escapeHtml(VOTE_FAILED_TEXT), alert: false };
+        rerender();
       });
     });
   }
 
   function mountQueue(section, entries, scope, voteState, now) {
-    var viewState = { group: "stories", sort: "top" };
-    if (!entriesInGroup(entries, "stories").length) {
-      var firstFilled = GROUP_ORDER.filter(function (group) { return entriesInGroup(entries, group).length; })[0];
-      if (firstFilled) viewState.group = firstFilled;
-    }
+    var viewState = { group: defaultGroup(entries), sort: "top" };
     var entriesById = {};
     entries.forEach(function (entry) { entriesById[entry.id] = entry; });
     dropPlaceholderMarking(section);
@@ -434,6 +480,7 @@
       var focused = scope.document.activeElement;
       var focusSelector = focused && focused.getAttribute && (focused.getAttribute("data-proposals-tab") ? '[data-proposals-tab="' + focused.getAttribute("data-proposals-tab") + '"]'
         : focused.getAttribute("data-proposals-sort") ? '[data-proposals-sort="' + focused.getAttribute("data-proposals-sort") + '"]'
+        : focused.hasAttribute("data-proposal-undo") ? '[data-proposal-undo][data-proposal-id="' + focused.getAttribute("data-proposal-id") + '"]'
         : focused.getAttribute("data-proposal-vote") ? '[data-proposal-vote="' + focused.getAttribute("data-proposal-vote") + '"][data-proposal-id="' + focused.getAttribute("data-proposal-id") + '"]' : "");
       section.innerHTML = queueHtml(entries, viewState, voteState, now);
       var restored = focusSelector ? section.querySelector(focusSelector) : null;
@@ -604,8 +651,8 @@
     var settings = readSettings(scope);
     return scope.fetch(settings.base + INDEX_PATH, { credentials: "omit", cache: "no-cache" })
       .then(function (response) { return response.ok ? response.json() : null; })
-      .then(normaliseEntries)
-      .catch(function () { return []; });
+      .then(function (payload) { return { entries: normaliseEntries(payload), generatedAt: indexGeneratedAt(payload) }; })
+      .catch(function () { return { entries: [], generatedAt: 0 }; });
   }
 
   function loadOwnProposalVotes(scope, entries, voteState) {
@@ -625,12 +672,17 @@
     }).catch(function () {});
   }
 
+  function newVoteState(enabled, generatedAt) {
+    return { enabled: enabled, generatedAt: generatedAt || 0, mine: {}, baseline: {}, castAt: {}, sending: {}, notes: {} };
+  }
+
   function start(scope) {
     var mounts = scope.document.querySelectorAll("[data-proposals-live]");
     if (!mounts.length || typeof scope.fetch !== "function") return Promise.resolve();
-    return fetchIndex(scope).then(function (entries) {
+    return fetchIndex(scope).then(function (index) {
+      var entries = index.entries;
       if (!entries.length) return;
-      var voteState = { enabled: votingEnabled(scope), mine: {}, baseline: {}, busy: false };
+      var voteState = newVoteState(votingEnabled(scope), index.generatedAt);
       return loadOwnProposalVotes(scope, entries, voteState).then(function () {
         var now = Date.now();
         Array.prototype.forEach.call(mounts, function (section) {
@@ -647,6 +699,11 @@
   return {
     loadOwnProposalVotes: loadOwnProposalVotes,
     normaliseEntries: normaliseEntries,
+    indexGeneratedAt: indexGeneratedAt,
+    newVoteState: newVoteState,
+    shownNetFor: shownNetFor,
+    defaultGroup: defaultGroup,
+    voteNoteHtml: voteNoteHtml,
     sortEntries: sortEntries,
     entriesInGroup: entriesInGroup,
     steeringLeaders: steeringLeaders,
