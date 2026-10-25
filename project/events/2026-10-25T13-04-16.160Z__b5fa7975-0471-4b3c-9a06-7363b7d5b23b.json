@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "b5fa7975-0471-4b3c-9a06-7363b7d5b23b",
+  "issue_id": "ship-b52838ba-2332-4c85-9d9c-edff3a24f073",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-25T13:04:16.160Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Promotion analytics and outbound links",
+    "description": "One small script sends view_promotion once per unit (50% visible for 1 s) and select_promotion on click. Each event carries the standard promotion fields plus topic, match kind and action. Every sponsored link gets rel='sponsored noopener' and UTMs. Extend the reader privacy scan to cover the new events.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-322b5331-ed73-4365-91d0-424a60d9842a",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

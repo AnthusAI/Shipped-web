@@ -1,0 +1,25 @@
+{
+  "id": "ship-56fd419c-4897-4545-8c91-e3be8e04f6e2",
+  "title": "Clearer vote buttons on proposals",
+  "description": "Ryan called the current button UX terrible (2026-10-25). Count the reader's own vote immediately, fill the pressed button and say 'You voted up · Undo', show 'Sending…' while the vote is in flight, and open the queue on the group with the most open proposals.",
+  "type": "story",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-322b5331-ed73-4365-91d0-424a60d9842a",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-25T13:04:16.199277Z",
+  "updated_at": "2026-10-25T13:04:16.199299Z",
+  "closed_at": null,
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "shipped-product-owner"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
