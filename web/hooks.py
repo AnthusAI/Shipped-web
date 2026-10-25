@@ -12,9 +12,9 @@ import math
 import re
 from datetime import date, datetime
 from functools import lru_cache
-from html import escape
+from html import escape, unescape
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlsplit, urlunsplit
 
 LOGGER = logging.getLogger("shipped.hooks")
 
@@ -1199,12 +1199,12 @@ def main(page):
 
 
 def footer(page):
-    links = "".join(f'<li><a href="{escape(href, quote=True)}">{escape(label)}</a></li>' for label, href in FOOTER_LINKS)
+    links = "".join(f'<li><a href="{escape(href, quote=True)}">{escape(label)}</a></li>' for label, href in _footer_links())
     return (
         '<div class="shipped-footer">'
         '<a class="shipped-footer-wordmark" href="/"><span class="brand-word">Shipped</span></a>'
         f'<nav aria-label="Footer"><ul class="shipped-footer-links">{links}</ul></nav>'
-        f'<p class="markus-footer-text">{escape(FOOTER_LINE)}</p></div>'
+        f'<p class="markus-footer-text">{_footer_text_html()}</p></div>'
     )
 
 
@@ -2492,12 +2492,581 @@ def _reader_settings_script():
     return f'<script>window.papyrusReader = Object.assign(window.papyrusReader || {{}}, {{ voteSubjects: {vote_subjects} }});</script>\n'
 
 
+SPONSORSHIP_PATH = Path(__file__).with_name("sponsorship.json")
+SPONSORSHIP_STYLESHEET_PATH = "/assets/shipped-sponsorship.css"
+SPONSORSHIP_SCRIPT_PATH = "/assets/shipped-sponsorship.js"
+SPONSORSHIP_GENERIC_KEY = "generic"
+SPONSORSHIP_NO_TOPIC = "none"
+SPONSORSHIP_TOPIC_MATCH = "topic"
+SPONSORSHIP_FALLBACK_MATCH = "fallback"
+SPONSORSHIP_SOURCE_WEIGHTS = {"topic": 4, "name": 3, "cluster": 2, "title": 1}
+SPONSORSHIP_UTM_SOURCE = "shipped"
+SPONSORSHIP_UTM_MEDIUM = "sponsored"
+SPONSORSHIP_LINK_REL = "sponsored noopener"
+SPONSORSHIP_DIAMOND_SVG = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0.5L9.5 5L5 9.5L0.5 5z" fill="currentColor"></path></svg>'
+SPONSORSHIP_ROW_RULES = {"front": (10, 2), "new": (10, 3), "list": (10, 3), "concept": (5, 1)}
+SPONSORSHIP_ROW_EARLIEST_AFTER_POSITION = 3
+SPONSORSHIP_ROW_NEIGHBOUR_COUNT = 3
+SPONSORSHIP_FRONT_PROFILE_SIGNALS = 10
+SPONSORSHIP_STORY_NOTE_AFTER_PARAGRAPH = 2
+SPONSORSHIP_WEEKLY_BANNER_AFTER_PART = 3
+SPONSORSHIP_PAGE_TYPES_BY_PATH = {
+    "/": "front",
+    "/new/": "new",
+    "/map/": "map",
+    "/proposals/": "proposals",
+    "/submit/": "submit",
+    "/sign-in/": "sign-in",
+}
+SPONSORSHIP_ELEMENT_TAG = re.compile(r"<(/?)([a-zA-Z][a-zA-Z0-9]*)\b[^>]*?(/?)>")
+SPONSORSHIP_ROW_ITEM = re.compile(r'<li class="(?:board|signal)-row">.*?</li>', re.DOTALL)
+SPONSORSHIP_ROW_HREF = re.compile(r'class="(?:board|signal)-title" href="([^"]+)"')
+SPONSORSHIP_PARAGRAPH_END = "</p>"
+
+
+@lru_cache(maxsize=1)
+def _sponsorship():
+    return json.loads(SPONSORSHIP_PATH.read_text(encoding="utf-8"))
+
+
+def _sponsorship_enabled():
+    return _sponsorship().get("enabled") is True
+
+
+def _sponsorship_slug(text):
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+
+def _sponsorship_words(text):
+    return re.sub(r"[^a-z0-9]+", " ", text.lower()).strip()
+
+
+@lru_cache(maxsize=1)
+def _sponsorship_rules():
+    rules = {}
+    for key, solution in _sponsorship()["solutions"].items():
+        if key == SPONSORSHIP_GENERIC_KEY:
+            continue
+        match = solution.get("match") or {}
+        keywords = [
+            (_sponsorship_slug(keyword), re.compile(r"(?<![a-z0-9])" + re.escape(_sponsorship_words(keyword)) + r"(?:s|es)?(?![a-z0-9])"))
+            for keyword in match.get("keywords") or []
+        ]
+        rules[key] = ({_sponsorship_slug(topic) for topic in match.get("topics") or []}, keywords)
+    return rules
+
+
+def _sponsorship_term_hit(rule, kind, text):
+    topics, keywords = rule
+    if kind == "topic" and _sponsorship_slug(text) in topics:
+        return _sponsorship_slug(text)
+    words = _sponsorship_words(text)
+    return next((term for term, pattern in keywords if pattern.search(words)), None)
+
+
+def _sponsorship_candidates(profile):
+    """The solutions that fit a page profile, best first, then the generic Anthus unit as the fallback."""
+    ranked = []
+    for order, (key, rule) in enumerate(_sponsorship_rules().items()):
+        score, best_term, best_weight = 0, None, 0
+        for kind, text in profile:
+            term = _sponsorship_term_hit(rule, kind, text)
+            if term is None:
+                continue
+            weight = SPONSORSHIP_SOURCE_WEIGHTS[kind]
+            score += weight
+            if weight > best_weight:
+                best_term, best_weight = term, weight
+        if score:
+            ranked.append((-score, order, key, best_term))
+    ranked.sort()
+    candidates = [{"key": key, "topic": term, "match": SPONSORSHIP_TOPIC_MATCH} for _score, _order, key, term in ranked]
+    candidates.append({"key": SPONSORSHIP_GENERIC_KEY, "topic": SPONSORSHIP_NO_TOPIC, "match": SPONSORSHIP_FALLBACK_MATCH})
+    return candidates
+
+
+def _sponsorship_claim(candidates, taken):
+    """The best candidate no unit on the page uses yet, or None when the page has run out of solutions."""
+    for candidate in candidates:
+        if candidate["key"] not in taken:
+            taken.add(candidate["key"])
+            return candidate
+    return None
+
+
+def _sponsorship_url(url, campaign, unit, page_type, topic):
+    parts = urlsplit(url)
+    query = parse_qsl(parts.query, keep_blank_values=True) + [
+        ("utm_source", SPONSORSHIP_UTM_SOURCE),
+        ("utm_medium", SPONSORSHIP_UTM_MEDIUM),
+        ("utm_campaign", campaign),
+        ("utm_content", f"{unit}-{page_type}"),
+        ("utm_term", topic or SPONSORSHIP_NO_TOPIC),
+    ]
+    return urlunsplit(parts._replace(path=parts.path or "/", query=urlencode(query)))
+
+
+def _sponsorship_link_html(context, url, label, css_class, action):
+    href = _sponsorship_url(url, context["campaign"], context["unit"], context["page_type"], context["topic"])
+    return (
+        f'<a class="{css_class}" href="{escape(href, quote=True)}" rel="{SPONSORSHIP_LINK_REL}" '
+        f'data-sponsor-action="{action}">{escape(label)}</a>'
+    )
+
+
+def _sponsorship_attributes_html(context, name, slot):
+    values = (
+        ("unit", context["unit"]),
+        ("id", context["campaign"]),
+        ("name", name),
+        ("slot", slot),
+        ("page-type", context["page_type"]),
+        ("topic", context["topic"] or SPONSORSHIP_NO_TOPIC),
+        ("match", context["match"]),
+    )
+    return " ".join(f'data-sponsor-{field}="{escape(value, quote=True)}"' for field, value in values)
+
+
+def _sponsorship_pill_html(extra_class=""):
+    return f'<span class="sp-pill{extra_class}">{SPONSORSHIP_DIAMOND_SVG}{escape(_sponsorship()["eyebrow"])}</span>'
+
+
+def _sponsorship_monogram_html(solution, size):
+    return f'<span class="sp-mono sp-mono-{size}" aria-hidden="true">{escape(solution["mark"])}</span>'
+
+
+def _sponsorship_disclosure_html(form):
+    disclosure = _sponsorship()["disclosure"]
+    return (
+        f'<p class="sp-disc sp-disc-{form}">{escape(disclosure[form])} '
+        f'<a href="{escape(disclosure["path"], quote=True)}">{escape(disclosure[form + "LinkLabel"])}</a></p>'
+    )
+
+
+def _sponsorship_context(unit, page_type, candidate):
+    return {
+        "unit": unit,
+        "page_type": page_type,
+        "campaign": candidate["key"],
+        "topic": candidate["topic"],
+        "match": candidate["match"],
+    }
+
+
+def _sponsorship_bar_html(page_type):
+    bar = _sponsorship()["bar"]
+    candidate = {"key": bar["id"], "topic": SPONSORSHIP_NO_TOPIC, "match": SPONSORSHIP_FALLBACK_MATCH}
+    context = _sponsorship_context("bar", page_type, candidate)
+    action = _sponsorship_link_html(context, bar["actionUrl"], f'{bar["actionLabel"]} →', "sp-bar-action", "primary")
+    return (
+        f'<aside class="sp-bar" aria-label="Sponsored: {escape(bar["name"], quote=True)}" {_sponsorship_attributes_html(context, bar["name"], "top")}>'
+        f'{_sponsorship_pill_html()}'
+        f'<span class="sp-bar-presenter"><span class="sp-bar-full">{escape(bar["presenter"])}</span>'
+        f'<span class="sp-bar-short">{escape(bar["presenterShort"])}</span></span>'
+        f'<span class="sp-bar-line">{escape(bar["line"])}</span>{action}</aside>'
+    )
+
+
+def _sponsorship_banner_html(candidate, page_type, slot):
+    solution = _sponsorship()["solutions"][candidate["key"]]
+    labels = _sponsorship()["labels"]
+    context = _sponsorship_context("banner", page_type, candidate)
+    return (
+        f'<aside class="sp-card sp-banner" aria-label="Sponsored: {escape(solution["name"], quote=True)}" {_sponsorship_attributes_html(context, solution["name"], slot)}>'
+        f'{_sponsorship_monogram_html(solution, "xl")}'
+        '<div class="sp-banner-copy">'
+        f'<span class="sp-banner-eyebrow">{_sponsorship_pill_html()}<span class="sp-by">{escape(labels["byFull"])}</span></span>'
+        f'<span class="sp-banner-pitch"><b class="sp-name">{escape(solution["name"])}</b> &middot; <span>{escape(solution["pitch"])}</span></span>'
+        f'<span class="sp-banner-description">{escape(solution["description"])}</span></div>'
+        '<div class="sp-banner-actions">'
+        f'{_sponsorship_link_html(context, solution["primary"]["url"], solution["primary"]["label"], "sp-btn", "primary")}'
+        f'{_sponsorship_link_html(context, solution["secondary"]["url"], solution["secondary"]["label"], "sp-btn sp-btn2", "secondary")}</div>'
+        f'<div class="sp-banner-disclosure">{_sponsorship_disclosure_html("long")}{_sponsorship_disclosure_html("short")}</div></aside>'
+    )
+
+
+def _sponsorship_card_html(candidate, page_type, slot):
+    solution = _sponsorship()["solutions"][candidate["key"]]
+    context = _sponsorship_context("card", page_type, candidate)
+    return (
+        f'<aside class="sp-card sp-sidebar-card" aria-label="Sponsored: {escape(solution["name"], quote=True)}" {_sponsorship_attributes_html(context, solution["name"], slot)}>'
+        f'<span class="sp-card-top">{_sponsorship_pill_html()}{_sponsorship_monogram_html(solution, "md")}</span>'
+        f'<b class="sp-name sp-card-name">{escape(solution["name"])}</b>'
+        f'<span class="sp-card-pitch">{escape(solution["cardPitch"])}</span>'
+        f'{_sponsorship_link_html(context, solution["primary"]["url"], solution["primary"]["label"], "sp-btn", "primary")}'
+        f'{_sponsorship_disclosure_html("short")}</aside>'
+    )
+
+
+def _sponsorship_note_html(candidate, page_type, slot):
+    solution = _sponsorship()["solutions"][candidate["key"]]
+    labels = _sponsorship()["labels"]
+    disclosure = _sponsorship()["disclosure"]
+    context = _sponsorship_context("note", page_type, candidate)
+    note_link = _sponsorship_link_html(context, solution["primary"]["url"], f'{solution["note"]} {labels["noteAction"]}', "sp-note-link", "primary")
+    return (
+        f'<aside class="sp-card sp-note" aria-label="Sponsored: {escape(solution["name"], quote=True)}" {_sponsorship_attributes_html(context, solution["name"], slot)}>'
+        f'{_sponsorship_monogram_html(solution, "sm")}'
+        '<span class="sp-note-body"><span class="sp-note-meta">'
+        f'{_sponsorship_pill_html(" sp-pill-small")}<span class="sp-disc">{escape(labels["noteInline"])}</span>'
+        f'<a class="sp-note-policy" href="{escape(disclosure["path"], quote=True)}">{escape(disclosure["shortLinkLabel"])}</a></span>'
+        f'{note_link}</span></aside>'
+    )
+
+
+def _sponsorship_row_html(candidate, page_type, slot):
+    solution = _sponsorship()["solutions"][candidate["key"]]
+    labels = _sponsorship()["labels"]
+    context = _sponsorship_context("row", page_type, candidate)
+    return (
+        '<li class="sp-item">'
+        f'<aside class="sp-card sp-row" aria-label="Sponsored: {escape(solution["name"], quote=True)}" {_sponsorship_attributes_html(context, solution["name"], slot)}>'
+        f'{_sponsorship_monogram_html(solution, "md")}'
+        f'<span class="sp-row-copy"><span class="sp-row-meta">{_sponsorship_pill_html()}<span class="sp-row-source">{escape(labels["rowSource"])}</span></span>'
+        f'<span class="sp-row-pitch"><b class="sp-name">{escape(solution["name"])}</b> &middot; {escape(solution["rowPitch"])}</span></span>'
+        f'{_sponsorship_link_html(context, solution["primary"]["url"], solution["rowAction"], "sp-btn sp-btn-small", "primary")}'
+        f'{_sponsorship_disclosure_html("short")}</aside></li>'
+    )
+
+
+def _sponsorship_element_end(html, start):
+    """The index just past the element that opens at `start`, counting nested elements of the same tag."""
+    opening = SPONSORSHIP_ELEMENT_TAG.match(html, start)
+    if opening is None:
+        return None
+    name = opening.group(2).lower()
+    depth = 0
+    for match in SPONSORSHIP_ELEMENT_TAG.finditer(html, start):
+        if match.group(2).lower() != name or match.group(3):
+            continue
+        depth += -1 if match.group(1) else 1
+        if depth == 0:
+            return match.end()
+    return None
+
+
+def _sponsorship_span(html, opening_pattern, search_from=0):
+    """The (start, end) of the first element whose opening tag matches the pattern, or None."""
+    opening = re.compile(opening_pattern).search(html, search_from)
+    if opening is None:
+        return None
+    end = _sponsorship_element_end(html, opening.start())
+    return (opening.start(), end) if end is not None else None
+
+
+def _sponsorship_insert_after(html, opening_pattern, fragment_for):
+    span = _sponsorship_span(html, opening_pattern)
+    if span is None:
+        return html
+    fragment = fragment_for()
+    return html if fragment is None else html[: span[1]] + fragment + html[span[1] :]
+
+
+def _sponsorship_append_inside(html, opening_pattern, fragment_for, require_section=False):
+    span = _sponsorship_span(html, opening_pattern)
+    if span is None:
+        return html
+    closing = html.rfind("</", span[0], span[1])
+    if require_section and "<section" not in html[span[0] : closing]:
+        return html
+    fragment = fragment_for()
+    return html if fragment is None else html[:closing] + fragment + html[closing:]
+
+
+def _sponsorship_wrap(html, opening_pattern, wrapper_class, fragment_for):
+    span = _sponsorship_span(html, opening_pattern)
+    if span is None:
+        return html
+    fragment = fragment_for()
+    if fragment is None:
+        return html
+    return html[: span[0]] + f'<div class="{wrapper_class}">' + html[span[0] : span[1]] + fragment + "</div>" + html[span[1] :]
+
+
+def _sponsorship_unit(builder, candidates, taken, page_type, slot):
+    """A closure that claims the next free solution and renders one unit, or returns None when none is left."""
+
+    def build():
+        candidate = _sponsorship_claim(candidates, taken)
+        return builder(candidate, page_type, slot) if candidate is not None else None
+
+    return build
+
+
+def _sponsorship_entry_summaries(page):
+    def build():
+        return {entry.url: entry.summary for entry in page.entries if entry.url}
+
+    return page.site.memo("shipped-sponsorship-summaries", build) if page.site is not None else build()
+
+
+def _sponsorship_item_profile(summary, page):
+    item = _read_item(summary)
+    profile = [("topic", tag) for tag in item["tags"]]
+    if summary.section:
+        profile.append(("topic", summary.section))
+    profile += [("name", entity["name"]) for entity in item["entities"]]
+    profile += [("cluster", str(cluster.get("name"))) for tag in item["tags"][:1] for cluster in _beat_clusters(page, tag) if cluster.get("name")]
+    profile.append(("title", _signal_title(summary)))
+    return profile
+
+
+def _sponsorship_story_profile(summary):
+    story = _read_story(summary)
+    profile = [("topic", story["section"])] if story["section"] else []
+    profile += [("name", concept["name"]) for concept in story["concepts"]]
+    profile += [("title", text) for text in (story["title"], story["standfirst"]) if text]
+    return profile
+
+
+def _sponsorship_concept_profile(page):
+    key = page.path.strip("/").rsplit("/", 1)[-1]
+    profile = [("topic", key), ("title", page.title)]
+    profile += [("cluster", str(cluster.get("name"))) for cluster in _beat_clusters(page, key) if cluster.get("name")]
+    return profile
+
+
+def _sponsorship_front_profile(page):
+    profile = []
+    for summary, _entry, _label in _board_pairs(page, lambda candidate: True)[:SPONSORSHIP_FRONT_PROFILE_SIGNALS]:
+        profile += _sponsorship_item_profile(summary, page)
+    return profile
+
+
+def _sponsorship_map_profile(page):
+    return [("topic", "map")] + [("cluster", str(cluster.get("name"))) for cluster in _knowledge_clusters(page) if cluster.get("name")]
+
+
+def _sponsorship_row_positions(row_count, page_type):
+    interval, maximum = SPONSORSHIP_ROW_RULES[page_type]
+    positions = range(interval, row_count + 1, interval)
+    return [position for position in positions if position >= SPONSORSHIP_ROW_EARLIEST_AFTER_POSITION][:maximum]
+
+
+def _sponsorship_rows(html, page, page_type, taken, list_pattern, search_from=0):
+    """Feed rows after every tenth signal of the first signal list at or after `search_from`, matched to the signals around them."""
+    span = _sponsorship_span(html, list_pattern, search_from)
+    if span is None:
+        return html
+    list_html = html[span[0] : span[1]]
+    rows = list(SPONSORSHIP_ROW_ITEM.finditer(list_html))
+    summaries = _sponsorship_entry_summaries(page)
+    placed = []
+    for position in _sponsorship_row_positions(len(rows), page_type):
+        neighbours = rows[max(0, position - SPONSORSHIP_ROW_NEIGHBOUR_COUNT) : position]
+        profile = []
+        for row in neighbours:
+            href = SPONSORSHIP_ROW_HREF.search(row.group(0))
+            summary = summaries.get(unescape(href.group(1))) if href else None
+            if summary is not None:
+                profile += _sponsorship_item_profile(summary, page)
+        candidate = _sponsorship_claim(_sponsorship_candidates(profile), taken)
+        if candidate is not None:
+            placed.append((rows[position - 1].end(), _sponsorship_row_html(candidate, page_type, f"after-signal-{position}")))
+    for insert_at, row_html in reversed(placed):
+        list_html = list_html[:insert_at] + row_html + list_html[insert_at:]
+    return html[: span[0]] + list_html + html[span[1] :]
+
+
+def _sponsorship_signal_units(html, page, page_type):
+    candidates = _sponsorship_candidates(_sponsorship_item_profile(page.entry.summary, page))
+    taken = set()
+    html = _sponsorship_insert_after(
+        html, r'<section class="signal-section" aria-labelledby="signal-map-h">',
+        _sponsorship_unit(_sponsorship_note_html, candidates, taken, page_type, "after-on-the-map"),
+    )
+    html = _sponsorship_append_inside(
+        html, r'<div class="signal-main">', _sponsorship_unit(_sponsorship_banner_html, candidates, taken, page_type, "before-nearby")
+    )
+    return _sponsorship_append_inside(
+        html, r'<aside class="signal-rail"', _sponsorship_unit(_sponsorship_card_html, candidates, taken, page_type, "rail-last"), require_section=True
+    )
+
+
+def _sponsorship_story_note(html, candidates, taken, page_type):
+    span = _sponsorship_span(html, r'<div class="story-body">')
+    if span is None:
+        return html
+    body = html[span[0] : span[1]]
+    ends = [match.end() for match in re.finditer(re.escape(SPONSORSHIP_PARAGRAPH_END), body)]
+    if len(ends) <= SPONSORSHIP_STORY_NOTE_AFTER_PARAGRAPH:
+        return html
+    note = _sponsorship_unit(_sponsorship_note_html, candidates, taken, page_type, f"after-paragraph-{SPONSORSHIP_STORY_NOTE_AFTER_PARAGRAPH}")()
+    if note is None:
+        return html
+    cut = span[0] + ends[SPONSORSHIP_STORY_NOTE_AFTER_PARAGRAPH - 1]
+    return html[:cut] + note + html[cut:]
+
+
+def _sponsorship_story_units(html, page, page_type):
+    candidates = _sponsorship_candidates(_sponsorship_story_profile(page.entry.summary))
+    taken = set()
+    html = _sponsorship_story_note(html, candidates, taken, page_type)
+    html = _sponsorship_insert_after(
+        html, r'<div class="story-body">', _sponsorship_unit(_sponsorship_banner_html, candidates, taken, page_type, "after-body")
+    )
+    return _sponsorship_append_inside(
+        html, r'<article class="story-article"', _sponsorship_unit(_sponsorship_card_html, candidates, taken, page_type, "after-sources")
+    )
+
+
+def _sponsorship_concept_units(html, page, page_type):
+    candidates = _sponsorship_candidates(_sponsorship_concept_profile(page))
+    taken = set()
+    html = _sponsorship_insert_after(
+        html, r'<div class="concept-row">', _sponsorship_unit(_sponsorship_banner_html, candidates, taken, page_type, "between-sections")
+    )
+    rows = list(re.finditer(r'<div class="concept-row">', html))
+    if not rows:
+        return html
+    last_row = rows[-1].start()
+    html = _sponsorship_concept_card(html, last_row, _sponsorship_unit(_sponsorship_card_html, candidates, taken, page_type, "rail-last"))
+    return _sponsorship_rows(html, page, page_type, taken, r'<ol class="signal-list">', last_row)
+
+
+def _sponsorship_concept_card(html, row_start, card_for):
+    row_end = _sponsorship_element_end(html, row_start)
+    if row_end is None:
+        return html
+    row_html = html[row_start:row_end]
+    stories = _sponsorship_span(row_html, r'<section class="concept-column-narrow concept-stories"')
+    if stories is not None:
+        card = card_for()
+        if card is None:
+            return html
+        rail = (
+            '<div class="concept-column-narrow sp-rail">'
+            + row_html[stories[0] : stories[1]].replace("concept-column-narrow concept-stories", "concept-stories", 1)
+            + card
+            + "</div>"
+        )
+        return html[:row_start] + row_html[: stories[0]] + rail + row_html[stories[1] :] + html[row_end:]
+    card = card_for()
+    if card is None:
+        return html
+    closing = row_end - len("</div>")
+    return html[:closing] + f'<div class="concept-column-narrow sp-rail">{card}</div>' + html[closing:]
+
+
+def _sponsorship_front_units(html, page, page_type):
+    candidates = _sponsorship_candidates(_sponsorship_front_profile(page))
+    taken = set()
+    html = _sponsorship_wrap(
+        html, r'<section class="rail front-rising"', "front-rising-rail",
+        _sponsorship_unit(_sponsorship_card_html, candidates, taken, page_type, "rail-last"),
+    )
+    latest = html.find('<div class="front-latest">')
+    return _sponsorship_rows(html, page, page_type, taken, r'<ol class="board-list">', max(latest, 0))
+
+
+def _sponsorship_map_units(html, page, page_type):
+    candidates = _sponsorship_candidates(_sponsorship_map_profile(page))
+    return _sponsorship_wrap(
+        html, r'<aside class="map-new"', "map-new-rail",
+        _sponsorship_unit(_sponsorship_card_html, candidates, set(), page_type, "below-new-on-the-map"),
+    )
+
+
+def _sponsorship_weekly_units(html, page, page_type):
+    candidates = _sponsorship_candidates([("topic", "weekly")])
+    parts = list(re.finditer(r'<section class="weekly-part[^"]*"', html))
+    if len(parts) < SPONSORSHIP_WEEKLY_BANNER_AFTER_PART:
+        return html
+    part = parts[SPONSORSHIP_WEEKLY_BANNER_AFTER_PART - 1]
+    end = _sponsorship_element_end(html, part.start())
+    banner = _sponsorship_unit(
+        _sponsorship_banner_html, candidates, set(), page_type, f"after-part-{SPONSORSHIP_WEEKLY_BANNER_AFTER_PART}"
+    )()
+    return html if end is None or banner is None else html[:end] + banner + html[end:]
+
+
+def _sponsorship_list_units(html, page, page_type):
+    return _sponsorship_rows(html, page, page_type, set(), r'<ol class="signal-list">', max(html.find('<section class="landing-signals"'), 0))
+
+
+def _sponsorship_new_units(html, page, page_type):
+    return _sponsorship_rows(html, page, page_type, set(), r'<ol class="board-list">')
+
+
+SPONSORSHIP_PAGE_HANDLERS = {
+    "signal": _sponsorship_signal_units,
+    "story": _sponsorship_story_units,
+    "concept": _sponsorship_concept_units,
+    "front": _sponsorship_front_units,
+    "map": _sponsorship_map_units,
+    "weekly": _sponsorship_weekly_units,
+    "list": _sponsorship_list_units,
+    "new": _sponsorship_new_units,
+}
+
+
+def _sponsorship_page_type(html, page):
+    if page.kind == "item" and page.entry is not None:
+        summary = page.entry.summary
+        if summary.type == PAGE_ITEM_TYPE:
+            return "policies" if page.path.startswith("/policies/") else "other"
+        if summary.type == WIKI_ITEM_TYPE:
+            return "other"
+        if _is_story(summary):
+            return "story"
+        return "weekly" if summary.section == ROUNDUP_SECTION else "signal"
+    if page.kind == "listing":
+        return "list" if 'class="shipped-page section-landing"' in html else "other"
+    if page.kind == "custom":
+        if page.path in SPONSORSHIP_PAGE_TYPES_BY_PATH:
+            return SPONSORSHIP_PAGE_TYPES_BY_PATH[page.path]
+        if "concept-page" in html:
+            return "concept"
+        if "weekly-issue" in html:
+            return "weekly"
+    return "other"
+
+
+def _sponsorship_finish(html, page):
+    if not _sponsorship_enabled():
+        return html
+    page_type = _sponsorship_page_type(html, page)
+    handler = SPONSORSHIP_PAGE_HANDLERS.get(page_type)
+    if handler is not None:
+        html = handler(html, page, page_type)
+    masthead = html.find('<header class="markus-site-masthead"')
+    if masthead < 0:
+        LOGGER.warning("page has no masthead; sponsor bar left out")
+        return html
+    return html[:masthead] + _sponsorship_bar_html(page_type) + html[masthead:]
+
+
+def _sponsorship_head_html():
+    return (
+        f'\n<link rel="stylesheet" href="{SPONSORSHIP_STYLESHEET_PATH}">\n'
+        f'<script src="{SPONSORSHIP_SCRIPT_PATH}" defer></script>'
+    )
+
+
+def _footer_links():
+    if not _sponsorship_enabled():
+        return FOOTER_LINKS
+    footer = _sponsorship()["footer"]
+    links = list(FOOTER_LINKS)
+    position = next((index for index, (_label, href) in enumerate(links) if href == "/policies/"), len(links) - 1) + 1
+    links.insert(position, ("Sponsorship", footer["linkPath"]))
+    return tuple(links)
+
+
+def _footer_text_html():
+    if not _sponsorship_enabled():
+        return escape(FOOTER_LINE)
+    footer = _sponsorship()["footer"]
+    return f'{escape(footer["line"])} <a href="{escape(footer["linkPath"], quote=True)}">{escape(footer["linkLabel"])}</a>'
+
+
 def head_extra(page):
     return (
         f'<link rel="stylesheet" href="{READER_STYLESHEET_PATH}">\n'
         + _reader_settings_script()
         + f'<script src="{READER_SCRIPT_PATH}" defer></script>\n'
         f'<script src="{PROPOSALS_SCRIPT_PATH}" defer></script>'
+        + (_sponsorship_head_html() if _sponsorship_enabled() else "")
     )
 
 
@@ -2622,6 +3191,7 @@ def _mast_logotype(html, day):
 def page_finish(html, page):
     html = _reader_sign_in(html)
     html = _mast_logotype(html, date.today())
+    html = _sponsorship_finish(html, page)
     if page.kind != "listing" or page.path != ROUNDUP_ARCHIVE_PATH:
         return html
     heading_end = html.find("</h1>")

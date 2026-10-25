@@ -133,7 +133,8 @@ class HooksProjectionTest(unittest.TestCase):
         footer = page.split("<footer")[1].split("</footer>")[0]
         for href in ('href="/map/">How the map works', 'href="/policies/#steering">How steering works', 'href="/policies/">Policies', 'href="/roundup/">All issues', 'href="/feed.xml">RSS', 'href="/policies/#privacy">Privacy', 'href="#cookie-settings">Cookie settings'):
             self.assertIn(href, footer)
-        self.assertIn("Published by Anthus AI Solutions.", footer)
+        self.assertIn("Published by Anthus AI Solutions, which also sponsors it.", footer)
+        self.assertIn('href="/policies/#sponsorship">Sponsorship and independence', footer)
         self.assertNotIn("ranked by the", page)
 
     def test_theme_color_is_the_brand_fill_in_light_and_dark(self):
