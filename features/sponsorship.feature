@@ -1,19 +1,28 @@
-Feature: Sponsorship is switched off until the site owner switches it on
-  The sponsorship units, their style and their script ship in the code but stay off: web/sponsorship.json says enabled false.
+Feature: Sponsored units are disclosed and kept out of editorial controls
+  Anthus sponsors Shipped. Its units are rounded, say "Sponsored", carry a diamond and name Anthus, and stay out of votes, proposals and policies.
 
   Background:
     Given the Shipped site is built from the fixture content
 
-  Scenario: the front page carries no sponsored unit, style or script
+  Scenario: the front page carries the sponsor bar and labelled units
     When I open the page "/"
-    Then the page does not contain "data-sponsor"
-    And the page does not contain "shipped-sponsorship"
-    And the page does not contain "Sponsored"
+    Then the page contains "sp-bar-presenter"
+    And the page contains "Sponsored"
+    And the page contains "shipped-sponsorship"
 
-  Scenario: the footer is the publisher line it always was
+  Scenario: the footer names the publisher as the sponsor
     When I open the page "/policies/"
-    Then the page contains "Published by Anthus AI Solutions."
-    And the page does not contain "also sponsors it"
+    Then the page contains "Published by Anthus AI Solutions, which also sponsors it."
+    And the page contains "/policies/#sponsorship"
 
-  Scenario: no projected page names a sponsored unit
-    Then no projected page contains "sp-card"
+  Scenario: the policies page carries the bar and no other unit
+    When I open the page "/policies/"
+    Then the page contains "sp-bar-presenter"
+    And the page does not contain "sp-banner-copy"
+    And the page does not contain "sp-card-pitch"
+
+  Scenario: the proposals page carries the bar and no other unit
+    When I open the page "/proposals/"
+    Then the page contains "sp-bar-presenter"
+    And the page does not contain "sp-item"
+    And the page does not contain "sp-note-body"

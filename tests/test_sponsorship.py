@@ -165,8 +165,8 @@ class SponsorshipConfigurationTest(unittest.TestCase):
     def setUpClass(cls):
         cls.configuration = json.loads((STATIC_DIRECTORY / "sponsorship.json").read_text(encoding="utf-8"))
 
-    def test_the_committed_configuration_is_switched_off(self):
-        self.assertIs(self.configuration["enabled"], False)
+    def test_the_committed_configuration_is_switched_on(self):
+        self.assertIs(self.configuration["enabled"], True)
 
     def test_the_two_disclosure_strings_are_the_designed_copy(self):
         disclosure = self.configuration["disclosure"]
@@ -379,12 +379,14 @@ class SponsorshipLogicTest(unittest.TestCase):
 class SponsorshipSwitchedOffTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.output_directory = _project(BASE_CONTENT_DIRECTORY, STATIC_DIRECTORY)
+        cls.static_directory = _static_directory_with_sponsorship(False)
+        cls.output_directory = _project(BASE_CONTENT_DIRECTORY, cls.static_directory)
         cls.pages = _read_pages(cls.output_directory)
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree(cls.output_directory, ignore_errors=True)
+        for directory in (cls.output_directory, cls.static_directory.parent):
+            shutil.rmtree(directory, ignore_errors=True)
 
     def test_no_page_carries_a_unit_a_sponsorship_style_or_a_sponsorship_script(self):
         self.assertTrue(self.pages)
