@@ -3,7 +3,7 @@
   "title": "AI trend stories from the knowledge snapshot, with editor approval",
   "description": "Needs Papyrus: a story pipeline that drafts trend and cluster stories from the knowledge snapshot (trends, clusters, new relations), citing signals, and posts them to Proposals as public drafts.\n\nEditors approve the copy and the figure. Figures are drawn from map data, such as the lineage diagram, so no stock images are needed.\n\nQuality matters more than volume: start with 1-2 stories a week, and have every factual claim traced to a cited signal.\n\nAcceptance: one real trend story goes from draft, through steering and editor approval, to the home lead slot.",
   "type": "story",
-  "status": "in_progress",
+  "status": "closed",
   "priority": 1,
   "assignee": null,
   "creator": null,
@@ -22,11 +22,18 @@
       "text": "In progress. The manual pipeline is proven: three AI-drafted stories with cited claims, approved by Ryan and published 2026-10-23. The automated pipeline from the snapshot is the Papyrus side (PPY-fb4dfa).",
       "created_at": "2026-10-23T13:25:36.585155Z",
       "comment_type": "default"
+    },
+    {
+      "id": "b94abb9a-bfc1-4bec-a039-2a336f643bfa",
+      "author": "home",
+      "text": "Done 2026-10-25: Papyrus 5.38.0/5.39.0 'papyrus ideas trends' drafts cited trend stories from the weekly snapshot as story_draft proposals with evidence.figure. Three drafts were filed; Shipped renders the figure (#90). The weekly run is scheduled for Mondays at 05:00 UTC; publishing still needs editor approval.",
+      "created_at": "2026-10-25T13:48:09.580587Z",
+      "comment_type": "default"
     }
   ],
   "created_at": "2026-10-22T15:29:00.014134Z",
-  "updated_at": "2026-10-23T13:25:36.610325Z",
-  "closed_at": null,
+  "updated_at": "2026-10-25T13:48:09.597503Z",
+  "closed_at": "2026-10-25T13:48:09.597468Z",
   "agent": {
     "platform": "claude_code",
     "model": "claude-opus-5-5",
