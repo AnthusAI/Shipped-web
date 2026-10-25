@@ -45,6 +45,12 @@ python3 -m http.server 8000 --directory /tmp/shipped-out
 
 The CMS dev server (`npm run dev`) needs a deployed backend's `amplify_outputs.json`, which is gitignored and never committed.
 
+## Sponsorship
+
+Anthus sponsorship units (a bar on every page, and banners, sidebar cards, contextual notes and feed rows on some) are built in `web/hooks.py` from `web/sponsorship.json`, which holds the switch, the disclosure copy, the six solutions with their pitches and landing URLs, and the keywords that match a page to a solution. The switch is `"enabled": false`: while it is off, no page carries a unit, the sponsorship stylesheet or script, and the footer is unchanged. Set `"enabled": true` to turn everything on, and add a `#sponsorship` section to the policies page first, because the disclosure and footer links point at `/policies/#sponsorship`.
+
+Units are the only rounded shapes on the site and always show the word "Sponsored", a diamond mark and the Anthus name. `web/assets/shipped-sponsorship.js` sends the Google Analytics events `view_promotion` (once per unit, after half the unit has been visible for one second) and `select_promotion` (on a click of a sponsored link), carrying only the unit and page fields in the `data-sponsor-*` attributes and never a reader id. `tests/reader_privacy.py` scans both. `tests/test_sponsorship.py` builds the site switched off and switched on from `tests/sponsorship_content.py`.
+
 ## How a change reaches production
 
 1. Branch from `main`, open a PR into `main`, and get CI green. `develop` exists but is stale; work goes to `main`.

@@ -1,0 +1,133 @@
+{
+  "enabled": false,
+  "eyebrow": "Sponsored",
+  "labels": {
+    "byFull": "by Anthus AI Solutions",
+    "byShort": "by Anthus",
+    "rowSource": "anth.us · by Anthus",
+    "noteInline": "by Anthus, which publishes Shipped",
+    "noteAction": "→"
+  },
+  "disclosure": {
+    "short": "Sponsored by Anthus, which publishes Shipped. Sponsorship never affects rankings, statuses or scores.",
+    "long": "Sponsored by Anthus AI Solutions, which publishes Shipped. Anthus writes this unit; editors and AI do not. Sponsorship never affects rankings, statuses, scores, map changes or which proposals editors approve.",
+    "shortLinkLabel": "Policies",
+    "longLinkLabel": "How sponsorship works",
+    "path": "/policies/#sponsorship"
+  },
+  "footer": {
+    "line": "Published by Anthus AI Solutions, which also sponsors it.",
+    "linkLabel": "Sponsorship and independence",
+    "linkPath": "/policies/#sponsorship"
+  },
+  "bar": {
+    "id": "anthus",
+    "name": "Anthus AI Solutions",
+    "presenter": "Presented by Anthus AI Solutions",
+    "presenterShort": "Presented by Anthus",
+    "line": "AI for decisions, speech, chat, knowledge and publishing",
+    "actionLabel": "Meet Anthus",
+    "actionUrl": "https://anth.us/ai-solutions/"
+  },
+  "solutions": {
+    "cyclotron": {
+      "topic": "Decision models",
+      "name": "Cyclotron",
+      "mark": "Cy",
+      "pitch": "Put decision models to work on your own cases",
+      "description": "Configure, test and compare decision models against examples you label, before they make real calls.",
+      "cardPitch": "Test and compare decision models against examples you label.",
+      "rowPitch": "Put decision models to work on your own cases",
+      "note": "Working with decision models? Anthus built Cyclotron for that",
+      "primary": { "label": "See how Cyclotron works", "url": "https://cyclotron.anth.us" },
+      "secondary": { "label": "Talk to Anthus", "url": "https://anth.us/engage/?solution=Cyclotron" },
+      "rowAction": "Learn more",
+      "match": {
+        "topics": ["decision-models", "decisions", "guard-model", "router"],
+        "keywords": ["decision model", "guardrail", "guard model", "judge model", "reward model", "moderation", "classifier", "router", "routing"]
+      }
+    },
+    "auritus": {
+      "topic": "Speech and TTS models",
+      "name": "Auritus",
+      "mark": "Au",
+      "pitch": "Speech and voice models, tried on your own audio",
+      "description": "Transcribe, generate and compare speech and text-to-speech models on the recordings and voices you care about.",
+      "cardPitch": "Compare speech and TTS models on your own recordings.",
+      "rowPitch": "Speech and voice models, tried on your own audio",
+      "note": "Comparing open TTS models? Auritus, from Anthus, does that on your audio",
+      "primary": { "label": "See how Auritus works", "url": "https://aurit.us" },
+      "secondary": { "label": "Talk to Anthus", "url": "https://anth.us/engage/?solution=Auritus" },
+      "rowAction": "Learn more",
+      "match": {
+        "topics": ["open-tts", "voice-cloning", "speech"],
+        "keywords": ["tts", "text to speech", "speech", "voice cloning", "transcription", "audio", "asr"]
+      }
+    },
+    "chatticus": {
+      "topic": "Chat and agents",
+      "name": "Chatticus",
+      "mark": "Ch",
+      "pitch": "Chat assistants and agents you can inspect step by step",
+      "description": "Build and test chat assistants and agent workflows, with every step kept for review.",
+      "cardPitch": "Build chat assistants and agents with every step kept for review.",
+      "rowPitch": "Chat assistants and agents you can inspect step by step",
+      "note": "Building an agent? Anthus built Chatticus for that",
+      "primary": { "label": "See how Chatticus works", "url": "https://chattic.us" },
+      "secondary": { "label": "Talk to Anthus", "url": "https://anth.us/engage/?solution=Chatticus" },
+      "rowAction": "Learn more",
+      "match": {
+        "topics": ["agents", "chat", "voice-agents"],
+        "keywords": ["agent", "chat", "chatbot", "assistant", "copilot", "tool use"]
+      }
+    },
+    "biblicus": {
+      "topic": "Topic modelling and knowledge bases",
+      "name": "Biblicus",
+      "mark": "Bi",
+      "pitch": "Topic models and knowledge graphs from your own documents",
+      "description": "Turn a corpus into topics, entities and a knowledge graph you can search and steer.",
+      "cardPitch": "Turn your documents into topics, entities and a knowledge graph.",
+      "rowPitch": "Topic models and knowledge graphs from your own documents",
+      "note": "Curious how a map like this is built? Anthus built Biblicus for that",
+      "primary": { "label": "See how Biblicus works", "url": "https://anth.us/platform/biblicus/" },
+      "secondary": { "label": "Talk to Anthus", "url": "https://anth.us/engage/?solution=Biblicus" },
+      "rowAction": "Learn more",
+      "match": {
+        "topics": ["map", "knowledge-base", "topic-modelling"],
+        "keywords": ["topic model", "knowledge base", "knowledge graph", "retrieval", "rag", "embedding", "entity extraction", "corpus", "document ai"]
+      }
+    },
+    "papyrus": {
+      "topic": "Automated publishing and insight feeds",
+      "name": "Papyrus",
+      "mark": "Pa",
+      "pitch": "The publishing engine Shipped runs on",
+      "description": "AI drafts, human approval and static pages: automated publishing and insight feeds for your own field.",
+      "cardPitch": "Automated publishing and insight feeds. Shipped runs on it.",
+      "rowPitch": "The publishing engine Shipped runs on",
+      "note": "Want a feed like this for your field? Shipped runs on Papyrus, from Anthus",
+      "primary": { "label": "See how Papyrus works", "url": "https://p.apyr.us" },
+      "secondary": { "label": "Talk to Anthus", "url": "https://anth.us/engage/?solution=Papyrus" },
+      "rowAction": "Learn more",
+      "match": {
+        "topics": ["weekly", "newsletter", "publishing"],
+        "keywords": ["publishing", "newsletter", "insight feed", "content generation", "cms"]
+      }
+    },
+    "generic": {
+      "topic": "No match",
+      "name": "Anthus AI Solutions",
+      "mark": "An",
+      "pitch": "AI for decisions, speech, chat, knowledge and publishing",
+      "description": "Anthus builds AI solutions and publishes Shipped. Tell us what you are working on.",
+      "cardPitch": "AI for decisions, speech, chat, knowledge and publishing.",
+      "rowPitch": "AI for decisions, speech, chat, knowledge and publishing",
+      "note": "Working on something like this? Anthus builds AI solutions",
+      "primary": { "label": "Talk to Anthus", "url": "https://anth.us/engage/" },
+      "secondary": { "label": "See all solutions", "url": "https://anth.us/ai-solutions/" },
+      "rowAction": "Talk to Anthus",
+      "match": { "topics": [], "keywords": [] }
+    }
+  }
+}
