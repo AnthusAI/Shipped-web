@@ -1879,9 +1879,9 @@ HOME_LEAD_PLACEHOLDER_HTML = (
     '<article class="front-lead is-placeholder" aria-labelledby="front-lead-h">\n'
     '<span class="placeholder-tag">Placeholder</span>\n'
     '<div class="front-lead-figure" role="img" aria-label="Lead image: three lines of descent between decision models">\n'
-    '<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>\n'
-    '<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>\n'
-    '<span class="front-lineage-from">[Earlier model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Later model]</span>\n'
+    '<span class="front-lineage-from">[Later model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Earlier model]</span>\n'
+    '<span class="front-lineage-from">[Later model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Earlier model]</span>\n'
+    '<span class="front-lineage-from">[Later model]</span><svg viewBox="0 0 60 12" width="60" height="12" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg><span class="front-lineage-to">[Earlier model]</span>\n'
     '<p class="front-lead-caption">Three “built on” relations from the map · Figure: Shipped map, Edited by AI</p>\n'
     '</div>\n'
     '<div class="front-lead-labels"><span class="cintillo">Lead story</span><span class="kicker">§ Decisions in the wild</span></div>\n'
@@ -2017,14 +2017,14 @@ def _story_provenance_html(story, css_prefix):
 
 def _story_lineage_row_html(pair):
     return (
-        f'<div class="story-lineage-row"><span class="story-node"><b>{escape(pair["parent"])}</b></span>'
+        f'<div class="story-lineage-row"><span class="story-node story-node-child"><b>{escape(pair["child"])}</b></span>'
         f'<span class="story-arrow">{STORY_ARROW_SVG}<span>built on</span></span>'
-        f'<span class="story-node story-node-child"><b>{escape(pair["child"])}</b></span></div>'
+        f'<span class="story-node"><b>{escape(pair["parent"])}</b></span></div>'
     )
 
 
 def _story_pairs_description(pairs):
-    return ", ".join(f'{pair["parent"]} to {pair["child"]}' for pair in pairs)
+    return ", ".join(f'{pair["child"]} built on {pair["parent"]}' for pair in pairs)
 
 
 def _story_figure_html(story):
@@ -2035,7 +2035,7 @@ def _story_figure_html(story):
     return (
         '<figure class="story-figure">'
         f'<div class="story-lineage" role="img" aria-label="Diagram, each joined by a built-on arrow: {description}">{rows}</div>'
-        '<figcaption class="story-figcaption"><span>Parents on the left, children on the right. Each arrow is a “built on” relation.</span>'
+        '<figcaption class="story-figcaption"><span>Each model points to the model it is built on.</span>'
         '<span class="story-figure-credit">Figure: Shipped map</span></figcaption></figure>'
     )
 
@@ -2149,7 +2149,7 @@ def _home_lead_figure_html(story):
         '<path d="M0 6h52"/><path d="M48 1l7 5-7 5"/></svg>'
     )
     cells = "".join(
-        f'<span class="front-lineage-from">{escape(pair["parent"])}</span>{arrow}<span class="front-lineage-to">{escape(pair["child"])}</span>'
+        f'<span class="front-lineage-from">{escape(pair["child"])}</span>{arrow}<span class="front-lineage-to">{escape(pair["parent"])}</span>'
         for pair in pairs
     )
     relations = len(story["pairs"])
@@ -2157,7 +2157,7 @@ def _home_lead_figure_html(story):
     description = escape(_story_pairs_description(pairs), quote=True)
     return (
         f'<div class="front-lead-figure" role="img" aria-label="Lead image, built-on lines of descent: {description}">{cells}'
-        f'<p class="front-lead-caption">{relations} “built on” {noun} from the map · Figure: Shipped map</p></div>'
+        f'<p class="front-lead-caption">{relations} “built on” {noun} from the map. Each model points to the model it is built on · Figure: Shipped map</p></div>'
     )
 
 
