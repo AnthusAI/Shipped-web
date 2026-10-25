@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "38ecf1ef-8ed6-4008-b397-597c72e12f02",
+  "issue_id": "ship-a003de1a-1c26-4198-bb42-998df79659d5",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-25T13:04:16.182Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Footer line and the Sponsorship and independence policy",
+    "description": "Footer: 'Published by Anthus AI Solutions, which also sponsors it.', with links. Add the policy section to the CMS Policies item; the disclosure links point at it.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-322b5331-ed73-4365-91d0-424a60d9842a",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}
