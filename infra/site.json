@@ -4,7 +4,7 @@
   "repository": "https://github.com/AnthusAI/Shipped-web",
   "brand": "shipped",
   "frontend": "markus-static",
-  "papyrusVersion": "5.53.0",
+  "papyrusVersion": "5.53.1",
   "aws": {
     "profile": "papyrus-production",
     "accountId": "712236451410",
