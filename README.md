@@ -34,7 +34,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements-publication.txt b
 .venv/bin/behave features
 ```
 
-`requirements-publication.txt` pins `papyrus-newsroom[markus]` to the same version as `@anthusai/papyrus` in `package.json` (currently **5.54.0**).
+`requirements-publication.txt` pins `papyrus-newsroom[markus]` to the same version as `@anthusai/papyrus` in `package.json` (currently **5.55.0**).
 
 Build the public site locally from the test fixtures, then serve it over HTTP. Opening the pages from disk breaks the root-relative assets.
 
