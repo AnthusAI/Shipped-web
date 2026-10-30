@@ -26,6 +26,7 @@ ANALYTICS_IDENTITY_FIELDS = re.compile(r"user_id|userId|user_properties|client_i
 GTAG_CALL = re.compile(r"gtag\s*\((?:[^()]|\([^()]*\))*\)|papyrusAnalytics\.track\s*\((?:[^()]|\([^()]*\))*\)")
 IDENTITY_QUERY_NAME = re.compile(r"[?&](?:token|t|ss|sitesubject|subject|email|handle|user|user_id|person|person_id|personid)=", re.IGNORECASE)
 
+VENDORED_LIBRARY = re.compile(r"(?:^|/)_plugins/mermaid-\d+\.\d+\.\d+\.min\.js$")
 SPONSORSHIP_SCRIPT_PATH = "/assets/shipped-sponsorship.js"
 SPONSORSHIP_EVENT_NAMES = {"view_promotion", "select_promotion"}
 SPONSORSHIP_EVENT_FIELDS = {
@@ -106,6 +107,10 @@ def scan_files(files: Mapping[str, bytes | str], allowed_reader_ids: Iterable[st
     allowed = list(allowed_reader_ids)
     found: dict[str, list[str]] = {}
     for name, body in files.items():
+        # The self-hosted Mermaid library (Papyrus 5.62.0) is third-party code with no reader data; its C4 style names
+        # (`person_border`) match the person id pattern.
+        if VENDORED_LIBRARY.search(name):
+            continue
         text = body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
         is_page = name.endswith("/") or name.endswith(".html")
         is_sponsorship_script = name.endswith(SPONSORSHIP_SCRIPT_PATH.lstrip("/"))
