@@ -24,7 +24,8 @@
     },
     "siteOrigin": "https://shipped.anth.us",
     "prospectusAccountsApiStageArn": "arn:aws:execute-api:us-east-1:712236451410:bnh9mctvo9/api",
-    "readerRetirementPoll": true
+    "readerRetirementPoll": true,
+    "cliRemoteLogin": true
   },
   "github": {
     "owner": "AnthusAI",
