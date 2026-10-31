@@ -569,20 +569,21 @@ class HooksProjectionTest(unittest.TestCase):
         header = page.split("<header")[1].split("</header>")[0]
         self.assertIn('<span class="brand-word">Shipped</span>', header)
         self.assertNotIn('brand-divider', header)
+        bars = header.split('<svg class="brand-barcode-bars"', 1)[1].split("</svg>", 1)[0]
+        self.assertTrue(bars.split("<rect ", 2)[1].startswith('x="0" y="0" width="2" height="46"/>'))
+        self.assertIn('height="36"/><rect class="brand-barcode-inset"', bars)
+        self.assertTrue(bars.rstrip().endswith('height="46"/>'))
         self.assertIn('role="img"', header)
         self.assertRegex(header, r'aria-label="Barcode for SHP \d{4}-\d{2}-\d{2}, today&#x27;s date"')
         self.assertRegex(header, r'data-brand-barcode-text aria-hidden="true">SHP \d{4}-\d{2}-\d{2}<')
         self.assertIn('<script src="/assets/shipped-barcode.js" defer></script>', header)
         self.assertEqual(header.count("data-brand-barcode>"), 1)
 
-    def test_masthead_carries_the_tagline_and_the_descriptor(self):
+    def test_masthead_carries_the_tagline_without_a_descriptor(self):
         page = self._page(".")
         header = page.split("<header")[1].split("</header>")[0]
-        self.assertIn('<p class="markus-site-tagline">New arrivals in machine learning.</p>', header)
-        self.assertIn(
-            '<p class="markus-site-descriptor">Open weights, decision models, real products. Mapped as they land.</p>',
-            header,
-        )
+        self.assertIn('<p class="markus-site-tagline">New arrivals in machine learning.</p></div>', header)
+        self.assertNotIn("markus-site-descriptor", header)
 
     def test_footer_wordmark_is_plain_without_a_barcode(self):
         page = self._page(".")
@@ -593,7 +594,8 @@ class HooksProjectionTest(unittest.TestCase):
     def test_home_title_and_description_use_the_new_copy(self):
         page = self._page(".")
         self.assertIn("<title>Shipped: new arrivals in machine learning", page)
-        self.assertIn("Mapped as they land.", page)
+        self.assertIn("tracked from the moment they land.", page)
+        self.assertNotIn("Mapped as they land.", page)
         self.assertNotIn("In the wild", page)
 
     def test_pages_link_the_icon_the_apple_touch_icon_and_the_manifest(self):

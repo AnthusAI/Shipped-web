@@ -3088,7 +3088,6 @@ def _reader_sign_in(html):
 LOGOTYPE_BARCODE_PREFIX = "SHP"
 LOGOTYPE_BARCODE_PLACEHOLDER = '<span class="brand-barcode" data-brand-barcode></span>'
 LOGOTYPE_BARCODE_SCRIPT = '<script src="/assets/shipped-barcode.js" defer></script>'
-LOGOTYPE_DESCRIPTOR = "Open weights, decision models, real products. Mapped as they land."
 LOGOTYPE_TAGLINE_PARAGRAPH = re.compile(r'<p class="markus-site-tagline">(.*?)</p>', re.DOTALL)
 CODE128_START_B = 104
 CODE128_STOP = 106
@@ -3123,6 +3122,9 @@ CODE128_PATTERNS = (
    "11010010000 11010011100 11000111010"
 ).split()
 BARCODE_HEIGHT_UNITS = 46
+BARCODE_INSET_UNITS = 10
+BARCODE_INSET_FIRST_MODULE = 55
+BARCODE_INSET_END_MODULE = 134
 
 
 def _code128_set_b_modules(text):
@@ -3141,6 +3143,20 @@ def _logotype_barcode_text(day):
     return f"{LOGOTYPE_BARCODE_PREFIX} {day.isoformat()}"
 
 
+def _barcode_bar_crosses_inset(position, width):
+    return position < BARCODE_INSET_END_MODULE and position + width > BARCODE_INSET_FIRST_MODULE
+
+
+def _barcode_bar_rects(position, width):
+    if not _barcode_bar_crosses_inset(position, width):
+        return [f'<rect x="{position}" y="0" width="{width}" height="{BARCODE_HEIGHT_UNITS}"/>']
+    above_inset = BARCODE_HEIGHT_UNITS - BARCODE_INSET_UNITS
+    return [
+        f'<rect x="{position}" y="0" width="{width}" height="{above_inset}"/>',
+        f'<rect class="brand-barcode-inset" x="{position}" y="{above_inset}" width="{width}" height="{BARCODE_INSET_UNITS}"/>',
+    ]
+
+
 def _barcode_svg(modules, label):
     bars = []
     position = 0
@@ -3151,7 +3167,7 @@ def _barcode_svg(modules, label):
         end = position
         while end < len(modules) and modules[end] == "1":
             end += 1
-        bars.append(f'<rect x="{position}" y="0" width="{end - position}" height="{BARCODE_HEIGHT_UNITS}"/>')
+        bars.extend(_barcode_bar_rects(position, end - position))
         position = end
     return (
         f'<svg class="brand-barcode-bars" viewBox="0 0 {len(modules)} {BARCODE_HEIGHT_UNITS}" preserveAspectRatio="none" '
@@ -3179,8 +3195,7 @@ def _mast_logotype(html, day):
     header = LOGOTYPE_TAGLINE_PARAGRAPH.sub(
         lambda tagline: (
             '<div class="markus-site-tagwrap">'
-            f'<p class="markus-site-tagline">{tagline.group(1)}</p>'
-            f'<p class="markus-site-descriptor">{escape(LOGOTYPE_DESCRIPTOR)}</p></div>'
+            f'<p class="markus-site-tagline">{tagline.group(1)}</p></div>'
         ),
         header,
         count=1,
