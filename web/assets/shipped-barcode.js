@@ -22,6 +22,9 @@
   var START_B = 104;
   var STOP = 106;
   var HEIGHT_UNITS = 46;
+  var INSET_UNITS = 10;
+  var INSET_FIRST_MODULE = 55;
+  var INSET_END_MODULE = 134;
   var SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 
   function twoDigits(number) {
@@ -44,6 +47,20 @@
     return symbols.map(function (symbol) { return CODE128_PATTERNS[symbol]; }).join("") + "11";
   }
 
+  function appendBar(bars, x, y, width, height, className) {
+    var bar = document.createElementNS(SVG_NAMESPACE, "rect");
+    if (className) { bar.setAttribute("class", className); }
+    bar.setAttribute("x", x);
+    bar.setAttribute("y", y);
+    bar.setAttribute("width", width);
+    bar.setAttribute("height", height);
+    bars.appendChild(bar);
+  }
+
+  function crossesInset(position, width) {
+    return position < INSET_END_MODULE && position + width > INSET_FIRST_MODULE;
+  }
+
   function redraw(holder, text) {
     var bars = holder.querySelector("svg");
     var caption = holder.querySelector("[data-brand-barcode-text]");
@@ -57,12 +74,12 @@
       if (modules.charAt(position) !== "1") { position += 1; continue; }
       var end = position;
       while (end < modules.length && modules.charAt(end) === "1") { end += 1; }
-      var bar = document.createElementNS(SVG_NAMESPACE, "rect");
-      bar.setAttribute("x", position);
-      bar.setAttribute("y", 0);
-      bar.setAttribute("width", end - position);
-      bar.setAttribute("height", HEIGHT_UNITS);
-      bars.appendChild(bar);
+      if (!crossesInset(position, end - position)) {
+        appendBar(bars, position, 0, end - position, HEIGHT_UNITS);
+      } else {
+        appendBar(bars, position, 0, end - position, HEIGHT_UNITS - INSET_UNITS);
+        appendBar(bars, position, HEIGHT_UNITS - INSET_UNITS, end - position, INSET_UNITS, "brand-barcode-inset");
+      }
       position = end;
     }
     if (caption) { caption.textContent = text; }

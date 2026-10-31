@@ -1,23 +1,21 @@
 .markus-site-masthead{align-items:center}
 .markus-site-wordmark{font-size:inherit;line-height:1;margin:0 0 16px}
 .markus-site-wordmark a{display:inline-block;text-decoration:none;color:var(--brand-on)}
-.brand-lockup{display:inline-flex;align-items:stretch;box-sizing:border-box;max-width:100%;border:2.5px solid var(--brand-on);padding:10px 14px 8px;color:var(--brand-on)}
+.brand-lockup{display:inline-flex;align-items:flex-start;column-gap:30px;box-sizing:border-box;max-width:100%;border:2.5px solid var(--brand-on);padding:10px 14px 8px;color:var(--brand-on)}
 .markus-site-wordmark .brand-word{display:block;font-size:64px;line-height:.8}
-.brand-divider{flex:none;width:2.5px;margin:0 14px;background:currentColor}
-.brand-barcode{display:flex;flex-direction:column;justify-content:space-between;gap:3px;min-width:0;color:var(--brand-on)}
+.brand-barcode{position:relative;display:block;margin-top:2px;min-width:0;color:var(--brand-on)}
 .brand-barcode-bars{display:block;width:246px;height:46px}
-.brand-barcode-text{font-family:var(--font-mono);font-size:9px;font-weight:700;line-height:1;letter-spacing:.08em;text-transform:none;white-space:nowrap}
+.brand-barcode-inset{visibility:hidden}
+.brand-barcode-text{position:absolute;left:29.1%;right:29.1%;bottom:-1px;text-align:center;font-family:var(--font-mono);font-size:10px;font-weight:700;line-height:1;letter-spacing:.08em;text-transform:none;white-space:nowrap}
 .markus-site-tagwrap{flex:1 1 auto;min-width:0;max-width:none;text-align:right;margin:0 0 16px}
-.markus-site-tagwrap .markus-site-tagline,.markus-site-descriptor{text-wrap:balance}
+.markus-site-tagwrap .markus-site-tagline{text-wrap:balance}
 .markus-site-tagwrap .markus-site-tagline{margin:0;max-width:none;font-weight:600;line-height:1.2}
-.markus-site-descriptor{margin:6px 0 0;font-family:var(--font-ui);font-size:14px;font-weight:500;line-height:1.4;text-transform:none;letter-spacing:0}
 @media (max-width:640px){
   .markus-site-wordmark{margin:0 0 10px}
-  .brand-lockup{padding:7px 9px 6px}
-  .markus-site-wordmark .brand-word,.markus-site-wordmark a .brand-word{font-size:28px}
-  .brand-divider{margin:0 9px}
-  .brand-barcode-bars{width:128px;height:24px}
-  .brand-barcode-text{display:none}
+  .brand-lockup{flex-direction:column;align-items:stretch;row-gap:10px;padding:10px 12px}
+  .markus-site-wordmark .brand-word,.markus-site-wordmark a .brand-word{font-size:min(48px,calc((100vw - 64px) / 5.9))}
+  .brand-barcode{margin-top:0}
+  .brand-barcode-bars{width:100%;height:46px}
+  .brand-barcode-text{font-size:min(11px,calc((100vw - 61px) * .0387))}
   .markus-site-tagwrap{max-width:none;text-align:left;margin:0 0 12px}
-  .markus-site-descriptor{display:none}
 }
