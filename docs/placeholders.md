@@ -4,7 +4,7 @@ Parts of the site still show a design with fictional data. Each one carries the 
 
 - Whole section or block: add `is-placeholder` to the section and put one `<span class="placeholder-tag">Placeholder</span>` inside it.
 - Inline number or chip inside a real component: add `is-placeholder is-placeholder-inline` and `title="Placeholder"`. This dims it and gives it a dotted underline, with no outline and no tag.
-- Pages that are placeholders from top to bottom (Rising, Roundup, the sample item and topic pages) wrap the mocked part, not the preview line that explains it.
+- Pages that are placeholders from top to bottom (Rising, the sample Weekly and the sample topic page) wrap the mocked part, not the preview line that explains it.
 
 When a feature goes live, remove the class (and the tag) from that block in the same change that makes the data real.
 
@@ -21,11 +21,10 @@ The Underrated mark, the Underrated panel on the home page and "Nearby on the ma
 - Mentions of a signal: how many other accepted signals share at least one of its accepted entities. An entity counts only when the snapshot has it; unresolved names are ignored.
 - Underrated: editor Useful and Ready both at least `underrated.minimumUseful` and `underrated.minimumReady` in `web/scoring.json` (4 and 4), and mentions within the quietest `underrated.quietestShare` of the signals that pass those two (about the bottom third, ties kept), never above `underrated.mentionCeiling`. The mark and the figures are labelled with the item's score label ("Editor's first pass" for agent-scored items). A signal that fails the rule shows nothing, and the home panel (up to `underrated.homeLimit` signals) is left out when none qualify.
 - Nearby: up to `nearby.limit` other signals, ranked by shared accepted entities, then the same beat (topic), then newest. The reason reads "Shares maker X and task Y", or "Same beat: Decision models" when only the beat is shared. Cluster membership is not in the snapshot, so beats stand in for clusters. The block is left out when there are none.
-- The sample item page (`/sample/tern-3/`) still shows a dimmed Underrated design reference.
 
 ## Reader steering is live
 
-Reader sign-in, votes, "I used it", ratings, comments and submissions are real (Papyrus 5.22.0 `reader-steering` plugin; `web/hooks.py` mounts the islands and `head_extra` loads the reader script). The Submit and Sign in pages are real. The steering invitation on home and concept pages ("Sign in to vote, rate and say what you've used.") is live and carries no placeholder marking. "The table this week" on home is real: a compact periodic table built from the same model data as the map (symbols only, models released in the last 7 days marked with a heavy border and a dot, counts in the header). Still placeholders: the Rising board and rail (waiting for a ranked-list island; a real line above each says so) The sample item and topic pages stay as dimmed design references.
+Reader sign-in, votes, "I used it", ratings, comments and submissions are real (Papyrus 5.22.0 `reader-steering` plugin; `web/hooks.py` mounts the islands and `head_extra` loads the reader script). The Submit and Sign in pages are real. The voting invitation on home and concept pages ("Sign in to vote, rate and say what you've used.") is live and carries no placeholder marking. "The table this week" on home is real: a compact periodic table built from the same model data as the map (symbols only, models released in the last 7 days marked with a heavy border and a dot, counts in the header). Still placeholders: the Rising board and rail (waiting for a ranked-list island; a real line above each says so) The sample topic page and the sample Weekly stay as dimmed design references, kept out of the sitemap and search.
 
 ## Proposals render from published data
 

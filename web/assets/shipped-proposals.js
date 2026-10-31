@@ -26,7 +26,7 @@
   var ICON_DOWN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg>';
   var STATE_MARKS = {
     draft: { word: "Draft", className: "proposals-mark-draft", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>' },
-    in_steering: { word: "In steering", className: "proposals-mark-steering", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>' },
+    in_steering: { word: "Open for votes", engineWord: "In steering", className: "proposals-mark-steering", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>' },
     editor_review: { word: "Editor review", className: "", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8 12.1 12.5 8 12.5 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg>' },
     approved: { word: "Approved", className: "proposals-mark-approved", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.5"/></svg>' },
     declined: { word: "Declined", className: "proposals-mark-declined", icon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>' },
@@ -248,7 +248,10 @@
   function provenanceLabel(entry) {
     var mark = STATE_MARKS[entry.state];
     var label = String(entry.label || "");
-    if (mark && label.indexOf(mark.word + " \u00b7 ") === 0) return label.slice(mark.word.length + 3);
+    var prefixes = mark ? [mark.word, mark.engineWord].filter(Boolean) : [];
+    for (var index = 0; index < prefixes.length; index += 1) {
+      if (label.indexOf(prefixes[index] + " \u00b7 ") === 0) return label.slice(prefixes[index].length + 3);
+    }
     return label;
   }
 

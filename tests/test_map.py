@@ -155,8 +155,9 @@ class MapPageWithModelsTest(unittest.TestCase):
         self.assertIn("New on the map this week", self.page)
         self.assertIn("fixture concept", self.page.split('class="map-new"')[1])
 
-    def test_river_view_is_honest_about_having_no_history_and_the_sample_is_a_placeholder(self):
-        self.assertIn("This is the first build, so there is nothing to replay yet.", self.page)
+    def test_river_view_drops_the_first_build_note_and_the_sample_is_a_placeholder(self):
+        self.assertNotIn("first build", self.page)
+        self.assertNotIn("No history yet", self.page)
         sample = self.page.split('class="map-river-sample is-placeholder"')[1].split("</section>")[0]
         self.assertEqual(sample.count('class="placeholder-tag"'), 1)
         self.assertIn("not real data", sample)
