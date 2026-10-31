@@ -1,0 +1,30 @@
+# LeftBlock overrides: each entry approves one reviewed value (one rule
+# matching one exact value in one file). Changing the matched value re-blocks
+# it; unrelated edits to the line do not. `kind` is the rule's category,
+# shown for reviewers; it is not part of matching.
+version: 1
+allow:
+  - id: "2d38f7742b9669db"
+    rule: "leftblock-session-uuid"
+    file: "infra/edge/shipped-console.yaml"
+    kind: "Bare UUID (potential session/agent identifier)"
+    reason: "Public AWS managed CloudFront policy ids (CachingDisabled and AllViewerExceptHostHeader), the same values already used in infra/edge/shipped.yaml; not session identifiers"
+    added: 2026-10-31
+  - id: "e4034045225fc102"
+    rule: "leftblock-session-uuid"
+    file: "infra/edge/shipped-console.yaml"
+    kind: "Bare UUID (potential session/agent identifier)"
+    reason: "Public AWS managed CloudFront policy ids (CachingDisabled and AllViewerExceptHostHeader), the same values already used in infra/edge/shipped.yaml; not session identifiers"
+    added: 2026-10-31
+  - id: "fef967ba1601d10d"
+    rule: "leftblock-session-uuid"
+    file: "tests/test_edge_rules.py"
+    kind: "Bare UUID (potential session/agent identifier)"
+    reason: "Public AWS managed CloudFront policy ids (CachingDisabled and AllViewerExceptHostHeader), the same values already used in infra/edge/shipped.yaml; not session identifiers"
+    added: 2026-10-31
+  - id: "9621ffafef60e999"
+    rule: "leftblock-session-uuid"
+    file: "tests/test_edge_rules.py"
+    kind: "Bare UUID (potential session/agent identifier)"
+    reason: "Public AWS managed CloudFront policy ids (CachingDisabled and AllViewerExceptHostHeader), the same values already used in infra/edge/shipped.yaml; not session identifiers"
+    added: 2026-10-31

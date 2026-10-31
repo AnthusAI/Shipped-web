@@ -24,4 +24,25 @@ Order, because the edge needs the bucket and the redirects store the backend cre
 3. Set `edgeDistributionArn` in `../papyrus.config.ts` to the stack's `DistributionArn` and merge.
 4. Point the `shipped` record in the `anth.us` zone at the distribution.
 
+## The console host
+
+The newsroom console is moving to `newsroom.shipped.anth.us` (decided 2026-10-31), like `newsroom.anth.us`. `edge/shipped-console.yaml` is its own CloudFormation stack, `papyrus-edge-shipped-console`, in us-east-1:
+
+- one CloudFront distribution with the alias `newsroom.shipped.anth.us` whose only origin is the CMS app's `main` branch, uncached, with every method and the viewer's host in `x-forwarded-host`. Every path (`/newsroom*`, `/_next/*`, `/api/*`, `/cli/*`, `/.well-known/papyrus-cli.json`) reaches the CMS app;
+- its own ACM certificate, validated by a DNS record that ACM writes into the `anth.us` hosted zone (`HostedZoneId`, the zone in the account that deploys the stack), and the A and AAAA alias records in the same zone;
+- no S3 origin and no `CustomErrorResponses`, so the CMS answers its own errors.
+
+It does not use an Amplify domain association: `create-domain-association` is throttled in the papyrus-production account.
+
+Create it with a change set, read the change set, then execute it (parameters only; the zone id and the app id are not stored in this repository):
+
+```bash
+export AWS_PROFILE=papyrus-production AWS_REGION=us-east-1
+aws cloudformation create-change-set --stack-name papyrus-edge-shipped-console --change-set-name create-console --change-set-type CREATE --template-body file://infra/edge/shipped-console.yaml --parameters ParameterKey=HostedZoneId,ParameterValue=<anth.us zone id> ParameterKey=CmsAppId,ParameterValue=<CmsAppId output of amplify-app-shell-shipped-cms>
+aws cloudformation describe-change-set --stack-name papyrus-edge-shipped-console --change-set-name create-console
+aws cloudformation execute-change-set --stack-name papyrus-edge-shipped-console --change-set-name create-console
+```
+
+Expected change set: one certificate, one CloudFront function, one distribution and two record sets, all additions. The stack waits for the certificate to validate, so it takes a few minutes. The public edge stack (`papyrus-edge-shipped`) is not touched until the console has been verified on the new host.
+
 Never connect the repository from the Amplify console on an app that already has branches.
