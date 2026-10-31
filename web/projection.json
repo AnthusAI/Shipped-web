@@ -83,7 +83,7 @@
         "href": "/sign-in/"
       }
     ],
-    "brandHtml": "<span class=\"brand-lockup\"><span class=\"brand-word\">Shipped</span><span class=\"brand-divider\" aria-hidden=\"true\"></span><span class=\"brand-barcode\" data-brand-barcode></span></span>"
+    "brandHtml": "<span class=\"brand-lockup\"><span class=\"brand-word\">Shipped</span><span class=\"brand-barcode\" data-brand-barcode></span></span>"
   },
   "listings": {
     "types": [

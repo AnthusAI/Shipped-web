@@ -568,7 +568,7 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page(".")
         header = page.split("<header")[1].split("</header>")[0]
         self.assertIn('<span class="brand-word">Shipped</span>', header)
-        self.assertIn('class="brand-divider"', header)
+        self.assertNotIn('brand-divider', header)
         self.assertIn('role="img"', header)
         self.assertRegex(header, r'aria-label="Barcode for SHP \d{4}-\d{2}-\d{2}, today&#x27;s date"')
         self.assertRegex(header, r'data-brand-barcode-text aria-hidden="true">SHP \d{4}-\d{2}-\d{2}<')
