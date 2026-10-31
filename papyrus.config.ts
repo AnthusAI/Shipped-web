@@ -2,7 +2,7 @@ import { defineSite } from "@anthusai/papyrus/define-site";
 import { shippedBrand } from "./publication/brand";
 
 const defaultCognitoDomainPrefix = "papyrus-shipped-cms";
-const defaultRedirectUrls = ["http://localhost:3001/", "https://shipped.anth.us/"];
+const defaultRedirectUrls = ["http://localhost:3001/", "https://newsroom.shipped.anth.us/", "https://shipped.anth.us/"];
 
 function readNonEmptyEnvironmentValue(name: string): string | undefined {
   const value = process.env[name]?.trim();

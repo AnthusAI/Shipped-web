@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: papyrus-edge-shipped CloudFront distribution for shipped.anth.us. Default behavior serves the Shipped S3 projection bucket through OAC; /newsroom*, /_next/* and /api/* go to the CMS Amplify app main branch. The distribution has no CustomErrorResponses, because those apply to every behavior and would replace the CMS /api/* errors with the 404 page; the default behavior's origin-response function serves the 404 page instead.
+Description: papyrus-edge-shipped CloudFront distribution for shipped.anth.us. Default behavior serves the Shipped S3 projection bucket through OAC; /_next/* and /api/* go to the CMS Amplify app main branch, and /newsroom* answers 301 to the newsroom's own host (NewsroomHost), keeping the rest of the path and the query string. The distribution has no CustomErrorResponses, because those apply to every behavior and would replace the CMS /api/* errors with the 404 page; the default behavior's origin-response function serves the 404 page instead.
 Parameters:
   CertificateArn:
     Type: String
@@ -8,6 +8,10 @@ Parameters:
   ApexHost:
     Type: String
     Default: shipped.anth.us
+  NewsroomHost:
+    Type: String
+    Default: newsroom.shipped.anth.us
+    Description: The host that serves the newsroom (CMS) at its root. Old shipped.anth.us/newsroom links redirect there.
   SiteBucketRegionalDomainName:
     Type: String
     Description: The backend site bucket, <bucket>.s3.us-east-1.amazonaws.com (PAPYRUS_SITE_BUCKET on content-actions).
@@ -34,6 +38,41 @@ Resources:
           var host = request.headers.host ? request.headers.host.value : "";
           request.headers["x-forwarded-host"] = { value: host };
           return request;
+        }
+  NewsroomRedirectFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub '${AWS::StackName}-newsroom-redirect'
+      AutoPublish: true
+      FunctionConfig:
+        Comment: 301 from /newsroom* on the apex to the same path at the root of the newsroom host
+        Runtime: cloudfront-js-2.0
+      FunctionCode: !Sub |
+        function newsroomPathOnItsOwnHost(uri) {
+          var rest = uri.substring("/newsroom".length);
+          if (rest === "") return "/";
+          if (rest.charAt(0) !== "/") return uri;
+          return rest;
+        }
+        function encodedQueryString(querystring) {
+          var parts = [];
+          Object.keys(querystring || {}).forEach(function (name) {
+            var entry = querystring[name];
+            var values = entry.multiValue ? entry.multiValue : [entry];
+            values.forEach(function (value) {
+              parts.push(value.value === "" ? name : name + "=" + value.value);
+            });
+          });
+          return parts.length ? "?" + parts.join("&") : "";
+        }
+        function handler(event) {
+          var request = event.request;
+          var location = "https://${NewsroomHost}" + newsroomPathOnItsOwnHost(request.uri) + encodedQueryString(request.querystring);
+          return {
+            statusCode: 301,
+            statusDescription: "Moved Permanently",
+            headers: { location: { value: location }, "cache-control": { value: "max-age=3600" } },
+          };
         }
   NotFoundPageRole:
     Type: AWS::IAM::Role
@@ -124,7 +163,7 @@ Resources:
     Properties:
       DistributionConfig:
         Enabled: true
-        Comment: shipped.anth.us (S3 projection, newsroom on /newsroom)
+        Comment: shipped.anth.us (S3 projection; /newsroom redirects to the newsroom host)
         Aliases: !If [HasCertificate, [!Ref ApexHost], !Ref 'AWS::NoValue']
         HttpVersion: http2and3
         IPV6Enabled: true
@@ -167,7 +206,7 @@ Resources:
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
             FunctionAssociations:
               - EventType: viewer-request
-                FunctionARN: !GetAtt CmsViewerRequestFunction.FunctionARN
+                FunctionARN: !GetAtt NewsroomRedirectFunction.FunctionARN
           - PathPattern: '/_next/*'
             TargetOriginId: cms
             ViewerProtocolPolicy: redirect-to-https
