@@ -5,22 +5,22 @@
 <div class="proposals-head">
 <div class="proposals-head-main">
 <span class="cintillo">Proposals</span>
-<h1 class="proposals-title">AI proposes. You steer. Editors decide.</h1>
+<h1 class="proposals-title">AI proposes. Readers vote. Editors decide.</h1>
 <p class="proposals-intro">Draft stories, new concepts and changes to the map, written by AI and open to every signed-in reader. Votes rank the queue and advise editors; editors approve anything with copy or an image before it goes public.</p>
 <p class="proposals-legend"><span class="proposals-draft-tag"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft · not yet approved</span><span>Everything in the queue carries this label until an editor approves it.</span></p>
 </div>
 <aside class="rail proposals-how" aria-labelledby="proposals-how-h">
-<h2 id="proposals-how-h" class="rail-h">How steering works</h2>
+<h2 id="proposals-how-h" class="rail-h">How voting works</h2>
 <ol>
 <li><b>AI proposes</b> drafts, concepts, cluster names, merges and splits.</li>
-<li><b>Any signed-in reader steers</b>: vote, flag “This is wrong”, say where it belongs, suggest a better name. Karma is shown but never gates voting.</li>
+<li><b>Any signed-in reader can take part</b>: vote, flag “This is wrong”, say where it belongs, suggest a better name. Karma is shown but never gates voting.</li>
 <li><b>Editors decide.</b> When an editor overrides the community, both results stay visible, with a reason.</li>
 </ol>
 </aside>
 </div>
 
 <div class="proposals-invite">
-<span class="proposals-invite-out"><b>This map is steered by its readers.</b> Sign in to vote on drafts. It takes 10 seconds and we never publish your email.</span>
+<span class="proposals-invite-out"><b>Readers vote on what goes on this map.</b> Sign in to vote on drafts. It takes 10 seconds and we never publish your email.</span>
 <span class="proposals-invite-in">You are signed in. Voting opens here once the queue is live.</span>
 <div class="proposals-invite-action" data-island="ReaderSignIn" data-props="{}"><a class="button" href="/sign-in/">Sign in with Google</a></div>
 </div>
@@ -34,11 +34,11 @@
 </div>
 <ol class="proposals-list">
 <li class="proposals-row"><div class="proposals-vote" role="group" aria-label="Votes on [proposal title]"><button type="button" disabled aria-label="Vote up: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l5.5 9h-11z"/></svg></button><span class="proposals-vote-count">[n]</span><button type="button" disabled aria-label="Vote down: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg></button></div>
-<div class="proposals-row-body"><div class="proposals-row-tags"><span class="proposals-mark proposals-mark-draft"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft</span><span class="proposals-mark proposals-mark-steering"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>In steering</span><span class="kicker proposals-row-kind">Story</span><span class="proposals-row-meta">[age] · [n] comments</span></div>
+<div class="proposals-row-body"><div class="proposals-row-tags"><span class="proposals-mark proposals-mark-draft"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft</span><span class="proposals-mark proposals-mark-steering"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>Open for votes</span><span class="kicker proposals-row-kind">Story</span><span class="proposals-row-meta">[age] · [n] comments</span></div>
 <p class="proposals-row-title">[PROPOSAL TITLE]</p><p class="proposals-row-change">[One line on what this story would say and what it changes on the map.]</p><p class="proposals-row-evidence">Evidence · [n] signals · [source]</p>
 <div class="proposals-row-actions"><span class="proposals-quiet">This is wrong</span><span class="proposals-quiet">This belongs under…</span><span class="proposals-quiet">Suggest a better name</span><span class="proposals-quiet">Read the draft</span></div></div></li>
 <li class="proposals-row"><div class="proposals-vote" role="group" aria-label="Votes on [proposal title]"><button type="button" disabled aria-label="Vote up: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l5.5 9h-11z"/></svg></button><span class="proposals-vote-count">[n]</span><button type="button" disabled aria-label="Vote down: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg></button></div>
-<div class="proposals-row-body"><div class="proposals-row-tags"><span class="proposals-mark proposals-mark-draft"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft</span><span class="proposals-mark proposals-mark-steering"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>In steering</span><span class="kicker proposals-row-kind">Concept</span><span class="proposals-row-meta">[age] · [n] comments</span></div>
+<div class="proposals-row-body"><div class="proposals-row-tags"><span class="proposals-mark proposals-mark-draft"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10.5 2.5l3 3-8 8H2.5v-3z"/></svg>Draft</span><span class="proposals-mark proposals-mark-steering"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 13V3M2.5 5.5L5 3l2.5 2.5"/><path d="M11 3v10M8.5 10.5L11 13l2.5-2.5"/></svg>Open for votes</span><span class="kicker proposals-row-kind">Concept</span><span class="proposals-row-meta">[age] · [n] comments</span></div>
 <p class="proposals-row-title">[PROPOSAL TITLE]</p><p class="proposals-row-change">[One line on the concept this would add to the map.]</p><p class="proposals-row-evidence">Evidence · [n] signals · [source]</p>
 <div class="proposals-row-actions"><span class="proposals-quiet">This is wrong</span><span class="proposals-quiet">This belongs under…</span><span class="proposals-quiet">Suggest a better name</span><span class="proposals-quiet">Read the draft</span></div></div></li>
 <li class="proposals-row"><div class="proposals-vote" role="group" aria-label="Votes on [proposal title]"><button type="button" disabled aria-label="Vote up: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l5.5 9h-11z"/></svg></button><span class="proposals-vote-count">[n]</span><button type="button" disabled aria-label="Vote down: [proposal title]"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M8 13l5.5-9h-11z"/></svg></button></div>

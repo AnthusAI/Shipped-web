@@ -16,6 +16,6 @@ Feature: The map page has three views
     When I open the page "/map/"
     Then the page contains "The table fills in as signals are tagged with their model details."
 
-  Scenario: The river is honest about having no history yet
+  Scenario: The map no longer claims to be the first build
     When I open the page "/map/"
-    Then the page contains "This is the first build, so there is nothing to replay yet."
+    Then the page does not contain "This is the first build"

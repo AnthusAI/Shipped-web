@@ -133,7 +133,7 @@ class FrontPageProjectionTest(unittest.TestCase):
 
     def test_home_invitation_is_live_and_not_marked_as_a_placeholder(self):
         invitation = self.home.split('<div class="front-invite">')[1].split("</div>")[0]
-        self.assertIn("This map is steered by its readers. Sign in to vote, rate and say what you", invitation)
+        self.assertIn("Readers vote on what goes on this map. Sign in to vote, rate and say what you", invitation)
         self.assertIn("rate and say what you", invitation)
         self.assertNotIn("is-placeholder", invitation)
         self.assertNotIn("vote on drafts", invitation)

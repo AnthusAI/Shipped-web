@@ -97,7 +97,7 @@ STAMP_NOTE_VERBS = {"available": "Confirmed by", "verified": "Verified by"}
 STAMP_NOTE_UNNAMED_VERBS = {"available": "Confirmed on", "verified": "Verified on"}
 FOOTER_LINKS = (
     ("How the map works", "/map/"),
-    ("How steering works", "/policies/#steering"),
+    ("How voting works", "/policies/#steering"),
     ("Policies", "/policies/"),
     ("All issues", "/roundup/"),
     ("RSS", "/feed.xml"),
@@ -1163,7 +1163,7 @@ def _landing_lead_html(label):
         '<article class="landing-lead is-placeholder" aria-labelledby="landing-lead-h"><span class="placeholder-tag">Placeholder</span>'
         f'<div class="landing-lead-kicker"><span class="cintillo">Lead story</span><span class="kicker">&sect; {escape(label)}</span></div>'
         '<h2 id="landing-lead-h">The lead story for this section will appear here</h2>'
-        '<p>AI-written stories are not switched on yet. When they are, readers steer which one leads and an editor approves it.</p>'
+        '<p>AI-written stories are not switched on yet. When they are, readers vote on which one leads and an editor approves it.</p>'
         '<p class="concept-note">Drafted by AI &middot; Approved by [editor] &middot; [date]</p></article>'
     )
 
@@ -1238,10 +1238,6 @@ MAP_RIVER_MARK_SIZE = 24
 MAP_RIVER_HEIGHT = 240
 MAP_RIVER_MARK_BAND = 28
 MAP_RIVER_UNIT_HEIGHT = 8
-MAP_COLD_START_TEXT = (
-    "This is the first build, so there is nothing to replay yet. Each Friday adds a column here; "
-    "after 8 weeks the river below starts to show births, merges and splits."
-)
 MAP_WHY_TABLE_NOTE = (
     "Most AI periodic tables map concepts (prompts, RAG, agents), and the product ones turn into logo walls because a tile’s "
     "position says little. This one places real signals on two measurable axes, task group and parameter size, so an empty "
@@ -1534,6 +1530,17 @@ def _map_edited_on(page, models=()):
     index = _map_knowledge_index(page)
     stamp = (index or {}).get("asOf") or max((model["sort_date"] for model in models), default="")
     return _full_date_label(stamp[:10]) if stamp else ""
+
+
+def _knowledge_week_html(page, attributes):
+    stamp = (_knowledge_index(page).get("asOf") or "")[:10]
+    week = f"Week of {_full_date_label(stamp)} · " if stamp else ""
+    return f'<p class="front-side-kicker kicker">{escape(week)}Edited by AI</p>'
+
+
+def _beats_nav_html(page, attributes):
+    beats = [beat for beat in _knowledge_index(page).get("beats") or [] if beat.get("href") and beat.get("name")]
+    return "".join(f'<a href="{escape(beat["href"], quote=True)}">{escape(beat["name"])}</a>' for beat in beats)
 
 
 def _map_why_html(edited_on):
@@ -1840,8 +1847,7 @@ def _map_river(page, attributes):
     now_html = (
         '<section class="map-now" aria-labelledby="map-now-h"><div class="section-heading"><span class="cintillo">Now</span>'
         '<h2 id="map-now-h">Clusters this week</h2></div>'
-        f'{_map_now_html(clusters)}'
-        f'<div class="map-cold-start"><b>No history yet</b><p>{escape(MAP_COLD_START_TEXT)}</p></div></section>'
+        f'{_map_now_html(clusters)}</section>'
     )
     return _map_pattern_defs_html() + now_html + _map_sample_river_html()
 
@@ -1887,7 +1893,7 @@ HOME_LEAD_PLACEHOLDER_HTML = (
     '<div class="front-lead-labels"><span class="cintillo">Lead story</span><span class="kicker">§ Decisions in the wild</span></div>\n'
     '<h1 id="front-lead-h"><a href="/topics/decision-models/">Decision models are starting to have family trees</a></h1>\n'
     '<p class="front-lead-standfirst">Three decision models released since [date] say whose weights they started from. The map now draws those lines, and a new concept is waiting for your vote.</p>\n'
-    '<p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span><b>[n]</b> readers steered it</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p>\n'
+    '<p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span><b>[n]</b> reader votes</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p>\n'
     '<p class="front-chips"><span class="entity-chip"><i>topic</i>Decision models</span><span class="entity-chip"><i>task</i>[task]</span><span class="entity-chip"><i>model</i>[model]</span><span class="entity-chip"><i>maker</i>[maker]</span></p>\n'
     '</article>'
 )
@@ -2331,6 +2337,10 @@ def block(name, attributes, page):
         return _topic_board(page, attributes)
     if name == "concept-stories":
         return _concept_stories(page, attributes)
+    if name == "map-week":
+        return _knowledge_week_html(page, attributes)
+    if name == "beats-nav":
+        return _beats_nav_html(page, attributes)
     if name in CONCEPT_BLOCKS:
         return CONCEPT_BLOCKS[name](page, attributes)
     raise ValueError(f"unknown block {name!r}")

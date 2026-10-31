@@ -229,5 +229,7 @@ Promise.all([
   assert.ok(requestedUrls[0].startsWith("/api/reader/me?subjects=proposal%3Afixture-"));
   assert.deepStrictEqual(plain(disabledVoteState.mine), {});
   assert.deepStrictEqual(plain(signedOutVoteState.mine), {});
-  console.log("proposals script checks passed");
+  assert.strictEqual(script.provenanceLabel({ state: "in_steering", label: "In steering \u00b7 Proposed by AI" }), "Proposed by AI");
+assert.strictEqual(script.provenanceLabel({ state: "in_steering", label: "Open for votes \u00b7 Proposed by AI" }), "Proposed by AI");
+console.log("proposals script checks passed");
 });
