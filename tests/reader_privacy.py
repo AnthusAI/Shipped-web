@@ -107,7 +107,7 @@ def scan_files(files: Mapping[str, bytes | str], allowed_reader_ids: Iterable[st
     allowed = list(allowed_reader_ids)
     found: dict[str, list[str]] = {}
     for name, body in files.items():
-        # The self-hosted Mermaid library (Papyrus 5.62.0) is third-party code with no reader data; its C4 style names
+        # The self-hosted Mermaid library (Papyrus 5.62.1) is third-party code with no reader data; its C4 style names
         # (`person_border`) match the person id pattern.
         if VENDORED_LIBRARY.search(name):
             continue
