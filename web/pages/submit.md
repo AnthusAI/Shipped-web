@@ -12,17 +12,18 @@
 <p class="form-rules">After you send a link it shows as Announced while we read it. The form checks at once whether the link is already in, or another link from the same site came in recently. “Save draft” keeps your unsent form in this browser only; it is never sent anywhere, and it clears when you submit.</p>
 <div class="reader-submit" data-island="Submit" data-props="{}"></div>
 <noscript><p class="field-hint">Submitting needs JavaScript. Without it you can still read the board.</p></noscript>
-<section class="on-the-map is-placeholder" aria-labelledby="on-the-map-h">
+<section class="on-the-map is-placeholder" aria-labelledby="on-the-map-h" data-extraction-live>
 <span class="placeholder-tag">Placeholder</span>
 <div class="step-line"><span class="cintillo">On the map</span><h2 id="on-the-map-h">Confirm what the map pulled out</h2></div>
-<p class="field-hint">After you send a link, AI reads it and pulls these out for the map. You confirm, fix or remove them. Dashed ones would be new concepts and go to the Proposals queue.</p>
-<div class="tag-table">
+<p class="field-hint" data-extraction-sample>After you send a link, AI reads it and pulls these out for the map. You confirm, fix or remove them. Dashed ones would be new concepts and go to the Proposals queue.</p>
+<div class="tag-table" data-extraction-sample>
 <div class="tag-row"><span class="kicker">Section</span><span class="tag-chips"><span class="entity-chip"><i>section</i>[SECTION]</span></span><span class="tag-action">Change</span></div>
 <div class="tag-row"><span class="kicker">Maker</span><span class="tag-chips"><span class="entity-chip"><i>maker</i>[MAKER]</span></span><span class="tag-action">Fix</span></div>
 <div class="tag-row"><span class="kicker">Built on</span><span class="tag-chips"><span class="entity-chip"><i>model</i>[PARENT MODEL]</span></span><span class="tag-action">Fix</span></div>
 <div class="tag-row"><span class="kicker">Task</span><span class="tag-chips"><span class="entity-chip"><i>task</i>[TASK]</span><span class="entity-chip entity-chip-proposed"><i>task</i>[NEW TASK] · new</span></span><span class="tag-action">Fix</span></div>
 <div class="tag-row"><span class="kicker">Licence</span><span class="tag-chips"><span class="entity-chip"><i>licence</i>[LICENCE]</span></span><span class="tag-action">Fix</span></div>
 </div>
+<div class="extraction-records" data-extraction-records></div>
 </section>
 </div>
 <aside class="form-side">
