@@ -10,7 +10,7 @@ import json
 import logging
 import math
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from functools import lru_cache
 from html import escape, unescape
 from pathlib import Path
@@ -1268,6 +1268,14 @@ MAP_RIVER_MARK_SHAPES = {
     "split": ('<path d="M8 2v6M8 8l-4.5 5.5M8 8l4.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8"/>', "Cluster split"),
     "merged": ('<path d="M3.5 2.5L8 8l4.5-5.5M8 8v6" fill="none" stroke="currentColor" stroke-width="1.8"/>', "Clusters merged"),
 }
+MAP_RIVER_STREAM_LIMIT = 5
+MAP_RIVER_OTHER_LABEL = "Other clusters"
+CLUSTER_HISTORY_SCHEMA_VERSION = 1
+CLUSTER_EVENT_MARK_KINDS = {"born": "born", "merged_from": "merged", "split_into": "split"}
+CLUSTER_CHANGE_MARK_SHAPES = {
+    **{kind: shape for kind, (shape, _) in MAP_RIVER_MARK_SHAPES.items()},
+    "continued": '<path d="M2 8h10M9 4.5L12.5 8 9 11.5" fill="none" stroke="currentColor" stroke-width="1.8"/>',
+}
 
 
 @lru_cache(maxsize=1)
@@ -1841,6 +1849,198 @@ def _map_sample_river_html():
     )
 
 
+def _knowledge_history(page):
+    lookup = getattr(getattr(page, "site", None), "knowledge", None)
+    reader = getattr(lookup, "history", None)
+    history = reader() if callable(reader) else None
+    if not isinstance(history, dict) or history.get("schemaVersion") != CLUSTER_HISTORY_SCHEMA_VERSION:
+        return None
+    weeks = [week for week in history.get("weeks") or [] if isinstance(week, dict) and week.get("asOf")]
+    return {**history, "weeks": weeks} if weeks else None
+
+
+def _short_date_label(iso_date):
+    try:
+        return datetime.fromisoformat(str(iso_date)[:10]).strftime("%-d %b")
+    except (TypeError, ValueError):
+        return str(iso_date or "")
+
+
+def _weeks_before(iso_date, count):
+    try:
+        return (datetime.fromisoformat(str(iso_date)[:10]) - timedelta(weeks=count)).date().isoformat()
+    except (TypeError, ValueError):
+        return str(iso_date or "")
+
+
+def _history_labels(weeks):
+    labels = {}
+    for week in weeks:
+        for cluster in week.get("clusters") or []:
+            if cluster.get("uid") and cluster.get("label"):
+                labels[cluster["uid"]] = str(cluster["label"])
+    return labels
+
+
+def _river_streams(weeks, labels):
+    totals = {}
+    for week in weeks:
+        for cluster in week.get("clusters") or []:
+            if cluster.get("uid") in labels:
+                totals[cluster["uid"]] = totals.get(cluster["uid"], 0) + int(cluster.get("itemCount") or 0)
+    ranked = sorted(totals, key=lambda uid: (-totals[uid], labels[uid]))
+    shown = ranked[:MAP_RIVER_STREAM_LIMIT]
+    streams = []
+    for uid in shown:
+        streams.append((labels[uid], [
+            sum(int(cluster.get("itemCount") or 0) for cluster in week.get("clusters") or [] if cluster.get("uid") == uid)
+            for week in weeks
+        ]))
+    other = [
+        sum(int(cluster.get("itemCount") or 0) for cluster in week.get("clusters") or [] if cluster.get("uid") not in shown)
+        for week in weeks
+    ]
+    if any(other):
+        streams.append((MAP_RIVER_OTHER_LABEL, other))
+    return streams
+
+
+def _river_week_kinds(week):
+    counts = {}
+    for event in week.get("events") or []:
+        kind = CLUSTER_EVENT_MARK_KINDS.get(event.get("event"))
+        if kind:
+            counts[kind] = counts.get(kind, 0) + 1
+    return [(kind, counts[kind]) for kind in ("born", "split", "merged") if kind in counts]
+
+
+def _river_marks_html(weeks, first_slot):
+    marks = []
+    for offset, week in enumerate(weeks):
+        kinds = _river_week_kinds(week) if offset else []
+        if not kinds:
+            continue
+        size = min(MAP_RIVER_MARK_SIZE, MAP_RIVER_COLUMN_WIDTH // len(kinds))
+        left = (first_slot + offset) * MAP_RIVER_COLUMN_WIDTH + (MAP_RIVER_COLUMN_WIDTH - size * len(kinds)) // 2
+        for position, (kind, count) in enumerate(kinds):
+            label = f"{MAP_RIVER_MARK_SHAPES[kind][1]}: {count} in the week of {_short_date_label(week['asOf'])}"
+            marks.append(
+                f'<svg x="{left + position * size}" y="2" width="{size}" height="{size}" viewBox="0 0 16 16" role="img" aria-label="{escape(label, quote=True)}">'
+                f'<title>{escape(label)}</title>{MAP_RIVER_MARK_SHAPES[kind][0]}</svg>'
+            )
+    return "".join(marks)
+
+
+def _river_numbers_html(weeks, streams):
+    head = "".join(f'<th scope="col">{escape(_short_date_label(week["asOf"]))}</th>' for week in weeks)
+    rows = "".join(
+        f'<tr><th scope="row">{escape(label)}</th>{"".join(f"<td>{value}</td>" for value in values)}</tr>'
+        for label, values in streams
+    )
+    return (
+        '<details class="map-river-numbers"><summary>The numbers</summary><div class="map-river-numbers-scroll">'
+        f'<table><thead><tr><th scope="col">Cluster</th>{head}</tr></thead><tbody>{rows}</tbody></table></div></details>'
+    )
+
+
+def _map_cluster_river_html(history):
+    weeks = history["weeks"][-MAP_RIVER_WEEKS:]
+    streams = _river_streams(weeks, _history_labels(weeks))
+    first_slot = MAP_RIVER_WEEKS - len(weeks)
+    width = MAP_RIVER_COLUMN_WIDTH * MAP_RIVER_WEEKS
+    total_height = MAP_RIVER_HEIGHT + MAP_RIVER_MARK_BAND
+    peak = max((sum(values[offset] for _, values in streams) for offset in range(len(weeks))), default=0) or 1
+    columns = []
+    for offset in range(len(weeks)):
+        floor = total_height
+        for stream, (_, values) in enumerate(streams):
+            height = round(MAP_RIVER_HEIGHT * values[offset] / peak)
+            if height < 2:
+                continue
+            floor -= height
+            columns.append(
+                f'<rect x="{(first_slot + offset) * MAP_RIVER_COLUMN_WIDTH + 1}" y="{floor}" width="{MAP_RIVER_COLUMN_WIDTH - 2}" height="{height - 1}" '
+                f'fill="url(#{MAP_PATTERN_ID_PREFIX}{stream % MAP_PATTERN_COUNT})" stroke="currentColor" stroke-width="1"/>'
+            )
+    stream_labels = "".join(
+        f'<li><svg viewBox="0 0 14 14" width="14" height="14" aria-hidden="true"><rect x="0.75" y="0.75" width="12.5" height="12.5" fill="url(#{MAP_PATTERN_ID_PREFIX}{stream % MAP_PATTERN_COUNT})" stroke="currentColor" stroke-width="1.5"/></svg>{escape(label)}</li>'
+        for stream, (label, _) in reversed(list(enumerate(streams)))
+    )
+    legend = "".join(
+        f'<li><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">{MAP_RIVER_MARK_SHAPES[kind][0]}</svg>{label}</li>'
+        for kind, label in (("born", "Born"), ("split", "Split"), ("merged", "Merged"))
+    )
+    first_week, last_week = _short_date_label(weeks[0]["asOf"]), _short_date_label(weeks[-1]["asOf"])
+    frame_start = _short_date_label(_weeks_before(weeks[-1]["asOf"], MAP_RIVER_WEEKS - 1)) if first_slot else first_week
+    week_count = f"{len(weeks)} week" + ("" if len(weeks) == 1 else "s")
+    note = (
+        f"Signals per cluster, week by week, from the week of {first_week}. The river fills in as each weekly run adds a week."
+        if len(weeks) < MAP_RIVER_WEEKS else f"Signals per cluster, week by week, over the last {MAP_RIVER_WEEKS} weeks."
+    )
+    summary = f"Stacked river of signals per cluster over {week_count}, from the week of {first_week} to the week of {last_week}."
+    return (
+        '<section class="map-river" aria-labelledby="map-river-h">'
+        '<div class="section-heading"><span class="cintillo">Over time</span><h2 id="map-river-h">Cluster river</h2>'
+        f'<span class="section-heading-note">{escape(week_count)} of history</span></div>'
+        f'<p class="map-river-note">{escape(note)}</p>'
+        '<div class="map-river-figure">'
+        f'<svg class="map-river-chart" viewBox="0 0 {width} {total_height}" role="img" aria-label="{escape(summary, quote=True)}">{_river_marks_html(weeks, first_slot)}{"".join(columns)}</svg>'
+        f'<ul class="map-river-labels">{stream_labels}</ul></div>'
+        f'<div class="map-river-axis kicker"><span>Week of {escape(frame_start)}</span><span>Week of {escape(last_week)}</span></div>'
+        f'<ul class="map-river-legend">{legend}<li>Each stream is named in the key and filled with its own pattern.</li></ul>'
+        f'{_river_numbers_html(weeks, streams)}</section>'
+    )
+
+
+def _cluster_names_text(uids, labels):
+    names = [labels[uid] for uid in uids if uid in labels]
+    unnamed = len(uids) - len(names)
+    if unnamed:
+        names.append(f"{unnamed} unnamed")
+    if len(names) <= 1:
+        return "".join(names)
+    return ", ".join(names[:-1]) + " and " + names[-1]
+
+
+def _cluster_changes_rows(week, labels):
+    events = week.get("events") or []
+    rows = []
+    born = [event["uid"] for event in events if event.get("event") == "born" and event.get("uid")]
+    if born:
+        rows.append(("born", "Born", _cluster_names_text(born, labels)))
+    for event in events:
+        if event.get("event") == "merged_from" and event.get("uid"):
+            rows.append(("merged", "Merged", f"{_cluster_names_text([event['uid']], labels)} from {_cluster_names_text(event.get('sources') or [], labels)}"))
+    for event in events:
+        if event.get("event") == "split_into" and event.get("uid"):
+            rows.append(("split", "Split", f"{_cluster_names_text([event['uid']], labels)} into {_cluster_names_text(event.get('into') or [], labels)}"))
+    continued = sum(1 for event in events if event.get("event") == "continued")
+    if continued:
+        rows.append(("continued", "Continued", f"{continued} cluster" + ("" if continued == 1 else "s")))
+    return rows
+
+
+def _map_changes_html(page, attributes):
+    history = _knowledge_history(page)
+    if history is None or len(history["weeks"]) < 2:
+        return ""
+    weeks = history["weeks"]
+    labels = _history_labels(weeks)
+    rows = _cluster_changes_rows(weeks[-1], labels)
+    if not rows:
+        return ""
+    items = "".join(
+        f'<li><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">{CLUSTER_CHANGE_MARK_SHAPES[kind]}</svg>'
+        f'<b>{escape(word)}</b> <span>{escape(text)}</span></li>'
+        for kind, word, text in rows
+    )
+    return (
+        '<section class="front-changes" aria-labelledby="front-changes-h">'
+        f'<h3 id="front-changes-h" class="kicker">Since the week of {escape(_short_date_label(weeks[-2]["asOf"]))}</h3>'
+        f'<ul class="front-changes-list">{items}</ul></section>'
+    )
+
+
 def _map_river(page, attributes):
     source = _map_knowledge_source(page)
     clusters = (source.clusters() if source is not None else None) or {}
@@ -1849,7 +2049,9 @@ def _map_river(page, attributes):
         '<h2 id="map-now-h">Clusters this week</h2></div>'
         f'{_map_now_html(clusters)}</section>'
     )
-    return _map_pattern_defs_html() + now_html + _map_sample_river_html()
+    history = _knowledge_history(page)
+    river_html = _map_cluster_river_html(history) if history is not None else _map_sample_river_html()
+    return _map_pattern_defs_html() + now_html + river_html
 
 
 def _map_block(name, attributes, page):
@@ -2341,6 +2543,8 @@ def block(name, attributes, page):
         return _knowledge_week_html(page, attributes)
     if name == "beats-nav":
         return _beats_nav_html(page, attributes)
+    if name == "map-changes":
+        return _map_changes_html(page, attributes)
     if name in CONCEPT_BLOCKS:
         return CONCEPT_BLOCKS[name](page, attributes)
     raise ValueError(f"unknown block {name!r}")

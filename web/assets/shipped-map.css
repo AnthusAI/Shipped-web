@@ -146,7 +146,13 @@ a.map-chip:hover{color:var(--brand-text);text-decoration:underline}
 .map-cold-start{border:1.5px dashed var(--rule-strong);padding:18px 20px;margin-top:8px}
 .map-cold-start b{font-family:var(--font-title);font-stretch:125%;font-size:20px;font-weight:800}
 .map-cold-start p{margin:6px 0 0;max-width:62ch}
-.map-river-sample{margin-top:52px}
+.map-river-sample,.map-river{margin-top:52px}
+.map-river-numbers{margin-top:14px;font-size:13px}
+.map-river-numbers summary{cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:700}
+.map-river-numbers-scroll{overflow-x:auto;max-width:100%}
+.map-river-numbers table{border-collapse:collapse;margin-top:8px;font-family:var(--font-mono);font-size:12px}
+.map-river-numbers th,.map-river-numbers td{padding:4px 10px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+.map-river-numbers th[scope=row],.map-river-numbers thead th:first-child{text-align:left;font-family:var(--font-ui);font-weight:700}
 .map-river-note{margin:14px 0;max-width:64ch;font-size:15px}
 .map-river-figure{display:flex;gap:16px;align-items:flex-end}
 .map-river-chart{flex:1 1 auto;min-width:0;height:auto;color:var(--ink);border-bottom:2px solid var(--ink)}
