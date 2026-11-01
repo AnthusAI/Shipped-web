@@ -18,7 +18,7 @@ This repository holds **only what is specific to Shipped**: configuration, theme
 | What | Where |
 |---|---|
 | Public site | https://shipped.anth.us: a static S3 projection behind the CloudFront stack `papyrus-edge-shipped` (`infra/edge/shipped.yaml`) |
-| Newsroom (CMS) | https://shipped.anth.us/newsroom: Amplify app `dkycd9pntgo6d`, branch `main`, app-shell stack `amplify-app-shell-shipped-cms` |
+| Newsroom (CMS) | https://newsroom.shipped.anth.us, at the root (old shipped.anth.us/newsroom links redirect there): Amplify app `dkycd9pntgo6d`, branch `main`, app-shell stack `amplify-app-shell-shipped-cms` |
 | Reader API, newsletter routes | `/api/*` on the same origin, routed by the edge to the CMS app |
 | AWS | account `papyrus-production` (`712236451410`), `us-east-1` |
 | Weekly knowledge run | Papyrus scheduled container job (Step Functions + ECS Fargate), Mondays 05:00 UTC. Runbook: Papyrus `docs/knowledge-cloud-run.md` |

@@ -45,6 +45,8 @@ next-env.d.ts
 /app/api/newsroom/curation/context/route.ts
 /app/api/newsroom/curation/priming/route.ts
 /app/api/newsroom/curation/publication/route.ts
+/app/api/newsroom/source-frameable/route.ts
+/app/api/newsroom/source-icon/route.ts
 /app/api/reader/comment/delete/route.ts
 /app/api/reader/comment/edit/route.ts
 /app/api/reader/comment/route.ts
@@ -59,6 +61,8 @@ next-env.d.ts
 /app/api/revalidate/route.ts
 /app/archive/page.tsx
 /app/articles/\[slug\]/page.tsx
+/app/cli/approve/route.ts
+/app/cli/callback/route.ts
 /app/cyclotron/page.tsx
 /app/layout.tsx
 /app/newsroom/\[section\]/\[...selection\]/page.tsx

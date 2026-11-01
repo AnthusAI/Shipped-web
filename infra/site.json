@@ -20,12 +20,14 @@
       "PAPYRUS_ENABLE_SLACK": "false",
       "PAPYRUS_ENABLE_INBOUND_EMAIL": "false",
       "PAPYRUS_ENABLE_STORAGE_BACKUPS": "false",
-      "PAPYRUS_OAUTH_REDIRECT_URLS": "http://localhost:3001/,https://shipped.anth.us/,https://main.dkycd9pntgo6d.amplifyapp.com/"
+      "PAPYRUS_OAUTH_REDIRECT_URLS": "http://localhost:3001/,https://newsroom.shipped.anth.us/,https://shipped.anth.us/,https://main.dkycd9pntgo6d.amplifyapp.com/"
     },
     "siteOrigin": "https://shipped.anth.us",
     "prospectusAccountsApiStageArn": "arn:aws:execute-api:us-east-1:712236451410:bnh9mctvo9/api",
     "readerRetirementPoll": true,
-    "cliRemoteLogin": true
+    "cliRemoteLogin": true,
+    "consoleOrigin": "https://newsroom.shipped.anth.us",
+    "cliOnFederationClient": true
   },
   "github": {
     "owner": "AnthusAI",
@@ -35,5 +37,11 @@
     ],
     "ownerId": 152415604,
     "repoId": 1428297675
+  },
+  "email": {
+    "mode": "existing",
+    "sendingDomain": "shipped.anth.us",
+    "configurationSet": "papyrus-shipped",
+    "eventTopicName": "papyrus-newsletter-events-shipped"
   }
 }
