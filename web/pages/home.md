@@ -35,6 +35,8 @@
 
 ::include{kind="block" name="knowledge-clusters" limit=4 terms=3 empty="No clusters yet. They appear when the topic model finds a group of items that belong together."}
 
+::include{kind="block" name="map-changes"}
+
 ::raw
 </section>
 </aside>
