@@ -97,7 +97,7 @@ STAMP_NOTE_VERBS = {"available": "Confirmed by", "verified": "Verified by"}
 STAMP_NOTE_UNNAMED_VERBS = {"available": "Confirmed on", "verified": "Verified on"}
 FOOTER_LINKS = (
     ("How the map works", "/map/"),
-    ("How steering works", "/policies/#steering"),
+    ("How voting works", "/policies/#steering"),
     ("Policies", "/policies/"),
     ("All issues", "/roundup/"),
     ("RSS", "/feed.xml"),
@@ -1163,7 +1163,7 @@ def _landing_lead_html(label):
         '<article class="landing-lead is-placeholder" aria-labelledby="landing-lead-h"><span class="placeholder-tag">Placeholder</span>'
         f'<div class="landing-lead-kicker"><span class="cintillo">Lead story</span><span class="kicker">&sect; {escape(label)}</span></div>'
         '<h2 id="landing-lead-h">The lead story for this section will appear here</h2>'
-        '<p>AI-written stories are not switched on yet. When they are, readers steer which one leads and an editor approves it.</p>'
+        '<p>AI-written stories are not switched on yet. When they are, readers vote on which one leads and an editor approves it.</p>'
         '<p class="concept-note">Drafted by AI &middot; Approved by [editor] &middot; [date]</p></article>'
     )
 
@@ -1238,10 +1238,6 @@ MAP_RIVER_MARK_SIZE = 24
 MAP_RIVER_HEIGHT = 240
 MAP_RIVER_MARK_BAND = 28
 MAP_RIVER_UNIT_HEIGHT = 8
-MAP_COLD_START_TEXT = (
-    "This is the first build, so there is nothing to replay yet. Each Friday adds a column here; "
-    "after 8 weeks the river below starts to show births, merges and splits."
-)
 MAP_WHY_TABLE_NOTE = (
     "Most AI periodic tables map concepts (prompts, RAG, agents), and the product ones turn into logo walls because a tile’s "
     "position says little. This one places real signals on two measurable axes, task group and parameter size, so an empty "
@@ -1534,6 +1530,17 @@ def _map_edited_on(page, models=()):
     index = _map_knowledge_index(page)
     stamp = (index or {}).get("asOf") or max((model["sort_date"] for model in models), default="")
     return _full_date_label(stamp[:10]) if stamp else ""
+
+
+def _knowledge_week_html(page, attributes):
+    stamp = (_knowledge_index(page).get("asOf") or "")[:10]
+    week = f"Week of {_full_date_label(stamp)} · " if stamp else ""
+    return f'<p class="front-side-kicker kicker">{escape(week)}Edited by AI</p>'
+
+
+def _beats_nav_html(page, attributes):
+    beats = [beat for beat in _knowledge_index(page).get("beats") or [] if beat.get("href") and beat.get("name")]
+    return "".join(f'<a href="{escape(beat["href"], quote=True)}">{escape(beat["name"])}</a>' for beat in beats)
 
 
 def _map_why_html(edited_on):
@@ -1840,8 +1847,7 @@ def _map_river(page, attributes):
     now_html = (
         '<section class="map-now" aria-labelledby="map-now-h"><div class="section-heading"><span class="cintillo">Now</span>'
         '<h2 id="map-now-h">Clusters this week</h2></div>'
-        f'{_map_now_html(clusters)}'
-        f'<div class="map-cold-start"><b>No history yet</b><p>{escape(MAP_COLD_START_TEXT)}</p></div></section>'
+        f'{_map_now_html(clusters)}</section>'
     )
     return _map_pattern_defs_html() + now_html + _map_sample_river_html()
 
@@ -1887,7 +1893,7 @@ HOME_LEAD_PLACEHOLDER_HTML = (
     '<div class="front-lead-labels"><span class="cintillo">Lead story</span><span class="kicker">§ Decisions in the wild</span></div>\n'
     '<h1 id="front-lead-h"><a href="/topics/decision-models/">Decision models are starting to have family trees</a></h1>\n'
     '<p class="front-lead-standfirst">Three decision models released since [date] say whose weights they started from. The map now draws those lines, and a new concept is waiting for your vote.</p>\n'
-    '<p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span><b>[n]</b> readers steered it</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p>\n'
+    '<p class="front-provenance"><span class="front-ai-mark">AI</span><span>Edited by AI</span><span aria-hidden="true">·</span><span><b>[n]</b> reader votes</span><span aria-hidden="true">·</span><span>Approved by <b>[editor]</b> on [date]</span></p>\n'
     '<p class="front-chips"><span class="entity-chip"><i>topic</i>Decision models</span><span class="entity-chip"><i>task</i>[task]</span><span class="entity-chip"><i>model</i>[model]</span><span class="entity-chip"><i>maker</i>[maker]</span></p>\n'
     '</article>'
 )
@@ -2331,6 +2337,10 @@ def block(name, attributes, page):
         return _topic_board(page, attributes)
     if name == "concept-stories":
         return _concept_stories(page, attributes)
+    if name == "map-week":
+        return _knowledge_week_html(page, attributes)
+    if name == "beats-nav":
+        return _beats_nav_html(page, attributes)
     if name in CONCEPT_BLOCKS:
         return CONCEPT_BLOCKS[name](page, attributes)
     raise ValueError(f"unknown block {name!r}")
@@ -3088,7 +3098,6 @@ def _reader_sign_in(html):
 LOGOTYPE_BARCODE_PREFIX = "SHP"
 LOGOTYPE_BARCODE_PLACEHOLDER = '<span class="brand-barcode" data-brand-barcode></span>'
 LOGOTYPE_BARCODE_SCRIPT = '<script src="/assets/shipped-barcode.js" defer></script>'
-LOGOTYPE_DESCRIPTOR = "Open weights, decision models, real products. Mapped as they land."
 LOGOTYPE_TAGLINE_PARAGRAPH = re.compile(r'<p class="markus-site-tagline">(.*?)</p>', re.DOTALL)
 CODE128_START_B = 104
 CODE128_STOP = 106
@@ -3123,6 +3132,9 @@ CODE128_PATTERNS = (
    "11010010000 11010011100 11000111010"
 ).split()
 BARCODE_HEIGHT_UNITS = 46
+BARCODE_INSET_UNITS = 10
+BARCODE_INSET_FIRST_MODULE = 55
+BARCODE_INSET_END_MODULE = 134
 
 
 def _code128_set_b_modules(text):
@@ -3141,6 +3153,20 @@ def _logotype_barcode_text(day):
     return f"{LOGOTYPE_BARCODE_PREFIX} {day.isoformat()}"
 
 
+def _barcode_bar_crosses_inset(position, width):
+    return position < BARCODE_INSET_END_MODULE and position + width > BARCODE_INSET_FIRST_MODULE
+
+
+def _barcode_bar_rects(position, width):
+    if not _barcode_bar_crosses_inset(position, width):
+        return [f'<rect x="{position}" y="0" width="{width}" height="{BARCODE_HEIGHT_UNITS}"/>']
+    above_inset = BARCODE_HEIGHT_UNITS - BARCODE_INSET_UNITS
+    return [
+        f'<rect x="{position}" y="0" width="{width}" height="{above_inset}"/>',
+        f'<rect class="brand-barcode-inset" x="{position}" y="{above_inset}" width="{width}" height="{BARCODE_INSET_UNITS}"/>',
+    ]
+
+
 def _barcode_svg(modules, label):
     bars = []
     position = 0
@@ -3151,7 +3177,7 @@ def _barcode_svg(modules, label):
         end = position
         while end < len(modules) and modules[end] == "1":
             end += 1
-        bars.append(f'<rect x="{position}" y="0" width="{end - position}" height="{BARCODE_HEIGHT_UNITS}"/>')
+        bars.extend(_barcode_bar_rects(position, end - position))
         position = end
     return (
         f'<svg class="brand-barcode-bars" viewBox="0 0 {len(modules)} {BARCODE_HEIGHT_UNITS}" preserveAspectRatio="none" '
@@ -3179,8 +3205,7 @@ def _mast_logotype(html, day):
     header = LOGOTYPE_TAGLINE_PARAGRAPH.sub(
         lambda tagline: (
             '<div class="markus-site-tagwrap">'
-            f'<p class="markus-site-tagline">{tagline.group(1)}</p>'
-            f'<p class="markus-site-descriptor">{escape(LOGOTYPE_DESCRIPTOR)}</p></div>'
+            f'<p class="markus-site-tagline">{tagline.group(1)}</p></div>'
         ),
         header,
         count=1,

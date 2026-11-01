@@ -26,9 +26,9 @@
 </header>
 
 <div class="concept-invite">
-<span>This map is steered by its readers. Sign in to vote, rate and say what you've used.</span>
+<span>Readers vote on what goes on this map. Sign in to vote, rate and say what you've used.</span>
 <a class="concept-button concept-button-small" href="/sign-in/">Sign in</a>
-<a class="concept-link" href="/policies/#ranking">How steering works</a>
+<a class="concept-link" href="/policies/#ranking">How voting works</a>
 </div>
 
 <div class="concept-row">
@@ -73,7 +73,7 @@
 
 <section class="concept-proposals is-placeholder" aria-labelledby="proposals-h" data-proposals-live="concept" data-concept-name="Open TTS" data-concept-key="open-tts"><span class="placeholder-tag">Placeholder</span>
 <div class="section-heading"><span class="cintillo">Proposals</span><h2 id="proposals-h">Open proposals touching this concept</h2></div>
-<p class="concept-note">Reader proposals are not switched on yet. When they are, open proposals about this concept will be listed here, newest votes first.</p>
+<p class="concept-note">Open proposals about this concept are listed here, most votes first.</p>
 <ul class="concept-proposal-list"><li><span class="concept-proposal-kind">New concept</span> [Proposed title] <span class="concept-note">[n] votes</span></li><li><span class="concept-proposal-kind">Merge</span> [Proposed title] <span class="concept-note">[n] votes</span></li></ul>
 </section>
 

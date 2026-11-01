@@ -110,7 +110,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotIn("sample-mark", rising)
 
     def test_placeholder_pages_have_no_sample_marks(self):
-        for relative_path in ("sample/roundup", "sample/story", "sample/tern-3", "sample/voice-agents"):
+        for relative_path in ("sample/roundup", "sample/voice-agents"):
             page = self._page(relative_path)
             self.assertNotIn("sample-mark", page)
             self.assertNotIn(">Sample<", page)
@@ -131,7 +131,7 @@ class HooksProjectionTest(unittest.TestCase):
     def test_footer_is_the_wordmark_links_and_the_plain_line(self):
         page = self._page(".")
         footer = page.split("<footer")[1].split("</footer>")[0]
-        for href in ('href="/map/">How the map works', 'href="/policies/#steering">How steering works', 'href="/policies/">Policies', 'href="/roundup/">All issues', 'href="/feed.xml">RSS', 'href="/policies/#privacy">Privacy', 'href="#cookie-settings">Cookie settings'):
+        for href in ('href="/map/">How the map works', 'href="/policies/#steering">How voting works', 'href="/policies/">Policies', 'href="/roundup/">All issues', 'href="/feed.xml">RSS', 'href="/policies/#privacy">Privacy', 'href="#cookie-settings">Cookie settings'):
             self.assertIn(href, footer)
         self.assertIn("Published by Anthus AI Solutions, which also sponsors it.", footer)
         self.assertIn('href="/policies/#sponsorship">Sponsorship and independence', footer)
@@ -143,7 +143,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn('<meta name="theme-color" content="#C6F432" media="(prefers-color-scheme: dark)">', page)
 
     def test_no_visible_page_says_desk(self):
-        for relative_path in (".", "new", "roundup", "submit", "sign-in", "sample/tern-3", "sample/voice-agents", "topics/decision-models"):
+        for relative_path in (".", "new", "roundup", "submit", "sign-in", "sample/voice-agents", "topics/decision-models"):
             page = re.sub(r'<section class="clusters.*?</section>', "", self._page(relative_path), flags=re.S)
             visible = re.sub(r'class="[^"]*"|id="[^"]*"|aria-labelledby="[^"]*"|href="[^"]*"', "", page)
             self.assertNotRegex(visible.lower(), r"\bdesk\b", relative_path)
@@ -248,13 +248,13 @@ class HooksProjectionTest(unittest.TestCase):
         return [json.loads(html.unescape(raw)) for raw in re.findall(rf'data-island="{name}" data-props="([^"]*)"', page)]
 
     def test_every_page_loads_the_reader_script_and_stylesheet(self):
-        for relative_path in (".", "new", "rising", "submit", "sign-in", "policies", "open-weights/fixture-full-contract", "topics/open-tts", "sample/tern-3"):
+        for relative_path in (".", "new", "rising", "submit", "sign-in", "policies", "open-weights/fixture-full-contract", "topics/open-tts", "sample/voice-agents"):
             page = self._page(relative_path)
             self.assertIn('<link rel="stylesheet" href="/_plugins/papyrus-reader@1.css">', page, relative_path)
             self.assertIn('<script src="/_plugins/papyrus-reader@1.js" defer></script>', page, relative_path)
 
     def test_reader_sign_in_replaces_the_static_link_in_the_header_and_keeps_it_as_a_fallback(self):
-        for relative_path in (".", "submit", "sign-in", "open-weights/fixture-full-contract", "sample/tern-3"):
+        for relative_path in (".", "submit", "sign-in", "open-weights/fixture-full-contract", "new"):
             header = self._page(relative_path).split("</header>")[0]
             self.assertEqual(len(re.findall(r'data-island="ReaderSignIn"', header)), 1, relative_path)
             self.assertIn('data-island="ReaderSignIn" data-props="{}"><a href="/sign-in/"', header, relative_path)
@@ -350,11 +350,12 @@ class HooksProjectionTest(unittest.TestCase):
             self.assertNotIn("Kiln-3B", page, relative_path)
             self.assertNotIn("rail is-placeholder", page, relative_path)
 
-    def test_beat_chips_no_longer_point_at_sample_pages(self):
+    def test_beat_chips_come_from_the_knowledge_beats(self):
         for relative_path in ("new", "rising"):
             beats = self._page(relative_path).split('aria-label="Editors’ beats"')[1].split("</nav>")[0]
             self.assertNotIn("/sample/", beats, relative_path)
-            self.assertIn('href="/wiki/task-voice-agents/">Voice agents', beats, relative_path)
+            self.assertNotIn("is-placeholder", beats, relative_path)
+            self.assertIn('<a href="/topics/decision-models/">Decision models</a><a href="/topics/open-tts/">Open TTS</a>', beats, relative_path)
 
     def test_sample_voice_agents_page_says_ai_not_the_desk(self):
         page = self._page("sample/voice-agents")
@@ -493,16 +494,6 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("status-stamp-announced", page)
         self.assertIn(">Announced<", page)
 
-    def test_sample_item_page_uses_evidence_link_and_item_text_sources_and_shows_the_minimum_n_state(self):
-        page = self._page("sample/tern-3")
-        self.assertNotIn("cmts", page)
-        self.assertNotIn("corrections by readers", page)
-        self.assertNotIn("41 comments", page)
-        self.assertIn("evidence link", page)
-        self.assertIn("item text", page)
-        self.assertIn("n=3, too few", page)
-        self.assertIn("188 rated it", page)
-
     def test_sample_roundup_is_the_weekly_with_every_part_as_a_placeholder(self):
         page = self._page("sample/roundup")
         self.assertIn("New arrivals in machine learning.", page)
@@ -514,17 +505,40 @@ class HooksProjectionTest(unittest.TestCase):
         for old in ("Weekly roundup", ">Real<", ">Notable<", ">Novel<"):
             self.assertNotIn(old, page)
 
+    def test_sample_pages_that_remain_stay_out_of_search_and_the_rest_are_gone(self):
+        sitemap = (self.output_directory / "sitemap.xml").read_text(encoding="utf-8")
+        self.assertNotIn("/sample/", sitemap)
+        for relative_path in ("sample/roundup", "sample/voice-agents"):
+            self.assertIn('<meta name="robots" content="noindex', self._page(relative_path), relative_path)
+        for relative_path in ("sample/story", "sample/tern-3"):
+            self.assertFalse((self.output_directory / relative_path / "index.html").exists(), relative_path)
+
+    def test_front_map_panel_names_the_snapshot_week_and_drops_the_first_build_copy(self):
+        page = self._page(".")
+        panel = page.split('id="front-map-h"')[1].split("</section>")[0]
+        self.assertIn('<p class="front-side-kicker kicker">Week of ', panel)
+        self.assertIn(" · Edited by AI</p>", panel)
+        for stale in ("Week 1", "first build", "Everything is new"):
+            self.assertNotIn(stale, page)
+
+    def test_reader_facing_copy_says_vote_rather_than_steer(self):
+        for relative_path in (".", "proposals", "topics/decision-models", "topics/open-tts"):
+            visible = re.sub(r'class="[^"]*"|id="[^"]*"|href="[^"]*"|aria-labelledby="[^"]*"|data-[a-z-]+="[^"]*"', "", self._page(relative_path))
+            visible = re.sub(r"<script.*?</script>", "", visible, flags=re.S)
+            self.assertNotRegex(visible, r"\b[Ss]teer", relative_path)
+        self.assertIn("Up for a vote", self._page("."))
+
     def test_roundup_archive_has_the_weekly_strap_and_links_the_sample_issue(self):
         page = self._page("roundup")
         self.assertIn("<h1>The Weekly</h1>", page)
         self.assertIn("New arrivals in machine learning.", page)
         self.assertIn('href="/sample/roundup/"', page)
 
-    def test_proposals_page_explains_steering_and_keeps_the_queue_as_a_placeholder(self):
+    def test_proposals_page_explains_voting_and_keeps_the_queue_as_a_placeholder(self):
         page = self._page("proposals")
-        for text in ("AI proposes. You steer. Editors decide.", "Draft · not yet approved", "How steering works", "Karma is shown but never gates voting", "both results stay visible, with a reason", "Sign in with Google", "Two tiers", "When editors overrule the community", "data-proposals-tiers-list"):
+        for text in ("AI proposes. Readers vote. Editors decide.", "Draft · not yet approved", "How voting works", "Karma is shown but never gates voting", "both results stay visible, with a reason", "Sign in with Google", "Two tiers", "When editors overrule the community", "data-proposals-tiers-list"):
             self.assertIn(text, page)
-        for text in ("Stories", "Concepts", "Map changes", "Top", "New", "Controversial", "Overridden by editor", "Editor review", "In steering"):
+        for text in ("Stories", "Concepts", "Map changes", "Top", "New", "Controversial", "Overridden by editor", "Editor review", "Open for votes"):
             self.assertIn(text, page)
         self.assertEqual(self._island_props(page, "ReaderSignIn")[-1], {})
         queue = page.split('class="proposals-queue is-placeholder"')[1].split("</section>")[0]
@@ -533,22 +547,6 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertNotRegex(queue, r"▲ \d")
         self.assertNotIn("<button type=\"button\" aria-pressed", queue)
         self.assertNotRegex((STATIC_DIRECTORY / "pages" / "proposals.md").read_text(encoding="utf-8").lower(), r"\bdesk\b")
-
-    def test_sample_story_is_a_placeholder_with_citations_lineage_and_a_draft_box(self):
-        page = self._page("sample/story")
-        self.assertIn("Decision models are starting to have family trees", page)
-        self.assertIn("Figure: Shipped map · Edited by AI", page)
-        self.assertIn("Draft · not yet approved", page)
-        self.assertIn("Signals cited", page)
-        self.assertIn("Was this story right?", page)
-        self.assertIn("This is wrong", page)
-        self.assertIn("Sample lineage · not yet verified", page)
-        for number in range(1, 6):
-            self.assertIn(f'href="#src-{number}"', page)
-            self.assertIn(f'id="src-{number}"', page)
-        self.assertIn("<b>[n]</b> readers steered it", page)
-        self.assertIn("Approved by <b>[editor]</b>", page)
-        self.assertNotIn("sample-mark", page)
 
     def test_sign_in_page_defines_karma(self):
         page = self._page("sign-in")
@@ -568,21 +566,22 @@ class HooksProjectionTest(unittest.TestCase):
         page = self._page(".")
         header = page.split("<header")[1].split("</header>")[0]
         self.assertIn('<span class="brand-word">Shipped</span>', header)
-        self.assertIn('class="brand-divider"', header)
+        self.assertNotIn('brand-divider', header)
+        bars = header.split('<svg class="brand-barcode-bars"', 1)[1].split("</svg>", 1)[0]
+        self.assertTrue(bars.split("<rect ", 2)[1].startswith('x="0" y="0" width="2" height="46"/>'))
+        self.assertIn('height="36"/><rect class="brand-barcode-inset"', bars)
+        self.assertTrue(bars.rstrip().endswith('height="46"/>'))
         self.assertIn('role="img"', header)
         self.assertRegex(header, r'aria-label="Barcode for SHP \d{4}-\d{2}-\d{2}, today&#x27;s date"')
         self.assertRegex(header, r'data-brand-barcode-text aria-hidden="true">SHP \d{4}-\d{2}-\d{2}<')
         self.assertIn('<script src="/assets/shipped-barcode.js" defer></script>', header)
         self.assertEqual(header.count("data-brand-barcode>"), 1)
 
-    def test_masthead_carries_the_tagline_and_the_descriptor(self):
+    def test_masthead_carries_the_tagline_without_a_descriptor(self):
         page = self._page(".")
         header = page.split("<header")[1].split("</header>")[0]
-        self.assertIn('<p class="markus-site-tagline">New arrivals in machine learning.</p>', header)
-        self.assertIn(
-            '<p class="markus-site-descriptor">Open weights, decision models, real products. Mapped as they land.</p>',
-            header,
-        )
+        self.assertIn('<p class="markus-site-tagline">New arrivals in machine learning.</p></div>', header)
+        self.assertNotIn("markus-site-descriptor", header)
 
     def test_footer_wordmark_is_plain_without_a_barcode(self):
         page = self._page(".")
@@ -593,7 +592,8 @@ class HooksProjectionTest(unittest.TestCase):
     def test_home_title_and_description_use_the_new_copy(self):
         page = self._page(".")
         self.assertIn("<title>Shipped: new arrivals in machine learning", page)
-        self.assertIn("Mapped as they land.", page)
+        self.assertIn("tracked from the moment they land.", page)
+        self.assertNotIn("Mapped as they land.", page)
         self.assertNotIn("In the wild", page)
 
     def test_pages_link_the_icon_the_apple_touch_icon_and_the_manifest(self):
