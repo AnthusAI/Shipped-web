@@ -37,5 +37,11 @@
     ],
     "ownerId": 152415604,
     "repoId": 1428297675
+  },
+  "email": {
+    "mode": "existing",
+    "sendingDomain": "shipped.anth.us",
+    "configurationSet": "papyrus-shipped",
+    "eventTopicName": "papyrus-newsletter-events-shipped"
   }
 }
