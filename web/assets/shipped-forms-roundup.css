@@ -93,6 +93,7 @@ textarea.field-input{height:auto;padding:10px 12px;line-height:1.5}
   .form-main,.form-side{flex:1 1 100%;max-width:100%}
   .tag-row{grid-template-columns:minmax(0,1fr) auto}
   .tag-row .kicker{grid-column:1 / -1}
+  .extraction-field{grid-template-columns:1fr}
   .evidence-row{grid-template-columns:minmax(0,1fr) 44px}
   .evidence-row .field:nth-child(2){grid-column:1 / -1;order:3}
   .roundup-article{padding-top:28px}
@@ -116,6 +117,24 @@ textarea.field-input{height:auto;padding:10px 12px;line-height:1.5}
 .on-the-map .step-line h2{font-size:25px}
 .on-the-map .field-hint{margin:0}
 .tag-action{font-family:var(--font-mono);font-size:12px;font-weight:700;border:1.5px solid var(--ink);padding:6px 10px}
+button.tag-action{background:var(--paper);color:var(--ink);cursor:pointer}
+button.tag-action:disabled{opacity:.5;cursor:wait}
+.extraction-records{display:flex;flex-direction:column;gap:22px}
+.extraction-records:empty{display:none}
+.extraction-record{display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:2px solid var(--rule-strong)}
+.extraction-title,.extraction-status,.extraction-note{margin:0}
+.extraction-title{overflow-wrap:anywhere}
+.extraction-status{display:flex;gap:8px;align-items:baseline;font-size:15px}
+.extraction-mark{font-family:var(--font-mono);font-weight:700}
+.extraction-none{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.extraction-actions{display:flex;flex-wrap:wrap;gap:10px}
+.extraction-fix{display:flex;flex-direction:column;gap:10px}
+.extraction-fix[hidden]{display:none}
+.extraction-field{display:grid;grid-template-columns:96px minmax(0,1fr);gap:6px 14px;align-items:center}
+.extraction-field input{font:inherit;padding:6px 8px;border:1.5px solid var(--ink);background:var(--paper-raised);color:var(--ink);min-width:0}
+.extraction-fix .tag-action{align-self:flex-start}
+.extraction-note{font-family:var(--font-mono);font-size:12px}
+.extraction-note:empty{display:none}
 
 .weekly-masthead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px 24px;border-bottom:4px solid var(--brand);padding-bottom:18px;margin-bottom:30px}
 .weekly-name{margin:0;font-family:var(--font-title);font-stretch:var(--title-stretch);font-size:clamp(40px,8vw,56px);line-height:.9;font-weight:800;letter-spacing:-.035em}

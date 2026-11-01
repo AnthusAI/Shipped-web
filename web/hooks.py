@@ -27,6 +27,8 @@ WIKI_ITEM_TYPE = "wiki_page"
 READER_SCRIPT_PATH = "/_plugins/papyrus-reader@1.js"
 READER_STYLESHEET_PATH = "/_plugins/papyrus-reader@1.css"
 PROPOSALS_SCRIPT_PATH = "/assets/shipped-proposals.js"
+EXTRACTION_SCRIPT_PATH = "/assets/shipped-extraction.js"
+EXTRACTION_PAGE_PATH = "submit"
 PAGE_ITEM_TYPE = "page"
 VERSION_SUFFIX = re.compile(r"-v\d+$")
 SIGN_IN_LINK = re.compile(r'<a href="/sign-in/"[^>]*>Sign in</a>')
@@ -3280,6 +3282,7 @@ def head_extra(page):
         + _reader_settings_script()
         + f'<script src="{READER_SCRIPT_PATH}" defer></script>\n'
         f'<script src="{PROPOSALS_SCRIPT_PATH}" defer></script>'
+        + (f'\n<script src="{EXTRACTION_SCRIPT_PATH}" defer></script>' if str(getattr(page, "path", "") or "").strip("/") == EXTRACTION_PAGE_PATH else "")
         + (_sponsorship_head_html() if _sponsorship_enabled() else "")
     )
 
