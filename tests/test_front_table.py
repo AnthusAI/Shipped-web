@@ -131,6 +131,15 @@ class FrontPageProjectionTest(unittest.TestCase):
         section = self.plain_home.split('<section class="front-table-entry"')[1].split("</section>")[0]
         self.assertIn("The table fills in as signals are tagged with their model details.", section)
 
+    def test_home_shows_what_changed_in_the_clusters_since_the_previous_week(self):
+        self.assertIn("Since the week of 19 Oct", self.home)
+        panel = self.home.split("Since the week of 19 Oct")[1].split("</section>")[0]
+        self.assertIn("Agent tooling from Agents and Code models", panel)
+        self.assertIn("Voice into Voice cloning and Speech synthesis", panel)
+
+    def test_home_without_cluster_history_has_no_changes_panel(self):
+        self.assertNotIn("Since the week of", self.plain_home)
+
     def test_home_invitation_is_live_and_not_marked_as_a_placeholder(self):
         invitation = self.home.split('<div class="front-invite">')[1].split("</div>")[0]
         self.assertIn("Readers vote on what goes on this map. Sign in to vote, rate and say what you", invitation)

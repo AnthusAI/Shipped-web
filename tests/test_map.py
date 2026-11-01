@@ -155,12 +155,15 @@ class MapPageWithModelsTest(unittest.TestCase):
         self.assertIn("New on the map this week", self.page)
         self.assertIn("fixture concept", self.page.split('class="map-new"')[1])
 
-    def test_river_view_drops_the_first_build_note_and_the_sample_is_a_placeholder(self):
+    def test_river_view_is_drawn_from_the_cluster_history_in_the_knowledge_snapshot(self):
         self.assertNotIn("first build", self.page)
-        self.assertNotIn("No history yet", self.page)
-        sample = self.page.split('class="map-river-sample is-placeholder"')[1].split("</section>")[0]
-        self.assertEqual(sample.count('class="placeholder-tag"'), 1)
-        self.assertIn("not real data", sample)
+        self.assertNotIn("map-river-sample", self.page)
+        river = self.page.split('<section class="map-river"')[1].split("</section>")[0]
+        self.assertIn("2 weeks of history", river)
+        self.assertIn("Week of 26 Oct", river)
+        for label in ("Agent tooling", "Speech synthesis", "Other clusters"):
+            self.assertIn(label, river)
+        self.assertNotIn('class="placeholder-tag"', river)
         self.assertNotIn('type="range"', self.page)
 
     def test_the_map_page_uses_the_agreed_vocabulary(self):
@@ -193,6 +196,11 @@ class MapPageWithoutModelsTest(unittest.TestCase):
 
     def test_graph_view_without_entity_files_says_so_plainly(self):
         self.assertIn("No concept has recorded connections yet.", self.page)
+
+    def test_river_view_without_cluster_history_shows_the_sample_as_a_placeholder(self):
+        sample = self.page.split('class="map-river-sample is-placeholder"')[1].split("</section>")[0]
+        self.assertEqual(sample.count('class="placeholder-tag"'), 1)
+        self.assertIn("not real data", sample)
 
 
 if __name__ == "__main__":
