@@ -64,7 +64,7 @@ npm install --package-lock-only
 **Deploy:** merge to `main`. The push run deploys through OIDC, and the `current-main` job stops a late run from deploying an older commit over a newer one. If GitHub does not create the push run (an Actions incident), and only with the owner's OK, start the same job by hand:
 
 ```bash
-aws amplify start-job --app-id dkycd9pntgo6d --branch-name main --job-type RELEASE --commit-id <sha> --profile papyrus-production
+aws amplify start-job --app-id <amplify-app-id> --branch-name main --job-type RELEASE --commit-id <sha> --profile papyrus-production
 ```
 
 **Preview locally:** project the fixtures, as in the README, and serve them over HTTP.
