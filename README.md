@@ -7,6 +7,8 @@ Announcements and real-world deployments, including open-weights releases and de
 - **Newsroom (CMS)**: the stock Papyrus newsroom (`@anthusai/papyrus`, pinned in `package.json`) at `/newsroom`.
 - **Public site**: Markus pages projected into an S3 bucket and served by CloudFront from `web/projection.json`.
 
+Develop locally with `npm run dev`. Merge pull requests into `develop` (nothing builds in Amplify); a release, `develop` merged into `main`, deploys. The development policy is in [`AGENTS.md`](AGENTS.md).
+
 See [`AGENTS.md`](AGENTS.md) for the layout and rules and [`infra/README.md`](infra/README.md) for deployment.
 
 ---
