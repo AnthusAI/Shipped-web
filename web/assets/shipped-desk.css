@@ -27,6 +27,7 @@
 }
 @media (min-width:1920px){
   .shipped-page{max-width:2400px;padding-left:clamp(32px,3vw,120px);padding-right:clamp(32px,3vw,120px)}
+  .markus-page-actions:has(~.shipped-page){max-width:2400px;padding-left:clamp(32px,3vw,120px);padding-right:clamp(32px,3vw,120px)}
   .ticker-inner{max-width:2400px;padding-left:clamp(32px,3vw,120px);padding-right:clamp(32px,3vw,120px)}
   .papyrus-knowledge-trending-strip{--strip-inset:max(clamp(32px,3vw,120px),calc((100% - 2400px)/2 + clamp(32px,3vw,120px)))}
   .shipped-layout:has(>.shipped-main){display:grid;grid-template-columns:minmax(0,1fr) clamp(720px,34vw,900px);gap:0 clamp(40px,3vw,72px);align-items:start}
