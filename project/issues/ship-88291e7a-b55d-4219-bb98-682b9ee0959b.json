@@ -1,0 +1,33 @@
+{
+  "id": "ship-88291e7a-b55d-4219-bb98-682b9ee0959b",
+  "title": "Knowledge base: topics, trends, entity chips, wiki, weekly roundup",
+  "description": "PPY-428252 (wiki 495ec8, snapshots 493930, entity trends a45fd1, cluster callouts 0331f5) plus Biblicus blbs-d380cb.",
+  "type": "story",
+  "status": "closed",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "cbf9a676-9c14-4bf3-8906-e1965f602c99",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Closed with evidence. Papyrus initiative PPY-428252 is closed (knowledge base lead) and Biblicus epic blbs-d380cb is closed. Live: 282-page wiki at /wiki/ (each stamped 'Edited by AI'), trending strip and list, emerging clusters, concept of the week, 'All 282 topics', entity chips, topic pages; /_data/knowledge/index.json 200 (282 entities, 44 trending). Papyrus docs at https://p.apyr.us/public-knowledge-base.html. The weekly roundup issue itself is tracked by ship-7e99a6.",
+      "created_at": "2026-10-22T10:47:21.059698Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-10-22T00:58:15.531772Z",
+  "updated_at": "2026-10-22T10:47:21.072971Z",
+  "closed_at": "2026-10-22T10:47:21.072943Z",
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "papyrus-anthus"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

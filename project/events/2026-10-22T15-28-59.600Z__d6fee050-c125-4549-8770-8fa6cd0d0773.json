@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "d6fee050-c125-4549-8770-8fa6cd0d0773",
+  "issue_id": "ship-ddbf4600-e033-4cbc-8d56-937c15cc2679",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.600Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Round-3 design delivered by Claude Design",
+    "description": "The round-3 prompt is ready (periodic table as the Map's first view, stable curated columns, size rule, gap copy, dense cells, element symbols, section renamed \"In use\"). Ryan pastes it into the Claude Design session.\n\nClose when the canvas (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r) has the revised Map, Front, Proposals and Tokens artboards and the mobile Table.",
+    "issue_type": "task",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

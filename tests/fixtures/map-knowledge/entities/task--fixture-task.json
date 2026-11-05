@@ -1,0 +1,61 @@
+{
+ "acceptedBy": {
+  "actor": "ai",
+  "name": null,
+  "on": "2026-10-20"
+ },
+ "aliases": [],
+ "change": {
+  "last4": 3,
+  "percent": null,
+  "prior4": 1
+ },
+ "href": "/wiki/task-fixture-task/",
+ "isNew": false,
+ "itemCount": 3,
+ "key": "task--fixture-task",
+ "kind": "task",
+ "name": "fixture task",
+ "series8": [
+  0,
+  1,
+  0,
+  2,
+  3,
+  1,
+  4,
+  2
+ ],
+ "weeksOfHistory": 8,
+ "neighbours": [
+  {
+   "key": "maker--fixture-lab",
+   "kind": "maker",
+   "name": "Fixture Lab",
+   "relation": "made_by",
+   "weight": 2
+  },
+  {
+   "key": "concept--fixture-concept",
+   "kind": "concept",
+   "name": "fixture concept",
+   "relation": "mentioned_with",
+   "weight": 3
+  },
+  {
+   "key": "licence--fixture-licence",
+   "kind": "licence",
+   "name": "Fixture-1.0",
+   "relation": "mentioned_with",
+   "weight": 1
+  },
+  {
+   "key": "task--fixture-other",
+   "kind": "task",
+   "name": "fixture other",
+   "relation": "built_on",
+   "weight": 1
+  }
+ ],
+ "schemaVersion": 1
+}

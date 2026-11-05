@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "3fe4c09b-ed3d-401c-aa4c-a8588f254b71",
+  "issue_id": "ship-d02e82e8-ab3d-420c-8e8e-ed0f5292493e",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:14.592Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Comments as steering signals",
+    "description": "PPY-739cb4. Comment text steers the Cyclotrons.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

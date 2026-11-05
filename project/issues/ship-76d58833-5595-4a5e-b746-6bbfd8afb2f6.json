@@ -1,0 +1,33 @@
+{
+  "id": "ship-76d58833-5595-4a5e-b746-6bbfd8afb2f6",
+  "title": "Seed open LLMs",
+  "description": "After decision models and open TTS. Same sourcing rules.",
+  "type": "story",
+  "status": "closed",
+  "priority": 3,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-579bbb15-33e2-456f-88de-4f2968aab20c",
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "d1c0e930-4273-4f0f-93e1-a16bc02a55db",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. Done and live: 19 open LLM items, https://shipped.anth.us/tags/open-llms/.",
+      "created_at": "2026-10-22T04:03:12.495795Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-10-22T00:58:05.838677Z",
+  "updated_at": "2026-10-22T04:03:12.505892Z",
+  "closed_at": "2026-10-22T04:03:12.505859Z",
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "papyrus-anthus"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

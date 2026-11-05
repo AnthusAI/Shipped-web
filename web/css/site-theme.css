@@ -53,7 +53,7 @@
 
 body {
   margin: 0;
-  background: var(--papyrus-bg);
+  background: var(--brand-fill);
   color: var(--papyrus-ink);
   font-family: var(--font-ui);
   font-stretch: 100%;
@@ -70,6 +70,9 @@ main {
   max-width: 72rem;
   margin: 0 auto;
   padding: 2rem 1rem;
+  background: var(--papyrus-bg);
+  box-shadow: 0 0 0 100vmax var(--papyrus-bg);
+  clip-path: inset(0 -100vmax);
 }
 
 h1, h2, h3, .markus-card-title, .markus-site-wordmark {
@@ -140,6 +143,36 @@ time, .markus-time, .markus-byline, code, pre, .markus-tags, .markus-pager, .mar
   margin: 0 auto;
 }
 
+.shipped-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 2rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.shipped-footer-wordmark {
+  font-family: var(--font-title);
+  font-stretch: var(--title-stretch);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.shipped-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shipped-footer .markus-footer-text {
+  margin: 0 0 0 auto;
+}
+
 .markus-card {
   padding: 1rem;
   background: var(--paper-raised);
@@ -192,4 +225,28 @@ th {
 ::selection {
   background: var(--brand-fill);
   color: var(--brand-on);
+}
+
+:root {
+  --ink: var(--papyrus-ink);
+  --muted: var(--papyrus-muted);
+  --rule: var(--papyrus-rule);
+  --rule-strong: #1A1615;
+  --paper: var(--papyrus-bg);
+  --brand: #4A6B00;
+  --status-available: #1A1615;
+  --status-available-on: #F5F1EA;
+  --status-verified: #1C4C9C;
+  --status-announced: #5E5752;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --rule-strong: #F1ECE4;
+    --brand: #C6F432;
+    --status-available: #F1ECE4;
+    --status-available-on: #141112;
+    --status-verified: #93B4FF;
+    --status-announced: #A59D96;
+  }
 }

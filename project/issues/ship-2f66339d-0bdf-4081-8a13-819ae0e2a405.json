@@ -3,17 +3,30 @@
   "title": "Write content policies",
   "description": "Define what counts as shipped, source rules, how open-weights releases and decision models in the wild are treated, and corrections. Policies live in the newsroom backend as data (editorial missions and checks), not in the repository.",
   "type": "story",
-  "status": "open",
+  "status": "closed",
   "priority": 2,
   "assignee": null,
   "creator": null,
-  "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+  "parent": "ship-579bbb15-33e2-456f-88de-4f2968aab20c",
   "labels": [],
   "dependencies": [],
-  "comments": [],
+  "comments": [
+    {
+      "id": "a1b21e7d-5d8f-4fbd-a2fd-0cdc9a31ce9e",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. Done and live: content policies, Shipped-web PR #25, https://shipped.anth.us/policies/.",
+      "created_at": "2026-10-22T04:03:12.454698Z",
+      "comment_type": "default"
+    }
+  ],
   "created_at": "2026-10-21T11:42:25.099242Z",
-  "updated_at": "2026-10-21T11:42:25.099261Z",
-  "closed_at": null,
+  "updated_at": "2026-10-22T04:03:12.468570Z",
+  "closed_at": "2026-10-22T04:03:12.468544Z",
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "papyrus-anthus"
+  },
   "right_now_summary": null,
   "right_now_updated_at": null,
   "custom": {}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "50db464f-49ba-4ed3-8e9d-890116949707",
+  "issue_id": "ship-b88e8c9a-4943-415a-9efe-598f5c158494",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:29:00.062Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "AI-drafted sections of The Weekly",
+    "description": "Needs Papyrus: the roundup issue gets AI-drafted sections from the snapshot and the approved stories: lead essay, what moved on the map, concepts born this week, top proposal, Underrated.\n\nIt keeps the existing admin approval; any edit after approval sends it back to draft.\n\nAcceptance: one issue goes out with AI-drafted, editor-approved sections to the test inbox.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

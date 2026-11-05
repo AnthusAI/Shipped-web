@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "e377cf2a-9bd9-4f1c-995a-ec1e1ca53379",
+  "issue_id": "ship-378fcc2b-8b89-4840-8996-4377ae2f1411",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:14.129Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Public submit-a-link with moderation (human first, AI option)",
+    "description": "PPY-5b8cdc and PPY-af98c7. Public at once; human queue with undo; AI mode on GPT-6 Luna.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

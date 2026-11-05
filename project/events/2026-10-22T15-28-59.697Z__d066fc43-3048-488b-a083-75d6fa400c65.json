@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "d066fc43-3048-488b-a083-75d6fa400c65",
+  "issue_id": "ship-e51e563a-2c0e-4168-8711-9b46ff919120",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.697Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Signal pages rebuilt to the new design",
+    "description": "Rework item pages to the Signal artboard (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r):\n- the status word, with who stamped it and when;\n- summary and primary evidence;\n- On the map: entities and relations;\n- ratings on the four dimensions, readers and editors shown separately, with \"too few\" under 5 ratings;\n- the Underrated mark;\n- the stories it appears in;\n- nearby on the map.\n\nRemove \"#1 this week\" framing.\n\nAcceptance: every one of the 70 items renders the new layout, and the Markdown versions carry the same content.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

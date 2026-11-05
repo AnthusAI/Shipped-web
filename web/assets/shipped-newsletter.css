@@ -1,0 +1,20 @@
+.newsletter-signup{max-width:700px;margin:0 0 40px;padding:24px 0 8px;border-top:4px solid var(--brand);font-family:var(--font-ui)}
+.newsletter-signup h2{margin:0 0 8px;font-size:25px}
+.newsletter-dek{margin:0 0 20px;font-family:var(--font-title);font-size:19px;line-height:1.45;max-width:52ch}
+.newsletter-feed-note{margin:16px 0 0;font-size:14px;color:var(--muted)}
+.papyrus-newsletter{display:flex;flex-direction:column;gap:14px;max-width:560px}
+.papyrus-newsletter-label{font-weight:700;font-size:15px}
+.papyrus-newsletter-input{height:46px;box-sizing:border-box;border:1.5px solid var(--muted);background:var(--paper-raised);color:var(--ink);font-family:var(--font-ui);font-size:16px;padding:0 12px;width:100%;max-width:100%}
+.papyrus-newsletter-input:focus-visible,.papyrus-newsletter-checkbox:focus-visible{outline:3px solid var(--papyrus-focus);outline-offset:2px}
+.papyrus-newsletter-lists{display:flex;flex-direction:column;gap:10px;border:0;margin:0;padding:0;min-width:0}
+.papyrus-newsletter-legend{padding:0;margin:0 0 4px;font-weight:700;font-size:15px}
+.papyrus-newsletter-list{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1.5px solid var(--rule);background:var(--paper-raised);min-height:44px;box-sizing:border-box}
+.papyrus-newsletter-checkbox{margin:3px 0 0;width:18px;height:18px;accent-color:var(--brand);flex:none}
+.papyrus-newsletter-list-label{font-size:15px;line-height:1.4}
+.papyrus-newsletter-button{align-self:flex-start;font-family:var(--font-ui);font-weight:700;font-size:15px;height:44px;padding:0 18px;border:1.5px solid var(--brand-on);background:var(--brand-fill);color:var(--brand-on);cursor:pointer}
+.papyrus-newsletter-button:disabled{cursor:not-allowed;opacity:.75}
+.papyrus-newsletter-button:focus-visible{outline:3px solid var(--papyrus-focus);outline-offset:2px}
+.papyrus-newsletter-consent{margin:0;font-size:14px;line-height:1.45;color:var(--muted)}
+.papyrus-newsletter-status{margin:0;font-size:15px;font-weight:600;min-height:1.4em}
+.papyrus-newsletter-status[data-state]:not(:empty){padding:10px 12px;border:1.5px solid var(--ink);background:var(--paper-raised)}
+.papyrus-newsletter-status[data-state="check_email"]{border-left-width:6px;border-left-color:var(--brand)}

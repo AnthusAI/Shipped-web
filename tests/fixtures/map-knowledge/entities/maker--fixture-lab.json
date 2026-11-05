@@ -1,0 +1,40 @@
+{
+ "acceptedBy": {
+  "actor": "ai",
+  "name": null,
+  "on": "2026-10-20"
+ },
+ "aliases": [],
+ "change": {
+  "last4": 3,
+  "percent": null,
+  "prior4": 1
+ },
+ "href": "/wiki/maker-fixture-lab/",
+ "isNew": false,
+ "itemCount": 2,
+ "key": "maker--fixture-lab",
+ "kind": "maker",
+ "name": "Fixture Lab",
+ "series8": [
+  0,
+  1,
+  0,
+  2,
+  3,
+  1,
+  4,
+  2
+ ],
+ "weeksOfHistory": 8,
+ "neighbours": [
+  {
+   "key": "task--fixture-task",
+   "kind": "task",
+   "name": "fixture task",
+   "relation": "made_by",
+   "weight": 2
+  }
+ ],
+ "schemaVersion": 1
+}

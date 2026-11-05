@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "c62b9b10-9f67-4f4b-9657-ac29696480a8",
+  "issue_id": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T22:29:22.118Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Reader features: replace placeholders one by one",
+    "description": "Plan step 3. Each feature replaces a placeholder and drops its sample mark; architecture in docs/architecture.md. Order: real items, reader sign-in, votes/ratings/karma, submit+moderation, comments, live numbers, topics/trends/entities, wiki, weekly roundup.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": []
+  }
+}

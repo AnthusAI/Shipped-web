@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "40b7e025-e8dd-4c95-bc65-f8cd1e6fc983",
+  "issue_id": "ship-bf2bc634-c65c-4cd2-a3a3-b643de2feb10",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.679Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Section landing pages for In use, Open weights and Decisions in the wild",
+    "description": "Build one landing page per section to the Section artboard (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r):\n- section tabs;\n- the lead story (placeholder until Reposition 3);\n- clusters in the section;\n- concepts bubbling up;\n- latest signals.\n\nAcceptance: all three sections have live landing pages, and each signal list holds only that section's signals.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

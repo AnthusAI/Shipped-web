@@ -1,0 +1,61 @@
+{
+  "dimensions": [
+    {
+      "key": "useful",
+      "label": "Useful",
+      "question": "Does it do a real job well?"
+    },
+    {
+      "key": "ready",
+      "label": "Ready",
+      "question": "Could you adopt it today (docs, licence, runs on hardware you have)?"
+    },
+    {
+      "key": "advances",
+      "label": "Advances",
+      "question": "Does it push what’s possible?"
+    },
+    {
+      "key": "open",
+      "label": "Open",
+      "question": "How much is released (weights, data, code, the public record)?"
+    }
+  ],
+  "verdicts": [
+    "available",
+    "verified",
+    "announced"
+  ],
+  "verdictMeanings": {
+    "available": "Anyone can use it today.",
+    "verified": "Available, and an editor checked the evidence.",
+    "announced": "Claimed, not yet usable or not yet confirmed."
+  },
+  "underrated": {
+    "minimumUseful": 4,
+    "minimumReady": 4,
+    "quietestShare": 0.34,
+    "mentionCeiling": 5,
+    "homeLimit": 5
+  },
+  "nearby": {
+    "limit": 5,
+    "namedEntityLimit": 3
+  },
+  "topics": {
+    "decision-models": {
+      "label": "Decision models",
+      "path": "/topics/decision-models/"
+    },
+    "open-tts": {
+      "label": "Open TTS",
+      "path": "/topics/open-tts/"
+    }
+  },
+  "voteSubjects": [
+    "item",
+    "submission",
+    "story",
+    "proposal"
+  ]
+}

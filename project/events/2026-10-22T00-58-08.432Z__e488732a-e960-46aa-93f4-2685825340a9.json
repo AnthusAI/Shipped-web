@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "e488732a-e960-46aa-93f4-2685825340a9",
+  "issue_id": "ship-60c8261e-a074-4138-aa66-374fe4f1294d",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:08.432Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Item and topic twins, Accept negotiation, llms listing, page actions",
+    "description": "Shipped edge now uses the backend RedirectAndIndexFunction (PR #20). Accept: text/markdown works on items, topics and home; llms.txt lists all items; items carry page actions.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-3e4e38a4-6255-4c0d-afa7-b799eafcf5a4",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

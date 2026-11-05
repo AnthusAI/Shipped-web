@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "7318d1a7-2ac9-42a3-9c24-530324f32dc9",
+  "issue_id": "ship-09ea2cdb-f414-40fd-8aad-41569c2ca795",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:29:00.046Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Weekly knowledge history and a scheduled knowledge run",
+    "description": "Needs Papyrus:\n- Archive the knowledge snapshot every week, including cluster identity (new, continued, merged, split), starting now: cluster history cannot be backfilled. Trend counts can be backfilled from item dates.\n- Move the manual workstation run (BERTopic plus GLiNER2) to a scheduled job in AWS, with the stale-checkout guard.\n\nThe River, \"The map this week\" and \"Concepts born this week\" depend on this.\n\nAcceptance: two consecutive weekly archives exist, and the River shows both weeks from real data.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

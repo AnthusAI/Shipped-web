@@ -1,0 +1,35 @@
+.papyrus-wiki-stamp,.papyrus-wiki-superseded{margin:0 0 20px;padding:8px 12px;border:1.5px solid var(--rule-strong);border-radius:0;font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;line-height:1.4;color:var(--ink);background:transparent}
+.papyrus-wiki-stamp p,.papyrus-wiki-superseded p{margin:0}
+.papyrus-wiki-stamp[data-state="ai"]{border-style:solid}
+.papyrus-wiki-stamp[data-state="human"]{border-style:double;border-width:4px}
+.papyrus-wiki-stamp[data-state="draft"]{border-style:dashed;color:var(--muted)}
+.papyrus-wiki-superseded{border-style:dashed;text-transform:none;letter-spacing:0;font-size:14px;font-weight:500;background:var(--brand-tint)}
+.papyrus-wiki-superseded a{color:var(--ink);font-weight:700}
+.papyrus-wiki-mark{display:inline-block;min-width:1.2em}
+.papyrus-knowledge-entity-trend{margin:20px 0 8px;--papyrus-knowledge-line:var(--brand);--papyrus-knowledge-muted:var(--muted)}
+.papyrus-knowledge-entity-trend .papyrus-knowledge-sparkline{width:160px;height:48px}
+.papyrus-knowledge-neighbourhood{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:8px 40px;margin:24px 0}
+.papyrus-knowledge-neighbourhood-heading{font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.papyrus-knowledge-neighbourhood ul{list-style:none;margin:0;padding:0}
+.papyrus-knowledge-neighbourhood li{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule)}
+.papyrus-knowledge-neighbourhood .papyrus-knowledge-chip{border-radius:0;border:1px solid var(--rule-strong);color:var(--ink);text-decoration:none}
+.papyrus-knowledge-neighbourhood .papyrus-knowledge-chip-name{font-weight:700}
+.papyrus-knowledge-neighbourhood .papyrus-knowledge-weightbar-track{fill:var(--rule)}
+.papyrus-knowledge-neighbourhood .papyrus-knowledge-weightbar-fill{fill:var(--brand)}
+.papyrus-knowledge-neighbourhood .papyrus-knowledge-weight{font-family:var(--font-mono);font-size:12px;color:var(--ink)}
+.papyrus-knowledge-related{list-style:none;margin:0;padding:0}
+.papyrus-knowledge-related li{padding:8px 0;border-bottom:1px solid var(--rule)}
+.papyrus-knowledge-related time,.papyrus-knowledge-related .papyrus-knowledge-date{font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-left:8px}
+.papyrus-wiki-footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--rule-strong);font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.papyrus-wiki-footer p{margin:0 0 8px}
+.papyrus-wiki-footer a{color:var(--ink)}
+.papyrus-wiki-suggest summary{cursor:pointer;font-weight:600;color:var(--ink);min-height:24px}
+.papyrus-wiki-suggest[open] summary{margin-bottom:12px}
+.papyrus-wiki-suggest .markus-form{max-width:36rem;font-family:var(--font-ui);font-size:14px;color:var(--ink)}
+.papyrus-wiki-suggest .markus-form>h2{display:none}
+.papyrus-wiki-suggest form{display:flex;flex-direction:column;gap:12px}
+.papyrus-wiki-suggest .markus-form-field{display:flex;flex-direction:column;gap:4px}
+.papyrus-wiki-suggest label{font-weight:600}
+.papyrus-wiki-suggest input,.papyrus-wiki-suggest textarea{font:inherit;padding:8px 10px;border:1.5px solid var(--rule-strong);border-radius:0;background:var(--paper);color:var(--ink)}
+.papyrus-wiki-suggest button{align-self:flex-start;font-family:var(--font-mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border:1.5px solid var(--rule-strong);border-radius:0;background:var(--brand-fill);color:var(--brand-on);cursor:pointer}
+.papyrus-wiki-suggest .markus-form-status{margin:0;font-weight:600}

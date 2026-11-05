@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "97c43544-1f57-4810-a5ce-ef10ad396741",
+  "issue_id": "ship-1f3d29a2-88fe-46d8-bcd2-33a73af03de4",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:15.967Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Score combination exploration (editor and reader)",
+    "description": "PPY-0b2cbb. The snapshot stores both scores separately.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 3,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}
