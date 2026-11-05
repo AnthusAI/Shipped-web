@@ -104,6 +104,10 @@
     "style": "single",
     "lastmod": true
   },
+  "pageActions": {
+    "display": "icons",
+    "actions": ["view", "x", "reddit", "share"]
+  },
   "chrome": {
     "ga_measurement_id": "G-31SC26SDGX",
     "consent_mode": {
