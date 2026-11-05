@@ -23,6 +23,14 @@ Read `README.md` first. This repository holds only Shipped's configuration, them
 
 Not used by Shipped today: monitoring and the router, the shared relevance Cyclotron, the procedure runner and Tactus procedures, automations, review requests and the Notification Center. See the Papyrus docs if a task needs them.
 
+## Development policy (Ryan, 2026-11-04)
+
+- Develop and verify on a local dev server: `npm ci` then `npm run dev` (runs `papyrus-app sync`, then `next dev` on port 3001; it needs a backend's `amplify_outputs.json`, gitignored). For the seeded console with no AWS, run `npm run dev:preview` in a Papyrus checkout. Do not deploy to see whether something works.
+- **Merge** means merging a pull request into `develop`; that is where things are reviewed. `develop` builds nothing in Amplify.
+- **Release** means merging `develop` into `main`, which deploys. Aim for once or twice a day, batching what is ready. An extra release needs Ryan's say-so.
+- Papyrus version bumps go to this site's `develop` and ship in this site's release. A Papyrus release can add a GSI and a deploy can add only one per table, so a site cannot skip a release that adds one.
+- Say "merged to develop" or "released" precisely.
+
 ## Content model, in brief
 
 - **Signals** are CMS items in the sections `shipped` (labelled "In use"), `open-weights` and `decisions`. Their front matter shape is in `docs/editing-items.md`: `verdict`, `scores`, `scoreNotes`, `scoring`, `evidence`, `entities`, and a `model:` block for the periodic table.
@@ -52,7 +60,7 @@ rm amplify_outputs.json
 
 `papyrus-app sync` writes gitignored route shims under `app/`; don't commit them.
 
-**Bump Papyrus:** set the exact version in `package.json`, `infra/package.json`, `infra/site.json` (`papyrusVersion`) and `requirements-publication.txt`. Then refresh both lockfiles and test:
+**Bump Papyrus:** in a PR into `develop`, set the exact version in `package.json`, `infra/package.json`, `infra/site.json` (`papyrusVersion`) and `requirements-publication.txt`. Then refresh both lockfiles and test:
 
 ```bash
 npm install --package-lock-only
@@ -61,11 +69,13 @@ npm install --package-lock-only
 
 **Before bumping Papyrus past 5.32.0:** Papyrus #641 makes proposals private by default; the snapshot only publishes `/_data/proposals/*` when the site sets `proposals.publish: true`. Shipped renders `/proposals/` publicly, so add that setting, in the place Papyrus `docs/reader-steering.md` names, in the same PR as the bump. Otherwise the queue goes empty on the next snapshot.
 
-**Deploy:** merge to `main`. The push run deploys through OIDC, and the `current-main` job stops a late run from deploying an older commit over a newer one. If GitHub does not create the push run (an Actions incident), and only with the owner's OK, start the same job by hand:
+**Release:** merge `develop` into `main`. The push run deploys through OIDC, and the `current-main` job stops a late run from deploying an older commit over a newer one. If GitHub does not create the push run (an Actions incident), and only with the owner's OK, start the same job by hand:
 
 ```bash
-aws amplify start-job --app-id dkycd9pntgo6d --branch-name main --job-type RELEASE --commit-id <sha> --profile papyrus-production
+aws amplify start-job --app-id <amplify-app-id> --branch-name main --job-type RELEASE --commit-id <sha> --profile papyrus-production
 ```
+
+**Before bumping across releases:** compare the `index(` lines in Papyrus `amplify/data/schema.ts` between the two tags. Adding more than one index to one table takes one release per index.
 
 **Preview locally:** project the fixtures, as in the README, and serve them over HTTP.
 

@@ -1,4 +1,4 @@
-# Merge to main deploys: CI runs here (this repository is public, so Actions minutes are free);
+# A release (develop merged into main) deploys; pull requests run CI only. CI runs here (this repository is public, so Actions minutes are free);
 # a green push to main starts the Amplify job for that exact commit through GitHub OIDC.
 # No AWS keys are stored: the role trusts repo:AnthusAI/Shipped-web:ref:refs/heads/main only and may only
 # start and read jobs on this app's main branch. Amplify's own auto-build is off on main.

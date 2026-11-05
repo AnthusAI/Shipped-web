@@ -18,7 +18,7 @@ This repository holds **only what is specific to Shipped**: configuration, theme
 | What | Where |
 |---|---|
 | Public site | https://shipped.anth.us: a static S3 projection behind the CloudFront stack `papyrus-edge-shipped` (`infra/edge/shipped.yaml`) |
-| Newsroom (CMS) | https://newsroom.shipped.anth.us, at the root (old shipped.anth.us/newsroom links redirect there): Amplify app `dkycd9pntgo6d`, branch `main`, app-shell stack `amplify-app-shell-shipped-cms` |
+| Newsroom (CMS) | https://newsroom.shipped.anth.us, at the root (old shipped.anth.us/newsroom links redirect there): Amplify app `<amplify-app-id>`, branch `main`, app-shell stack `amplify-app-shell-shipped-cms` |
 | Reader API, newsletter routes | `/api/*` on the same origin, routed by the edge to the CMS app |
 | AWS | account `papyrus-production` (`712236451410`), `us-east-1` |
 | Weekly knowledge run | Papyrus scheduled container job (Step Functions + ECS Fargate), Mondays 05:00 UTC. Runbook: Papyrus `docs/knowledge-cloud-run.md` |
@@ -34,7 +34,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements-publication.txt b
 .venv/bin/behave features
 ```
 
-`requirements-publication.txt` pins `papyrus-newsroom[markus]` to the same version as `@anthusai/papyrus` in `package.json` (currently **5.69.0**).
+`requirements-publication.txt` pins `papyrus-newsroom[markus]` to the same version as `@anthusai/papyrus` in `package.json`.
 
 Build the public site locally from the test fixtures, then serve it over HTTP. Opening the pages from disk breaks the root-relative assets.
 
@@ -53,13 +53,13 @@ Units are the only rounded shapes on the site and always show the word "Sponsore
 
 ## How a change reaches production
 
-1. Branch from `main`, open a PR into `main`, and get CI green. `develop` exists but is stale; work goes to `main`.
-2. Merging to `main` runs `.github/workflows/deploy.yml`:
+1. Branch from `develop`, open a PR into `develop`, and get CI green. That is a merge: `develop` builds nothing in Amplify.
+2. A release merges `develop` into `main`, which runs `.github/workflows/deploy.yml`:
    - CI: typecheck, unit tests, behave;
    - `current-main`: skips the deploy if a later commit has already landed;
    - the deploy, which starts the Amplify RELEASE job for that commit through GitHub OIDC (role `shipped-github-deploy`). No AWS keys are stored.
 3. The Amplify job builds the CMS, deploys the backend and re-projects the public site.
-4. Papyrus versions: Papyrus releases with semantic-release. To adopt a release, bump the exact pin in `package.json`, `infra/package.json`, `infra/site.json` and `requirements-publication.txt` together, and update both lockfiles.
+4. Papyrus versions: Papyrus releases with semantic-release. To adopt a release, in a PR into `develop`, bump the exact pin in `package.json`, `infra/package.json`, `infra/site.json` and `requirements-publication.txt` together, and update both lockfiles.
 
 See [`AGENTS.md`](AGENTS.md) for the operating manual, and [`docs/`](docs/) for architecture, editing items and placeholders.
 
