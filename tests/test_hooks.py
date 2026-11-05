@@ -442,6 +442,19 @@ class HooksProjectionTest(unittest.TestCase):
             self.assertNotIn("214 TOPICS", page, path)
         self.assertIn("1 entities on the map", (self.output_directory / "index.md").read_text(encoding="utf-8"))
 
+    def test_page_actions_are_labelled_icons_that_view_post_and_share(self):
+        page = self._page("map")
+        self.assertIn("markus-page-actions-icons", page)
+        self.assertIn("data-share", page)
+        for label in ("View as Markdown", "Post on X", "Post on Reddit"):
+            self.assertIn(f'aria-label="{label}"', page)
+        self.assertNotIn(">Copy Markdown</button>", page)
+
+    def test_page_actions_are_square_and_share_the_page_column(self):
+        components = (STATIC_DIRECTORY / "assets" / "shipped-components.css").read_text(encoding="utf-8")
+        self.assertIn('.markus-page-actions-icons .markus-actions-menu [role="menu"]{border-radius:0}', components)
+        self.assertIn(".markus-page-actions:has(~.shipped-page){box-sizing:border-box;width:100%;max-width:90rem;margin:0 auto 1rem;padding:0 32px}", components)
+
     def test_home_clusters_show_three_terms(self):
         page = self._page(".")
         self.assertIn("Fixture theme", page)

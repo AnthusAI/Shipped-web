@@ -88,6 +88,8 @@
 
 main:has(>.shipped-page){max-width:none}
 .shipped-page{max-width:90rem;margin:0 auto;padding:0 32px 64px}
+.markus-page-actions:has(~.shipped-page){box-sizing:border-box;width:100%;max-width:90rem;margin:0 auto 1rem;padding:0 32px}
+.markus-page-actions-icons :is(.markus-icon-action,.markus-actions-menu-button),.markus-page-actions-icons .markus-actions-menu [role="menu"]{border-radius:0}
 .shipped-layout{display:flex;flex-wrap:wrap;gap:28px;padding-top:32px}
 .shipped-main{flex:999 1 720px;min-width:0}
 .shipped-rails{flex:1 1 260px;min-width:0;display:flex;flex-direction:column;gap:40px}
@@ -145,6 +147,7 @@ main:has(>.shipped-page){max-width:none}
 
 @media (max-width:640px){
   .shipped-page{padding:0 16px 40px}
+  .markus-page-actions:has(~.shipped-page){padding:0 16px}
   .ticker-inner{padding:10px 16px}
   .papyrus-knowledge-trending-strip{--strip-inset:16px}
   .shipped-layout{gap:28px;padding-top:20px}
