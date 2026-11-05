@@ -21,6 +21,7 @@ next-env.d.ts
 # >>> papyrus-app sync (generated route shims)
 /app/%5F_preview/\[\[...path\]\]/route.ts
 /app/.well-known/papyrus-cli.json/route.ts
+/app/.well-known/papyrus-site.json/route.ts
 /app/\[year\]/\[month\]/\[day\]/\[articleSlug\]/page.tsx
 /app/\[year\]/\[month\]/\[day\]/page.tsx
 /app/\[year\]/\[month\]/\[day\]/page/\[pageNumber\]/page.tsx
@@ -50,6 +51,8 @@ next-env.d.ts
 /app/api/reader/comment/delete/route.ts
 /app/api/reader/comment/edit/route.ts
 /app/api/reader/comment/route.ts
+/app/api/reader/extraction/confirm/route.ts
+/app/api/reader/extraction/route.ts
 /app/api/reader/flag/route.ts
 /app/api/reader/handle/route.ts
 /app/api/reader/me/route.ts
@@ -63,6 +66,8 @@ next-env.d.ts
 /app/articles/\[slug\]/page.tsx
 /app/cli/approve/route.ts
 /app/cli/callback/route.ts
+/app/cli/challenge/route.ts
+/app/cli/enroll/route.ts
 /app/cyclotron/page.tsx
 /app/layout.tsx
 /app/newsroom/\[section\]/\[...selection\]/page.tsx
@@ -75,6 +80,7 @@ next-env.d.ts
 /app/newsroom/layout.tsx
 /app/newsroom/page.tsx
 /app/newsroom/sections/\[sectionId\]/page.tsx
+/app/newsroom/settings/connect/page.tsx
 /app/newsroom/settings/page.tsx
 /app/page.tsx
 /app/robots.ts
