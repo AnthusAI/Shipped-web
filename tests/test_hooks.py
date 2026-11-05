@@ -440,7 +440,7 @@ class HooksProjectionTest(unittest.TestCase):
             self.assertIn('class="papyrus-knowledge-count"', page, path)
             self.assertIn("Topic index · 1 topics", page, path)
             self.assertNotIn("214 TOPICS", page, path)
-        self.assertIn('name="knowledge-topic-count"', (self.output_directory / "index.md").read_text(encoding="utf-8"))
+        self.assertIn("1 entities on the map", (self.output_directory / "index.md").read_text(encoding="utf-8"))
 
     def test_home_clusters_show_three_terms(self):
         page = self._page(".")
@@ -454,7 +454,7 @@ class HooksProjectionTest(unittest.TestCase):
         self.assertIn("papyrus-knowledge-beat-trend", page)
         self.assertIn("papyrus-knowledge-beat-entities", page)
         self.assertIn("Fixture theme", page)
-        self.assertIn('name="knowledge-beat" key=decision-models part=trend', (self.output_directory / "topics" / "decision-models" / "index.md").read_text(encoding="utf-8"))
+        self.assertIn("Signals, 8 wks", (self.output_directory / "topics" / "decision-models" / "index.md").read_text(encoding="utf-8"))
 
     def test_wiki_listing_page_size_is_fifty(self):
         projection = json.loads((STATIC_DIRECTORY / "projection.json").read_text(encoding="utf-8"))
