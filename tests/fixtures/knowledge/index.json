@@ -1,0 +1,16 @@
+{
+  "asOf": "2026-10-19",
+  "beats": [
+    {"href": "/topics/decision-models/", "itemCount": 2, "key": "decision-models", "name": "Decision models", "series8": [0, 1, 0, 2, 3, 1, 4, 2], "topEntities": ["task--fixture-task"]},
+    {"href": "/topics/open-tts/", "itemCount": 1, "key": "open-tts", "name": "Open TTS", "series8": [0, 0, 0, 0, 0, 0, 0, 1], "topEntities": ["task--fixture-task"]}
+  ],
+  "conceptOfTheWeek": {"editedBy": {"actor": "ai", "name": null, "on": "2026-10-21"}, "href": "/wiki/task-fixture-task/", "itemCount": 3, "key": "task--fixture-task", "lede": "A fictional fixture concept used only by the test suite.", "makerCount": 2, "name": "fixture task"},
+  "entities": [
+    {"acceptedBy": {"actor": "ai", "name": null, "on": "2026-10-20"}, "aliases": [], "change": {"last4": 3, "percent": null, "prior4": 1}, "href": "/wiki/task-fixture-task/", "isNew": false, "itemCount": 3, "key": "task--fixture-task", "kind": "task", "name": "fixture task", "series8": [0, 1, 0, 2, 3, 1, 4, 2], "weeksOfHistory": 8}
+  ],
+  "entityCount": 1,
+  "kinds": [{"count": 1, "key": "task", "label": "Task"}],
+  "schemaVersion": 1,
+  "topicCount": 2,
+  "trending": ["task--fixture-task"]
+}

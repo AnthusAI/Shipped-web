@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "30841ae6-9807-4a7b-932e-f1f0a28d210c",
+  "issue_id": "ship-9e6b3633-5449-48ea-96bc-4e52a861a299",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-25T13:04:16.118Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Sponsorship catalogue and switch, with topic matching from map concepts",
+    "description": "web/sponsorship.json holds six solutions with the design's copy and the real landing URLs: cyclotron.anth.us, aurit.us, chattic.us, anth.us/platform/biblicus/, p.apyr.us and anth.us/ai-solutions/. 'Talk to Anthus' goes to anth.us/engage/?solution=<Name>. enabled stays false until Ryan approves. Matching picks a solution from the page's concepts, with a generic fallback; no solution appears twice on a page.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-322b5331-ed73-4365-91d0-424a60d9842a",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

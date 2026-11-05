@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "779793e3-77be-4fc6-ac70-1bb2a1681689",
+  "issue_id": "ship-2107ddb5-e500-4c49-b2d1-085d0036d039",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.713Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Submit and The Weekly rebuilt to the new design",
+    "description": "Submit:\n- new copy;\n- signals start as Announced;\n- \"On the map\" entity confirmation;\n- the \"Propose a concept or a correction\" entry point (placeholder until Reposition 3).\n\nThe Weekly:\n- the archive article and the 600 px email, in this order: lead essay, what moved on the map, concepts born this week, top proposal, Underrated, \"Also out this week\";\n- AI-drafted parts ship as placeholders until Reposition 3.\n\nArtboards: Submit, Roundup and WeeklyEmail (https://claude.ai/artifact/EoXGtpzsayij4d7tmrfZ9r).\n\nAcceptance: `/submit/` and `/roundup/` match the artboards, and a test send of the email template renders at 600 px.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-f4cd69ac-ce50-409a-ac2d-e2f4e7b91b2e",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

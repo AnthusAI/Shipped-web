@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "event_id": "11bdc260-19be-465f-99e7-6cf2ff46c101",
+  "issue_id": "ship-2107ddb5-e500-4c49-b2d1-085d0036d039",
+  "event_type": "dependency_removed",
+  "occurred_at": "2026-10-22T16:24:13.224Z",
+  "actor_id": "home",
+  "payload": {
+    "dependency_type": "blocked-by",
+    "target_id": "ship-ddbf4600-e033-4cbc-8d56-937c15cc2679"
+  }
+}

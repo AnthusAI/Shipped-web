@@ -1,0 +1,54 @@
+{
+  "id": "ship-63b07de7-69d3-4ed5-9c05-e7cec5426ad8",
+  "title": "Google client redirect URIs for papyrus-shipped-cms",
+  "description": "Ryan adds origin https://papyrus-shipped-cms.auth.us-east-1.amazoncognito.com and redirect .../oauth2/idpresponse to Google client 916164220927-8d3m2nvo...",
+  "type": "task",
+  "status": "closed",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
+  "labels": [],
+  "dependencies": [],
+  "comments": [
+    {
+      "id": "e79013f3-ac1b-4b4f-aaad-14e17b4f4948",
+      "author": "home",
+      "text": "Reconciliation 2026-10-22. Blocked on Ryan: Google client redirect URIs for papyrus-shipped-cms.",
+      "created_at": "2026-10-22T04:03:02.664479Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "18a7933e-d148-4654-b132-1404a03fdfde",
+      "author": "home",
+      "text": "Board reconciliation 2026-10-22 (live checks 10:30-10:45Z). Still blocked on Ryan. Not retested end to end here (a Google login would need the account); the sign-in start returns 303 to https://papyrus-shipped-cms.auth.us-east-1.amazoncognito.com/oauth2/authorize with identity_provider=Google, so the app side is ready. Needed: add the Cognito origin and the .../oauth2/idpresponse redirect to Google client 916164220927-8d3m2nvo...",
+      "created_at": "2026-10-22T10:47:13.653694Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "0d9dc73b-f743-4ec0-898e-0151dae8fe59",
+      "author": "home",
+      "text": "2026-10-22 11:57Z: still blocked. A live check shows Google answering Error 400 redirect_uri_mismatch for client 916164220927-8d3m2nvo… (Cognito domain papyrus-shipped-cms).",
+      "created_at": "2026-10-22T11:57:02.309575Z",
+      "comment_type": "default"
+    },
+    {
+      "id": "590b31a9-e5bb-4e60-8611-c64aa32b6b9b",
+      "author": "home",
+      "text": "Fixed: the Google sign-in now reaches the account chooser with no redirect_uri_mismatch. The server write path was verified with a synthetic reader. A real person's end-to-end sign-in and vote is still to be confirmed (ship-b3b934).",
+      "created_at": "2026-10-23T13:25:17.668172Z",
+      "comment_type": "default"
+    }
+  ],
+  "created_at": "2026-10-22T00:58:11.935183Z",
+  "updated_at": "2026-10-23T13:25:17.693436Z",
+  "closed_at": "2026-10-23T13:25:17.693391Z",
+  "agent": {
+    "platform": "claude_code",
+    "model": "claude-opus-5-5",
+    "name": "papyrus-anthus"
+  },
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

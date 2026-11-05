@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "f9e67837-6ecc-4774-8a20-31a8462619b6",
+  "issue_id": "ship-2fd025df-1624-47cb-a048-c9be090fb904",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:29:00.014Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "AI trend stories from the knowledge snapshot, with editor approval",
+    "description": "Needs Papyrus: a story pipeline that drafts trend and cluster stories from the knowledge snapshot (trends, clusters, new relations), citing signals, and posts them to Proposals as public drafts.\n\nEditors approve the copy and the figure. Figures are drawn from map data, such as the lineage diagram, so no stock images are needed.\n\nQuality matters more than volume: start with 1-2 stories a week, and have every factual claim traced to a cited signal.\n\nAcceptance: one real trend story goes from draft, through steering and editor approval, to the home lead slot.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

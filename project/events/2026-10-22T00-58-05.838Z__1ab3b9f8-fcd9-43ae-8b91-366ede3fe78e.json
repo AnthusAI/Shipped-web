@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "1ab3b9f8-fcd9-43ae-8b91-366ede3fe78e",
+  "issue_id": "ship-76d58833-5595-4a5e-b746-6bbfd8afb2f6",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:05.838Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Seed open LLMs",
+    "description": "After decision models and open TTS. Same sourcing rules.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 3,
+    "assignee": null,
+    "parent": "ship-579bbb15-33e2-456f-88de-4f2968aab20c",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

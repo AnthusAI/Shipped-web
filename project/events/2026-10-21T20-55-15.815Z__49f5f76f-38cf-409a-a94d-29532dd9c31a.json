@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "event_id": "49f5f76f-38cf-409a-a94d-29532dd9c31a",
+  "issue_id": "ship-6ff2d71d-3c8c-415e-9d4d-a561b7faf36c",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-21T20:55:15.815Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Scaffold the designed site with labelled sample data",
+    "description": "Ryan's delivery rule (2026-10-21): deploy visible scaffolding first. Every page of the Claude Design artifact (EoXGtpzsayij4d7tmrfZ9r) is built as an authored page file on the standard Papyrus front end with obviously fictional sample data (Tern-3, Harlow County, Basalt-70B ...), each mocked section carrying the one consistent Sample mark. Placeholders are replaced feature by feature; each feature drops its sample mark.",
+    "issue_type": "epic",
+    "status": "open",
+    "priority": 2,
+    "assignee": null,
+    "parent": "ship-57b2b257-34ac-4ac8-a5d6-c32c3e52b8a6",
+    "labels": []
+  }
+}

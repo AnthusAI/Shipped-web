@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "021329fa-3e33-4f1d-8d29-f83c531ddc4d",
+  "issue_id": "ship-37026d62-5ef0-4823-b0a9-60e7d0432674",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T15:28:59.964Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Proposals queue live: public AI drafts with states",
+    "description": "Needs Papyrus: a Proposal record (story draft, new concept, rename, merge, split, new column, element symbol) with states:\n- Draft\n- In steering\n- Editor review\n- Approved\n- Declined\n- Overridden by editor\n\nDrafts are public and always labelled \"Draft · not yet approved\".\n\nBuild `/proposals/` (tabs Stories, Concepts, Map changes; sort Top, New, Controversial) and the previews on home, concept and story pages.\n\nAcceptance: a real AI proposal appears publicly with its label, and an editor approval moves it to Approved with the decision line shown.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-054405bb-0f5a-4694-bc84-9b3288168210",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "shipped-product-owner"
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-26",
+  "weeks": [
+    {
+      "asOf": "2026-10-19",
+      "runId": "run-a",
+      "clusters": [
+        {
+          "uid": "tc-agents",
+          "label": "Agents",
+          "itemCount": 5
+        },
+        {
+          "uid": "tc-code",
+          "label": "Code models",
+          "itemCount": 4
+        },
+        {
+          "uid": "tc-voice",
+          "label": "Voice",
+          "itemCount": 6
+        }
+      ],
+      "events": [
+        {
+          "event": "born",
+          "uid": "tc-agents"
+        },
+        {
+          "event": "born",
+          "uid": "tc-code"
+        },
+        {
+          "event": "born",
+          "uid": "tc-voice"
+        }
+      ]
+    },
+    {
+      "asOf": "2026-10-26",
+      "runId": "run-b",
+      "clusters": [
+        {
+          "uid": "tc-cloning",
+          "label": "Voice cloning",
+          "itemCount": 3
+        },
+        {
+          "uid": "tc-evals",
+          "label": null,
+          "itemCount": 2
+        },
+        {
+          "uid": "tc-synthesis",
+          "label": "Speech synthesis",
+          "itemCount": 4
+        },
+        {
+          "uid": "tc-tooling",
+          "label": "Agent tooling",
+          "itemCount": 11
+        }
+      ],
+      "events": [
+        {
+          "event": "born",
+          "uid": "tc-evals"
+        },
+        {
+          "event": "merged_from",
+          "uid": "tc-tooling",
+          "sources": [
+            "tc-agents",
+            "tc-code"
+          ]
+        },
+        {
+          "event": "split_into",
+          "uid": "tc-voice",
+          "into": [
+            "tc-cloning",
+            "tc-synthesis"
+          ]
+        }
+      ]
+    }
+  ]
+}

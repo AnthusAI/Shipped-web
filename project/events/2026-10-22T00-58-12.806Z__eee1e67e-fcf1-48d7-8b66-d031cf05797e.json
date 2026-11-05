@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "eee1e67e-fcf1-48d7-8b66-d031cf05797e",
+  "issue_id": "ship-b3933d4e-afe5-4cd1-a2d1-5a4c7cbd514d",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:12.806Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Person ID never public: scanning test over pages and snapshots",
+    "description": "Test that fails if a Prospectus Person ID appears in any rendered page, public JSON, snapshot, feed or llms file.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-b08701c5-548d-440f-8fe4-c6dac3e30dd8",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

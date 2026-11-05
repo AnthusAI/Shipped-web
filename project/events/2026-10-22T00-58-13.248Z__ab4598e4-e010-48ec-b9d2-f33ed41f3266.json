@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "event_id": "ab4598e4-e010-48ec-b9d2-f33ed41f3266",
+  "issue_id": "ship-b3b9340c-729f-42a7-b879-3454458a7a61",
+  "event_type": "issue_created",
+  "occurred_at": "2026-10-22T00:58:13.248Z",
+  "actor_id": "home",
+  "payload": {
+    "title": "Votes, ratings and karma",
+    "description": "Papyrus reader-steering plugin (PPY-73a82d). Built and tested ahead of sign-in; production writes open when siteSubject is live.",
+    "issue_type": "story",
+    "status": "open",
+    "priority": 1,
+    "assignee": null,
+    "parent": "ship-c9e2cefd-b49f-42f9-86eb-e696d007e7c2",
+    "labels": [],
+    "agent": {
+      "platform": "claude_code",
+      "model": "claude-opus-5-5",
+      "name": "papyrus-anthus"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "ship-c6efafba-48e4-4531-acf5-7e7cfc0f064c",
+  "title": "Pin Papyrus 5.15.1",
+  "description": "Bump the exact pin from 5.13.0 to 5.15.1 in package.json, package-lock.json, infra/package.json (and its lock), infra/site.json and requirements-publication.txt. 5.15.1 is on npm and PyPI and carries the PAPYRUS_SITE_ORIGIN sign-in fix (Papyrus #483). The app-shell CDK deploy that delivers PAPYRUS_SITE_ORIGIN is a separate ticket.",
+  "type": "task",
+  "status": "closed",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-6ff2d71d-3c8c-415e-9d4d-a561b7faf36c",
+  "labels": [],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-10-21T20:56:37.421554Z",
+  "updated_at": "2026-10-21T23:18:50.989624Z",
+  "closed_at": "2026-10-21T23:18:50.989596Z",
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
