@@ -1,0 +1,22 @@
+{
+  "id": "ship-8767c6d8-9fd7-4a64-8faa-46f4743af4aa",
+  "title": "Shipped keeps a different product shape on a dedicated deployment",
+  "description": "What: record what Shipped keeps as its own product on a dedicated deployment (Papyrus decision: our own sites stay dedicated for now): the signal and map surfaces (task-group columns, size bands, licence markers in web/map-view.json), periodic table, Underrated, Nearby, Vapor log, sponsorship, newsletter lists, and its scoring verdicts. These are hooks kept as tracked gaps; each gets a Papyrus promotion issue only if a second site wants it. Shipped does not bend the core catalogue around them.\nAcceptance:\nScenario: Every remaining Shipped hook is listed\n  Given the hooks after the block swaps\n  Then each is marked product-specific or promote-to-core, with an issue for the latter",
+  "type": "story",
+  "status": "open",
+  "priority": 3,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-1ba6b8ff-b0b6-449d-a4e8-a3da0383ad00",
+  "labels": [
+    "standard-frontend-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-07T21:44:11.248137Z",
+  "updated_at": "2026-11-07T21:44:11.248169Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

@@ -1,0 +1,22 @@
+{
+  "id": "ship-daeea5db-f2cc-4518-8f81-350063e0e409",
+  "title": "Cost and abuse controls for reader writes",
+  "description": "What: before many readers vote, check cost per vote with the incremental snapshot (Papyrus PPY-d647ee), confirm moderation mode (human) and the existing reservedConcurrency, and watch the shared rate rule (Papyrus PPY-0e5942). Controls are learned from traffic, not fixed caps. Shipped records its numbers here.\nAcceptance:\nScenario: A burst of votes does not multiply cost\n  Given 1,000 votes arrive in an hour\n  Then AppSync calls stay proportional to the changed subjects and no reader is blocked in normal use",
+  "type": "story",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-1ba6b8ff-b0b6-449d-a4e8-a3da0383ad00",
+  "labels": [
+    "standard-frontend-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-07T21:44:11.228513Z",
+  "updated_at": "2026-11-07T21:44:11.228540Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
