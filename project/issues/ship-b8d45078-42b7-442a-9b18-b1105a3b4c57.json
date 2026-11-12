@@ -1,0 +1,22 @@
+{
+  "id": "ship-b8d45078-42b7-442a-9b18-b1105a3b4c57",
+  "title": "Swap the remaining islands: Rating, Comments, Flag, Freshness, sign-in link",
+  "description": "What: one slice per island after the first; each removes its _island call and keeps the pages unchanged. Rating takes the dimension list from configuration.\nAcceptance:\nScenario: No hand-written island markup remains\n  Given the hooks after the last slice\n  Then web/hooks.py has no _island call and the golden renders are unchanged",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-1ba6b8ff-b0b6-449d-a4e8-a3da0383ad00",
+  "labels": [
+    "standard-frontend-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-07T21:44:11.189607Z",
+  "updated_at": "2026-11-07T21:44:11.189636Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

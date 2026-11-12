@@ -1,0 +1,22 @@
+{
+  "id": "ship-23a89afe-801b-4528-814e-9e989eae8325",
+  "title": "Stars on References and the 1-5 scale (adopt Papyrus PPY-49e9b5)",
+  "description": "What: adopt the 1-5 judgement scale with Reference as a vote subject and migrate legacy up/down votes, in Shipped's configuration and tests. Shipped's own scripts read the new snapshot shape ({mean, n, hist, upShare}). Follows Papyrus PPY-5245ed and PPY-2cbf35.\nAcceptance:\nScenario: Legacy votes read as stars\n  Given a legacy up vote and a down vote\n  When the migration has run\n  Then they read as 5 and 1 and Shipped's pages show the new summary",
+  "type": "story",
+  "status": "open",
+  "priority": 2,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-1ba6b8ff-b0b6-449d-a4e8-a3da0383ad00",
+  "labels": [
+    "standard-frontend-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-07T21:44:11.209469Z",
+  "updated_at": "2026-11-07T21:44:11.209491Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

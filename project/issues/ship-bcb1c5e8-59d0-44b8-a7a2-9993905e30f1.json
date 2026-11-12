@@ -1,0 +1,22 @@
+{
+  "id": "ship-bcb1c5e8-59d0-44b8-a7a2-9993905e30f1",
+  "title": "First slice: swap the Vote island on stories for the core Vote block",
+  "description": "What: the smallest end-to-end swap. One block (Vote on story pages, hook line ~2296) placed from layout data; Shipped's page looks and behaves as before; the dimensions and subject types stay in papyrus.config.ts and web/scoring.json (tests/test_hooks.py keeps the pairs in sync). Needs Papyrus PPY-57f6d2 (islands as blocks).\nAcceptance:\nScenario: A story page shows the same vote control\n  Given the Vote block is placed by configuration\n  When a story page renders\n  Then the control matches the previous markup in the golden render and the hook no longer emits it\nScenario: A reader's vote still counts once\n  Given a signed-in reader votes on a story\n  Then one vote is recorded and the tally updates after the next snapshot",
+  "type": "story",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": "ship-1ba6b8ff-b0b6-449d-a4e8-a3da0383ad00",
+  "labels": [
+    "standard-frontend-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-07T21:44:11.170380Z",
+  "updated_at": "2026-11-07T21:44:11.170400Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}

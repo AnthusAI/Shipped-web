@@ -1,0 +1,22 @@
+{
+  "id": "ship-1ba6b8ff-b0b6-449d-a4e8-a3da0383ad00",
+  "title": "Reader feedback through Papyrus core blocks, driven by Shipped",
+  "description": "Planning draft (2026-11-07). Shipped is the pilot for voting, comments, flags and Proposals (reader-steering plugin in papyrus.config.ts; islands hand-placed through _island() in web/hooks.py, nine call sites). Papyrus plans to make these catalogue blocks placed from data (Papyrus board: epic PPY-149b82 \"Reader feedback as catalogue blocks in core\", under initiative PPY-25ffa3). Shipped says what is generic and what is Shipped-specific, and swaps its hand-placed islands for the blocks in small slices.\nNot included: the product shape of Shipped itself (see the separate story on what Shipped keeps).\nDone when: Shipped renders every reader control from core blocks, with its pages visually unchanged and the _island markup removed from hooks.",
+  "type": "epic",
+  "status": "open",
+  "priority": 1,
+  "assignee": null,
+  "creator": null,
+  "parent": null,
+  "labels": [
+    "standard-frontend-plan"
+  ],
+  "dependencies": [],
+  "comments": [],
+  "created_at": "2026-11-07T21:44:11.130862Z",
+  "updated_at": "2026-11-07T21:44:11.130882Z",
+  "closed_at": null,
+  "right_now_summary": null,
+  "right_now_updated_at": null,
+  "custom": {}
+}
